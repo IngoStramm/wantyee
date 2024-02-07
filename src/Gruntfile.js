@@ -27,7 +27,8 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= dirs.js %>/wantyee.js'
+                '<%= dirs.js %>/wantyee.js',
+                '<%= dirs.js %>/wantyee-admin.js'
             ]
         },
 
@@ -37,6 +38,9 @@ module.exports = function (grunt) {
                 files: {
                     '<%= dirs.js %>/wantyee.min.js': [
                         '<%= dirs.js %>/wantyee.js'    // Custom JavaScript
+                    ],
+                    '<%= dirs.js %>/wantyee-admin.min.js': [
+                        '<%= dirs.js %>/wantyee-admin.js'    // Custom JavaScript
                     ]
                 }
             }
@@ -165,6 +169,22 @@ module.exports = function (grunt) {
                         cwd: 'node_modules/bootstrap-icons/font/',
                         src: '**',
                         dest: '../assets/fonts/bootstrap-icons/'
+                    },
+                    {
+                        nonull: true,
+                        expand: true,
+                        src: 'node_modules/imask/dist/imask.min.js',
+                        dest: '../assets/js/',
+                        flatten: true,
+                        filter: 'isFile'
+                    },
+                    {
+                        nonull: true,
+                        expand: true,
+                        src: 'node_modules/imask/dist/imask.min.js.map',
+                        dest: '../assets/js/',
+                        flatten: true,
+                        filter: 'isFile'
                     }
                 ]
             }

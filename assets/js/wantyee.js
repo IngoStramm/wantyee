@@ -114,7 +114,6 @@
     }
 
     function wtInitToasts() {
-        console.log('wtInitToasts');
         const toasts = document.querySelectorAll('.toast');
         Array.from(toasts).forEach(toast => {
             console.log('toasts');
@@ -123,11 +122,41 @@
         });
     }
 
+    function inputMasks() {
+        const inputTelefone = document.getElementById('wt_fone');
+        const maskOptionsTelefone = {
+            mask: '(00) 0000-0000[0]'
+        };
+        if (typeof inputTelefone !== undefined && inputTelefone) {
+            const maskTelefone = IMask(inputTelefone, maskOptionsTelefone);
+        }
+
+        const inputWhatsApp = document.getElementById('wt_whatsapp');
+        const maskOptionsWhatsApp = {
+            mask: '(00) 0000-00000'
+        };
+        if (typeof inputWhatsApp !== undefined && inputWhatsApp) {
+            const maskWhatsApp = IMask(inputWhatsApp, maskOptionsWhatsApp);
+        }
+    }
+
+    function wtGoBackBtn() {
+        const goBackBtns = document.querySelectorAll('.go-back-btn');
+        Array.from(goBackBtns).forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                history.back();
+            })
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
         wtInputsMasks();
         wtInitToasts();
+        inputMasks();
+        wtGoBackBtn();
     }, false);
 
 })();

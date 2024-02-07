@@ -14,7 +14,7 @@ function wt_forcelogin()
     }
 
     global $wp_query;
-    $current_page_id = $wp_query->post->ID;
+    $current_page_id = isset($wp_query->post->ID) ? $wp_query->post->ID : null;
     $login_page_id = wt_get_page_id('login');
     $new_user_page_id = wt_get_page_id('newuser');
     $lostpassword_page_id = wt_get_page_id('lostpassword');

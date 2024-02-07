@@ -14,7 +14,7 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col-md-12">
                 <header class="entry-header">
                     <?php if (is_singular()) : ?>
                         <?php the_title('<h1 class="entry-title default-max-width">', '</h1>'); ?>
@@ -24,11 +24,7 @@
 
                 </header><!-- .entry-header -->
             </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col">
+            <div class="col-md-12">
                 <div class="entry-content">
                     <?php
                     the_content();

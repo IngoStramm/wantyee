@@ -14,9 +14,11 @@ function wt_frontend_scripts()
 
     // wp_register_script('list-js', WT_URL . '/assets/js/list' . $min . '.js', array('jquery'), $version, true);
 
+    wp_register_script('imask-script', WT_URL . '/assets/js/imask.min.js', array('jquery'), $version, true);
+
     wp_register_script('bootstrap-script', WT_URL . '/assets/js/bootstrap.bundle.min.js', array('jquery'), $version, true);
 
-    wp_register_script('wantyee-script', WT_URL . '/assets/js/wantyee' . $min . '.js', array('jquery', 'bootstrap-script'), $version, true);
+    wp_register_script('wantyee-script', WT_URL . '/assets/js/wantyee' . $min . '.js', array('jquery', 'bootstrap-script', 'imask-script'), $version, true);
 
     wp_enqueue_script('wantyee-script');
 
@@ -30,7 +32,7 @@ function wt_frontend_scripts()
     wp_enqueue_style('wantyee-style', WT_URL . '/assets/css/wantyee.css', array('bootstrap-style'), $version, 'all');
 }
 
-// add_action('admin_enqueue_scripts', 'wt_admin_scripts');
+add_action('admin_enqueue_scripts', 'wt_admin_scripts');
 
 function wt_admin_scripts()
 {
@@ -41,7 +43,9 @@ function wt_admin_scripts()
 
     $min = (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1', '10.0.0.3'))) ? '' : '.min';
 
-    wp_register_script('wantyee-admin-script', WT_URL . '/assets/js/wantyee-admin' . $min . '.js', array('jquery'), $version, true);
+    wp_register_script('imask-script', WT_URL . '/assets/js/imask.min.js', array('jquery'), $version, true);
+
+    wp_register_script('wantyee-admin-script', WT_URL . '/assets/js/wantyee-admin' . $min . '.js', array('jquery', 'imask-script'), $version, true);
 
     wp_enqueue_script('wantyee-admin-script');
 
