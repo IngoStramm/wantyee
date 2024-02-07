@@ -1,0 +1,41 @@
+:root {
+    --meter-section-cl: #ddd;
+    --pwd-str-cl-weak: #ff4d4d;
+    --pwd-str-cl-medium: #ffd633;
+    --pwd-str-cl-strong: #00b300;
+    --pwd-str-cl-very-strong: #009900;
+}
+
+// Logo, usado no totpo e no rodapé do site
+.site-logo {
+    max-width: 150px;
+    height: auto;
+}
+
+// Medidor de força da senha
+.password-meter {
+    display: flex;
+    height: 5px;
+    margin-top: 10px;
+}
+
+.meter-section {
+    flex: 1;
+    background-color: var(--meter-section-cl);
+}
+
+.weak {
+    background-color: var(--pwd-str-cl-weak);
+}
+
+.medium {
+    background-color: var(--pwd-str-cl-medium);
+}
+
+.strong {
+    background-color: var(--pwd-str-cl-strong);
+}
+
+.very-strong {
+    background-color: var(--pwd-str-cl-very-strong);
+}
