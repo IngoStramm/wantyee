@@ -229,3 +229,96 @@ function wt_alert_small($type = 'success', $message)
     ';
     return $output;
 }
+
+/**
+ * Pagination.
+ *
+ * @since  2.2.0
+ *
+ * @global array $wp_query   Current WP Query.
+ * @global array $wp_rewrite URL rewrite rules.
+ *
+ * @param  int   $mid   Total of items that will show along with the current page.
+ * @param  int   $end   Total of items displayed for the last few pages.
+ * @param  bool  $show  Show all items.
+ * @param  mixed $query Custom query.
+ *
+ * @return string       Return the pagination.
+ */
+function wt_pagination($mid = 2, $end = 1, $show = false, $query = null)
+{
+    // Prevent show pagination number if Infinite Scroll of JetPack is active.
+    if (!isset($_GET['infinity'])) {
+
+        global $wp_query, $wp_rewrite;
+
+        $total_pages = $wp_query->max_num_pages;
+
+        if (is_object($query) && null != $query) {
+            $total_pages = $query->max_num_pages;
+        }
+
+        if ($total_pages > 1) {
+            $url_base = $wp_rewrite->pagination_base;
+            $big = 999999999;
+
+            // Sets the paginate_links arguments.
+            $arguments = apply_filters(
+                'odin_pagination_args',
+                array(
+                    'base'      => esc_url_raw(str_replace($big, '%#%', get_pagenum_link($big, false))),
+                    'format'    => '',
+                    'current'   => max(1, get_query_var('paged')),
+                    'total'     => $total_pages,
+                    'show_all'  => $show,
+                    'end_size'  => $end,
+                    'mid_size'  => $mid,
+                    'type'      => 'list',
+                    'prev_text' => '<span aria-hidden="true">&laquo;</span>',
+                    'next_text' => '<span aria-hidden="true">&raquo;</span>',
+                )
+            );
+
+            // Aplica o HTML/classes CSS do bootstrap
+            $wt_paginate_links = paginate_links($arguments);
+            // $wt_paginate_links = str_replace('page-numbers', 'pagination', paginate_links($arguments));
+            $wt_paginate_links = str_replace('<li>', '<li class="page-item">', $wt_paginate_links);
+            $wt_paginate_links = str_replace('<li class="page-item"><span aria-current="page" class="page-numbers current">', '<li class="page-item active"><a class="page-link" href="">', $wt_paginate_links);
+            $wt_paginate_links = str_replace('</span></li>', '</a></li>', $wt_paginate_links);
+            $wt_paginate_links = str_replace('<a class="page-numbers"', '<a class="page-link"', $wt_paginate_links);
+            $wt_paginate_links = str_replace('page-numbers dots', 'page-link dots', $wt_paginate_links);
+            $wt_paginate_links = str_replace('<a class="next page-numbers"', '<a class="page-link"', $wt_paginate_links);
+            $wt_paginate_links = str_replace('<a class="prev page-numbers"', '<a class="page-link"', $wt_paginate_links);
+            $wt_paginate_links = str_replace('<span class="page-link dots">', '<a class="page-link dots" href="">', $wt_paginate_links);
+            $wt_paginate_links = str_replace('</span>', '</a>', $wt_paginate_links);
+            $wt_paginate_links = str_replace('<ul class=\'page-numbers\'>', '<ul class="pagination justify-content-center">', $wt_paginate_links);
+            $wt_paginate_links = str_replace('<li class="page-item"><a class="page-link dots" href="">', '<li class="page-item disabled"><a class="page-link dots" href="">', $wt_paginate_links);
+        
+            $pagination = '<div class="my-4"><nav aria-label="Page navigation">' . $wt_paginate_links . '</nav></div>';
+            
+            // Prevents duplicate bars in the middle of the url.
+            if ($url_base) {
+                $pagination = str_replace('//' . $url_base . '/', '/' . $url_base . '/', $pagination);
+            }
+
+            return $pagination;
+        }
+    }
+}
+
+if (!function_exists('wt_paging_nav')) {
+
+    /**
+     * Print HTML with meta information for the current post-date/time and author.
+     *
+     * @since 2.2.0
+     */
+    function wt_paging_nav()
+    {
+        $mid  = 2;     // Total of items that will show along with the current page.
+        $end  = 1;     // Total of items displayed for the last few pages.
+        $show = false; // Show all items.
+
+        echo wt_pagination($mid, $end, false);
+    }
+}

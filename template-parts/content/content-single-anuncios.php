@@ -18,16 +18,14 @@ $wt_email = get_post_meta(get_the_ID(), 'wt_email', true);
 $wt_whatsapp = get_post_meta(get_the_ID(), 'wt_whatsapp', true);
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 $user = wp_get_current_user();
+$custom_post_types = 'anuncios';
 ?>
 
+<?php get_template_part('template-parts/breadcrumbs/breadcrumbs', null, array('anuncios')); ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="container">
         <div class="row">
-
-            <div class="col-md-12 mb-5">
-                <button class="go-back-btn btn btn-info"><?php _e('Voltar', 'wt'); ?></button>
-            </div>
 
             <div class="col-md-6">
 

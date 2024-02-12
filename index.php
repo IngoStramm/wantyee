@@ -29,14 +29,37 @@ get_header(); ?>
 <?php endif; ?>
 
 <?php
-if (have_posts()) {
-    // Load posts loop.
-    while (have_posts()) {
-        the_post();
-        get_template_part('template-parts/content/content');
+if (is_home()) {
+?>
+
+    <div class="container">
+        <div class="row">
+            <?php if (have_posts()) { ?>
+                <?php // wt_debug($post); 
+                ?>
+                <?php get_template_part('template-parts/archive/archive', 'anuncios'); ?>
+            <?php } else { ?>
+                <div class="row">
+                    <div class="col">
+                        <?php get_template_part('template-parts/content/content-none'); ?>
+                    </div>
+                </div>
+            <?php } ?>
+            <?php wt_paging_nav(); ?>
+        </div>
+    </div>
+
+<?php } else {
+
+    if (have_posts()) {
+        // Load posts loop.
+        while (have_posts()) {
+            the_post();
+            get_template_part('template-parts/content/content');
+        }
+    } else {
+        // If no content, include the "No posts found" template.
+        get_template_part('template-parts/content/content-none');
     }
-} else {
-    // If no content, include the "No posts found" template.
-    get_template_part('template-parts/content/content-none');
 }
 get_footer();
