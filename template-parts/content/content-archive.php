@@ -18,9 +18,11 @@
 
 
                 <div class="card shadow-sm">
-                    <?php the_post_thumbnail('medium-large', array('loading' => false, 'class' => 'img-fluid')); ?>
+                    <a href="<?php echo get_permalink(); ?>">
+                        <?php the_post_thumbnail('medium-large', array('loading' => false, 'class' => 'img-fluid')); ?>
+                    </a>
                     <div class="card-body">
-                        <h5><?php the_title(); ?></h5>
+                        <h5><a href="<?php echo get_permalink(); ?>"><?php the_title(); ?></a></h5>
                         <div class="d-flex align-items-center align-content-center gap-3">
                             <small><i class="bi bi-calendar-week-fill"></i> <?php echo get_the_date('', get_the_ID()); ?></small>
                             <small><i class="bi bi-person-fill"></i> <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>"><?php the_author(); ?></a></small>
