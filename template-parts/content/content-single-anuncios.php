@@ -65,7 +65,7 @@ $custom_post_types = 'anuncios';
             </div>
 
             <?php if ($wt_faq) { ?>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <h4 class="mb-4"><?php _e('FAQ', 'wt'); ?></h4>
                     <div class="accordion" id="accordion-anuncio-faq">
                         <?php foreach ($wt_faq as $k => $item) { ?>
@@ -88,35 +88,49 @@ $custom_post_types = 'anuncios';
                 </div>
             <?php } ?>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
 
-                <h4><?php _e('Dados do Comprador', 'wt'); ?></h4>
-                <dl class="row">
+                <?php if (is_user_logged_in()) { ?>
 
-                    <?php if ($user) { ?>
-                        <dt class="col-sm-3"><?php _e('Comprador', 'wt'); ?></dt>
-                        <dd class="col-sm-9"><?php echo $user->display_name; ?></a></dd>
-                    <?php } ?>
+                    <h4><?php _e('Dados do Comprador', 'wt'); ?></h4>
+                    <dl class="row">
 
-                    <?php if ($wt_fone) { ?>
-                        <dt class="col-sm-3"><?php _e('Telefone', 'wt'); ?></dt>
-                        <dd class="col-sm-9"><a href="tel:+55<?php echo preg_replace('~\D~', '', $wt_fone); ?>"><?php echo $wt_fone; ?></a></dd>
-                    <?php } ?>
+                        <?php if ($user) { ?>
+                            <dt class="col-sm-3"><?php _e('Comprador', 'wt'); ?></dt>
+                            <dd class="col-sm-9"><?php echo $user->display_name; ?></a></dd>
+                        <?php } ?>
 
-                    <?php if ($wt_email) { ?>
-                        <dt class="col-sm-3"><?php _e('E-mail', 'wt'); ?></dt>
-                        <dd class="col-sm-9"><a href="mailto:<?php echo $wt_email; ?>"><?php echo $wt_email; ?></a></dd>
-                    <?php } ?>
+                        <?php if ($wt_fone) { ?>
+                            <dt class="col-sm-3"><?php _e('Telefone', 'wt'); ?></dt>
+                            <dd class="col-sm-9"><a href="tel:+55<?php echo preg_replace('~\D~', '', $wt_fone); ?>"><?php echo $wt_fone; ?></a></dd>
+                        <?php } ?>
 
-                    <?php if ($wt_whatsapp) { ?>
-                        <dt class="col-sm-3"><?php _e('WhatsApp', 'wt'); ?></dt>
-                        <dd class="col-sm-9"><a href="https://wa.me/55<?php echo preg_replace('~\D~', '', $wt_whatsapp); ?>" target="_blank"><?php echo $wt_whatsapp; ?></a></dd>
-                    <?php } ?>
+                        <?php if ($wt_email) { ?>
+                            <dt class="col-sm-3"><?php _e('E-mail', 'wt'); ?></dt>
+                            <dd class="col-sm-9"><a href="mailto:<?php echo $wt_email; ?>"><?php echo $wt_email; ?></a></dd>
+                        <?php } ?>
 
-                </dl>
+                        <?php if ($wt_whatsapp) { ?>
+                            <dt class="col-sm-3"><?php _e('WhatsApp', 'wt'); ?></dt>
+                            <dd class="col-sm-9"><a href="https://wa.me/55<?php echo preg_replace('~\D~', '', $wt_whatsapp); ?>" target="_blank"><?php echo $wt_whatsapp; ?></a></dd>
+                        <?php } ?>
+
+                    <?php } else { ?>
+                        <?php
+                        $login_page_id = wt_get_page_id('login');
+                        if ($login_page_id) {
+                            $login_page_url = wt_get_page_url('login'); ?>
+                            <div class="alert alert-warning">
+                                <?php _e('É preciso estar logado para visualizar as informações de contato do vendedor.', 'wt'); ?>
+                                <br>
+                                <a class="" href="<?php echo $login_page_url; ?>"><?php _e('Entrar', 'wt'); ?></a>
+                            </div>
+                        <?php } ?>
+
+                    </dl>
+                <?php } ?>
 
             </div>
-
         </div>
     </div>
 

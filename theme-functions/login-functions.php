@@ -1,5 +1,8 @@
 <?php
 
+add_action('admin_post_wt_login_form', 'wt_login_form_handle');
+add_action('admin_post_nopriv_wt_login_form', 'wt_login_form_handle');
+
 /**
  * wt_login_form_handle
  *

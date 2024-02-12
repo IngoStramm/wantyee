@@ -3,6 +3,8 @@ $wrapper_classes  = 'site-header mb-5 sticky-top';
 $wrapper_classes .= has_custom_logo() ? ' has-logo' : '';
 $wrapper_classes .= (true === get_theme_mod('display_title_and_tagline', true)) ? ' has-title-and-tagline' : '';
 $wrapper_classes .= has_nav_menu('primary') ? ' has-menu' : '';
+$account_page_id = wt_get_page_id('account');
+$login_page_id = wt_get_page_id('login');
 ?>
 <header class="<?php echo esc_attr($wrapper_classes); ?>">
     <nav class="navbar navbar-expand-md bg-body-tertiary">
@@ -19,9 +21,26 @@ $wrapper_classes .= has_nav_menu('primary') ? ' has-menu' : '';
                 <?php get_template_part('template-parts/header/site-nav'); ?>
 
                 <?php if (is_user_logged_in()) { ?>
+                    <?php $user = wp_get_current_user(); ?>
+                    <?php if ($account_page_id) { ?>
+                        <a href="<?php echo wt_get_page_url('account'); ?>" class="nav-link d-block text-center px-2">
+                            <i class="bi bi-person-circle d-block fs-3"></i>
+                            <?php /* ?><small class="d-block"><?php echo $user->display_name; ?></small><?php */ ?>
+                        </a>
+                    <?php } ?>
+
                     <div class="d-grid d-md-block">
                         <a class="btn btn-danger btn-sm" href="<?php echo wp_logout_url(); ?>"><?php _e('Sair', 'wt'); ?></a>
                     </div>
+                <?php } else { ?>
+                    <?php if ($login_page_id) { ?>
+                        <?php
+                        $login_page_url = wt_get_page_url('login');
+                        ?>
+                        <div class="d-grid d-md-block">
+                            <a class="btn btn-secondary btn-sm" href="<?php echo $login_page_url; ?>"><?php _e('Entrar', 'wt'); ?></a>
+                        </div>
+                    <?php } ?>
                 <?php } ?>
 
                 <!-- <form class="d-flex" role="search">
