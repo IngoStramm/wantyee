@@ -26,7 +26,6 @@
         if (meterSections.length <= 0) {
             return;
         }
-        console.log('meterSections', meterSections);
         passwordInput.addEventListener('input', () => wtUpdateMeter(passwordInput, meterSections));
     }
 
@@ -151,6 +150,43 @@
         });
     }
 
+    function checkboxTermsList() {
+        const listas = document.querySelectorAll('.checkbox-terms-list');
+        Array.from(listas).forEach(lista => {
+            const checkboxes = lista.querySelectorAll('input[type="checkbox"]');
+            Array.from(checkboxes).forEach(checkbox => {
+                const parentCheckboxId = checkbox.dataset.parent;
+                // É filho
+                if (typeof parentCheckboxId !== undefined && parentCheckboxId) {
+                    checkbox.addEventListener('change', e => {
+                        const parentCheckbox = document.getElementById(parentCheckboxId);
+                        const sameParentCheckboxes = document.querySelectorAll('[data-parent="' + parentCheckboxId + '"]');
+                        let isChecked = false;
+                        Array.from(sameParentCheckboxes).forEach(sameParentCheckbox => {
+                            if (sameParentCheckbox.checked) {
+                                isChecked = true;
+                            }
+                        });
+                        if (isChecked) {
+                            parentCheckbox.checked = isChecked;
+                        }
+                    });
+                } else {
+                    // É pai
+                    checkbox.addEventListener('change', e => {
+                        const isChecked = checkbox.checked;
+                        if (!isChecked) {
+                            const childrenCheckboxes = document.querySelectorAll('[data-parent="' + checkbox.id + '"]');
+                            Array.from(childrenCheckboxes).forEach(childrenCheckbox => {
+                                childrenCheckbox.checked = isChecked;
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -158,6 +194,7 @@
         wtInitToasts();
         inputMasks();
         wtGoBackBtn();
+        checkboxTermsList();
     }, false);
 
 })();

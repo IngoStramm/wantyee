@@ -23,12 +23,17 @@ function wt_register_user_profile_metabox()
         'on_front' => false,
     ));
 
-    // $cmb_user->add_field(array(
-    //     'name'    => esc_html__('Avatar', 'wt'),
-    //     'desc'    => esc_html__('Opcional', 'wt'),
-    //     'id'      => 'wt_user_avatar',
-    //     'type'    => 'file',
-    // ));
+    $cmb_user->add_field(array(
+        'name' => esc_html__('WhatsApp', 'wt'),
+        'id'   => 'wt_user_whatsapp',
+        'type' => 'text',
+    ));
+
+    $cmb_user->add_field(array(
+        'name' => esc_html__('Telefone de contato', 'wt'),
+        'id'   => 'wt_user_phone',
+        'type' => 'text',
+    ));
 
     $cmb_user->add_field(array(
         'name' => esc_html__('Tipo de usuário', 'wt'),
@@ -41,14 +46,9 @@ function wt_register_user_profile_metabox()
     ));
 
     $cmb_user->add_field(array(
-        'name' => esc_html__('WhatsApp', 'wt'),
-        'id'   => 'wt_user_whatsapp',
-        'type' => 'text',
-    ));
-
-    $cmb_user->add_field(array(
-        'name' => esc_html__('Telefone de contato', 'wt'),
-        'id'   => 'wt_user_phone',
-        'type' => 'text',
+        'name' => esc_html__('Tipo de usuário', 'wt'),
+        'id'   => 'wt_user_following_terms',
+        'type'             => 'multicheck',
+        'options'          => 'wt_anuncio_terms',
     ));
 }

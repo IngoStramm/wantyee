@@ -96,7 +96,7 @@ $custom_post_types = 'anuncios';
                     <dl class="row">
 
                         <dt class="col-sm-3"><?php _e('Comprador', 'wt'); ?></dt>
-                        <dd class="col-sm-9"><?php echo get_the_author_meta('display_name'); ?></a></dd>
+                        <dd class="col-sm-9"><?php echo get_the_author_meta('first_name') . ' ' . get_the_author_meta('last_name'); ?></a></dd>
 
                         <?php if ($wt_phone) { ?>
                             <dt class="col-sm-3"><?php _e('Telefone', 'wt'); ?></dt>
