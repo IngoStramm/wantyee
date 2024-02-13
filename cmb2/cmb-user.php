@@ -41,7 +41,13 @@ function wt_register_user_profile_metabox()
     ));
 
     $cmb_user->add_field(array(
-        'name' => esc_html__('Telefone de contato/WhatsApp', 'wt'),
+        'name' => esc_html__('WhatsApp', 'wt'),
+        'id'   => 'wt_user_whatsapp',
+        'type' => 'text',
+    ));
+
+    $cmb_user->add_field(array(
+        'name' => esc_html__('Telefone de contato', 'wt'),
         'id'   => 'wt_user_phone',
         'type' => 'text',
     ));

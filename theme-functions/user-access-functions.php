@@ -39,3 +39,19 @@ function wt_forcelogin()
         }
     }
 }
+
+
+function wt_alert_not_logged_in($text)
+{
+    $login_page_id = wt_get_page_id('login');
+    if (!$login_page_id) {
+        return;
+    }
+    $login_page_url = wt_get_page_url('login');
+    $output = '';
+    $output .= '<div class="alert alert-warning">';
+    $output .= $text;
+    $output .= '<br><a class="" href="';
+    $output .= $login_page_url . '">' . __('Entrar', 'wt') . '</a></div>';
+    return $output;
+}

@@ -56,6 +56,14 @@ function wt_register_new_user_form_handle()
     }
     $user_email = sanitize_email($_POST['user_email']);
 
+    if (!isset($_POST['user_whatsapp']) || !$_POST['user_whatsapp']) {
+
+        $_SESSION['wt_register_new_user_error_message'] = __('WhatsApp inválido.', 'wt');
+        wp_safe_redirect($register_new_user_page_url);
+        exit;
+    }
+    $user_whatsapp = preg_replace('/[^0-9]/', '', $_POST['user_whatsapp']);
+
     if (!isset($_POST['user_phone']) || !$_POST['user_phone']) {
 
         $_SESSION['wt_register_new_user_error_message'] = __('Telefone inválido.', 'wt');
@@ -111,6 +119,7 @@ function wt_register_new_user_form_handle()
         'meta_input'            => array(
             'wt_user_type'      => $user_type,
             'wt_user_phone'     => $user_phone,
+            'wt_user_whatsapp'     => $user_whatsapp,
         )
 
     );

@@ -13,11 +13,11 @@
 ?>
 
 <?php
-$wt_fone = get_post_meta(get_the_ID(), 'wt_fone', true);
+$author_id = get_the_author_meta('ID');
 $wt_email = get_post_meta(get_the_ID(), 'wt_email', true);
-$wt_whatsapp = get_post_meta(get_the_ID(), 'wt_whatsapp', true);
+$wt_whatsapp = get_user_meta($author_id, 'wt_user_whatsapp', true);
+$wt_phone = get_user_meta($author_id, 'wt_user_phone', true);
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
-$user = wp_get_current_user();
 $custom_post_types = 'anuncios';
 ?>
 
@@ -95,14 +95,12 @@ $custom_post_types = 'anuncios';
                     <h4><?php _e('Dados do Comprador', 'wt'); ?></h4>
                     <dl class="row">
 
-                        <?php if ($user) { ?>
-                            <dt class="col-sm-3"><?php _e('Comprador', 'wt'); ?></dt>
-                            <dd class="col-sm-9"><?php echo $user->display_name; ?></a></dd>
-                        <?php } ?>
+                        <dt class="col-sm-3"><?php _e('Comprador', 'wt'); ?></dt>
+                        <dd class="col-sm-9"><?php echo get_the_author_meta('display_name'); ?></a></dd>
 
-                        <?php if ($wt_fone) { ?>
+                        <?php if ($wt_phone) { ?>
                             <dt class="col-sm-3"><?php _e('Telefone', 'wt'); ?></dt>
-                            <dd class="col-sm-9"><a href="tel:+55<?php echo preg_replace('~\D~', '', $wt_fone); ?>"><?php echo $wt_fone; ?></a></dd>
+                            <dd class="col-sm-9"><a href="tel:+55<?php echo preg_replace('~\D~', '', $wt_phone); ?>"><?php echo $wt_phone; ?></a></dd>
                         <?php } ?>
 
                         <?php if ($wt_email) { ?>
@@ -114,21 +112,11 @@ $custom_post_types = 'anuncios';
                             <dt class="col-sm-3"><?php _e('WhatsApp', 'wt'); ?></dt>
                             <dd class="col-sm-9"><a href="https://wa.me/55<?php echo preg_replace('~\D~', '', $wt_whatsapp); ?>" target="_blank"><?php echo $wt_whatsapp; ?></a></dd>
                         <?php } ?>
-
-                    <?php } else { ?>
-                        <?php
-                        $login_page_id = wt_get_page_id('login');
-                        if ($login_page_id) {
-                            $login_page_url = wt_get_page_url('login'); ?>
-                            <div class="alert alert-warning">
-                                <?php _e('É preciso estar logado para visualizar as informações de contato do vendedor.', 'wt'); ?>
-                                <br>
-                                <a class="" href="<?php echo $login_page_url; ?>"><?php _e('Entrar', 'wt'); ?></a>
-                            </div>
-                        <?php } ?>
-
                     </dl>
-                <?php } ?>
+
+                <?php } else {
+                    echo wt_alert_not_logged_in(__('É preciso estar logado para visualizar as informações de contato do vendedor.', 'wt'));
+                } ?>
 
             </div>
         </div>

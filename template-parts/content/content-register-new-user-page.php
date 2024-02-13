@@ -56,8 +56,14 @@ $wt_add_form_register_new_user_nonce = wp_create_nonce('wt_form_register_new_use
                             </div>
 
                             <div class="mb-3">
-                                <label for="user_phone" class="form-label"><?php _e('Telefone/WhatsApp', 'wt') ?></label>
-                                <input type="tel" maxlength="15" class="form-control phone-input" id="user_phone" name="user_phone" tabindex="3" required>
+                                <label for="user_whatsapp" class="form-label"><?php _e('WhatsApp', 'wt') ?></label>
+                                <input type="tel" maxlength="15" minlength="15" class="form-control phone-input" id="user_whatsapp" name="user_whatsapp" tabindex="3" required>
+                                <div class="invalid-feedback"><?php _e('Campo obrigatório', 'wt'); ?></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="user_phone" class="form-label"><?php _e('Telefone', 'wt') ?></label>
+                                <input type="tel" maxlength="15" minlength="14" class="form-control phone-input" id="user_phone" name="user_phone" tabindex="3" required>
                                 <div class="invalid-feedback"><?php _e('Campo obrigatório', 'wt'); ?></div>
                             </div>
 

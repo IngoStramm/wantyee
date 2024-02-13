@@ -92,17 +92,18 @@
     function wtInputsMasks() {
         const phoneInput = document.querySelectorAll('.phone-input');
         Array.from(phoneInput).forEach(phoneInput => {
+            phoneInput.value = wtPhoneMask(phoneInput.value);
             phoneInput.addEventListener('keyup', event => {
                 wtHandlePhone(event);
             });
         });
 
-        const wtHandlePhone = (event) => {
+        function wtHandlePhone(event) {
             let input = event.target;
             input.value = wtPhoneMask(input.value);
-        };
+        }
 
-        const wtPhoneMask = (value) => {
+        function wtPhoneMask(value) {
             if (!value) {
                 return '';
             }
@@ -110,7 +111,7 @@
             value = value.replace(/(\d{2})(\d)/, "($1) $2");
             value = value.replace(/(\d)(\d{4})$/, "$1-$2");
             return value;
-        };
+        }
     }
 
     function wtInitToasts() {
@@ -123,7 +124,7 @@
     }
 
     function inputMasks() {
-        const inputTelefone = document.getElementById('wt_fone');
+        const inputTelefone = document.getElementById('user_phone');
         const maskOptionsTelefone = {
             mask: '(00) 0000-0000[0]'
         };
@@ -131,7 +132,7 @@
             const maskTelefone = IMask(inputTelefone, maskOptionsTelefone);
         }
 
-        const inputWhatsApp = document.getElementById('wt_whatsapp');
+        const inputWhatsApp = document.getElementById('user_whatsapp');
         const maskOptionsWhatsApp = {
             mask: '(00) 0000-00000'
         };
@@ -153,7 +154,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
-        wtInputsMasks();
+        // wtInputsMasks();
         wtInitToasts();
         inputMasks();
         wtGoBackBtn();
