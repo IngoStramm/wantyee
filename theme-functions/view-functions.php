@@ -46,3 +46,9 @@ function wt_show_anuncios_instead_posts($wp_query)
         $wp_query->set('post_type', array('anuncios'));
     }
 }
+
+// add_action('wp_head', 'wt_test');
+function wt_test()
+{
+    echo do_shortcode('[wt_editor]');
+}

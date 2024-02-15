@@ -208,6 +208,33 @@ function wt_get_page_url($slug)
 }
 
 /**
+ * wt_anuncio_terms
+ *
+ * @return array
+ */
+function wt_anuncio_terms()
+{
+    $terms = get_terms(array(
+        'taxonomy'   => 'categoria-de-anuncio',
+        'hide_empty' => false,
+    ));
+    $array_terms = array();
+    foreach ($terms as $term) {
+        if (!$term->parent) {
+            $array_terms[$term->term_id] = $term->name;
+            foreach ($terms as $term2) {
+                if ($term2->parent === $term->term_id) {
+                    $array_terms[$term2->term_id] = $term2->name;
+                }
+            }
+        }
+    }
+    return $array_terms;
+}
+
+
+
+/**
  * wt_alert_small
  *
  * @param  string $type
@@ -293,9 +320,9 @@ function wt_pagination($mid = 2, $end = 1, $show = false, $query = null)
             $wt_paginate_links = str_replace('</span>', '</a>', $wt_paginate_links);
             $wt_paginate_links = str_replace('<ul class=\'page-numbers\'>', '<ul class="pagination justify-content-center">', $wt_paginate_links);
             $wt_paginate_links = str_replace('<li class="page-item"><a class="page-link dots" href="">', '<li class="page-item disabled"><a class="page-link dots" href="">', $wt_paginate_links);
-        
+
             $pagination = '<div class="my-4"><nav aria-label="Page navigation">' . $wt_paginate_links . '</nav></div>';
-            
+
             // Prevents duplicate bars in the middle of the url.
             if ($url_base) {
                 $pagination = str_replace('//' . $url_base . '/', '/' . $url_base . '/', $pagination);

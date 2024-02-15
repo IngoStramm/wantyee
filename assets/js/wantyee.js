@@ -187,14 +187,170 @@
         });
     }
 
+    function wtLimitFileUploadSize() {
+        const uploadFields = document.querySelectorAll('input[type="file"]');
+
+        Array.from(uploadFields).forEach(uploadField => {
+            uploadField.onchange = function () {
+                if (this.files[0].size > 2097152) {
+                    alert('O arquivo é muito pesado, o tamanho máximo permitido é de 2MB.');
+                    this.value = "";
+                }
+            };
+        });
+    }
+
+    function wtFaq() {
+        const faqs = document.querySelectorAll('.wt-faq-group');
+        Array.from(faqs).forEach(faq => {
+            const listItems = faq.querySelector('.wt-faq-group-list');
+            const items = faq.querySelectorAll('.list-group-item');
+            const addItemBtn = faq.querySelector('.wt-group-new-item-btn');
+
+            if (typeof items === undefined || !items || items.length <= 0) {
+                console.error('Não foi encontrado nenhum item da lista de perguntas e respostas (FAQ).');
+                return;
+            }
+            if (typeof listItems === undefined || !listItems) {
+                console.error('Não foi encontrado a lista de itens de perguntas e respostas (FAQ).');
+                return;
+            }
+            if (typeof addItemBtn === undefined || !addItemBtn) {
+                console.error('Não foi encontrado o botão para adicionar novos itens na lista de perguntas e respostas (FAQ).');
+                return;
+            }
+
+            wtAddNewFaqItemEvent(addItemBtn, faq);
+            wtAddRemoveFaqItemEvent(faq);
+            wtRecalcFaqItems(faq);
+        });
+    }
+
+    function wtRecalcFaqItems(faq) {
+        const listItems = faq.querySelector('.wt-faq-group-list');
+        const items = faq.querySelectorAll('.list-group-item');
+
+        if (typeof items === undefined || !items || items.length <= 0) {
+            console.error('Não foi encontrado nenhum item da lista de perguntas e respostas (FAQ).');
+            return;
+        }
+        if (typeof listItems === undefined || !listItems) {
+            console.error('Não foi encontrado a lista de itens de perguntas e respostas (FAQ).');
+            return;
+        }
+        console.log(items.length);
+    }
+
+    function wtAddNewFaqItemEvent(addItemBtn, faq) {
+        const listItems = faq.querySelector('.wt-faq-group-list');
+
+        if (typeof listItems === undefined || !listItems) {
+            console.error('Não foi encontrado a lista de itens de perguntas e respostas (FAQ).');
+            return;
+        }
+
+        addItemBtn.addEventListener('click', wtAddNewFaqItem.bind(null, listItems, faq));
+    }
+
+    function wtAddNewFaqItem(listItems, faq, e) {
+        e.preventDefault();
+
+        // Item da lista
+        const listItem = document.createElement('li');
+        listItem.classList.add('wt-faq-group-item');
+        listItem.classList.add('list-group-item');
+        listItem.id = 'wt-faq-group-item-';
+        listItem.dataset.faqGroupItemId = '';
+
+        // Pergunta label
+        const perguntaLabel = document.createElement('label');
+        perguntaLabel.setAttribute('for', 'anuncio_faq-pergunta-');
+        perguntaLabel.classList.add('form-label');
+        perguntaLabel.innerText = 'Pergunta';
+
+        listItem.append(perguntaLabel);
+
+        // Pergunta input
+        const perguntaInput = document.createElement('input');
+        perguntaInput.setAttribute('type', 'text');
+        perguntaInput.classList.add('form-control');
+        perguntaInput.id = 'anuncio_faq-pergunta-';
+        perguntaInput.name = 'anuncio_faq-perguntas[]';
+        perguntaInput.setAttribute('required', '');
+
+        listItem.append(perguntaInput);
+
+        // Resposta label
+        const respostaLabel = document.createElement('label');
+        respostaLabel.setAttribute('for', 'anuncio_faq-resposta-');
+        respostaLabel.classList.add('form-label');
+        respostaLabel.innerText = 'Resposta';
+
+        listItem.append(respostaLabel);
+
+        // Resposta textarea
+        const respostaTextarea = document.createElement('textarea');
+        respostaTextarea.setAttribute('type', 'text');
+        respostaTextarea.classList.add('form-control');
+        respostaTextarea.id = 'anuncio_faq-resposta-';
+        respostaTextarea.name = 'anuncio_faq-respostas[]';
+        respostaTextarea.setAttribute('required', '');
+
+        listItem.append(respostaTextarea);
+
+        // Div com mensagem de validação
+        const divInvalidFeedback = document.createElement('div');
+        divInvalidFeedback.classList.add('invalid-feedback');
+        divInvalidFeedback.innerText = 'Campo obrigatório';
+
+        listItem.append(divInvalidFeedback);
+
+        // Div de container do botão de exclusão do item
+        const divBtnWrapper = document.createElement('div');
+        divBtnWrapper.classList.add('d-flex');
+
+        // Botão de exclusão do item
+        const btnRemoveItem = document.createElement('a');
+        btnRemoveItem.classList.add('wt-delete-faq-group');
+        btnRemoveItem.classList.add('btn');
+        btnRemoveItem.classList.add('btn-danger');
+        btnRemoveItem.classList.add('btn-sm');
+        btnRemoveItem.classList.add('mt-2');
+        btnRemoveItem.classList.add('ms-auto');
+        btnRemoveItem.innerHTML = '<i class="bi bi-x-circle-fill"></i> Remover item';
+        // btnRemoveItem.addEventListener('click', wtRemoveFaqItem);
+
+        divBtnWrapper.append(btnRemoveItem);
+
+        listItem.append(divBtnWrapper);
+        listItems.append(listItem);
+        wtAddRemoveFaqItemEvent(faq);
+        wtRecalcFaqItems(faq);
+    }
+
+    function wtAddRemoveFaqItemEvent(faq) {
+        const removeBtns = document.querySelectorAll('.wt-delete-faq-group');
+        Array.from(removeBtns).forEach(removeBtn => {
+            removeBtn.removeEventListener('click', wtRemoveFaqItem);
+            removeBtn.addEventListener('click', wtRemoveFaqItem.bind(null, faq));
+        });
+    }
+
+    function wtRemoveFaqItem(faq, e) {
+        e.preventDefault();
+        e.target.closest('.wt-faq-group-item').remove();
+        wtRecalcFaqItems(faq);
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
-        // wtInputsMasks();
+        wtLimitFileUploadSize();
         wtInitToasts();
         inputMasks();
         wtGoBackBtn();
         checkboxTermsList();
+        wtFaq();
     }, false);
 
 })();

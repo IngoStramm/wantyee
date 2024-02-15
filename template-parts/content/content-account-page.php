@@ -68,6 +68,22 @@ $user_type = get_user_meta($user->get('id'), 'wt_user_type', true);
                     }
                     ?>
 
+                    <?php
+                    // Mensagens de erro de novo anúncio
+                    if (isset($_SESSION['wt_new_anuncio_error_message']) && $_SESSION['wt_new_anuncio_error_message']) {
+                        echo wt_alert_small('danger', $_SESSION['wt_new_anuncio_error_message']);
+                        unset($_SESSION['wt_new_anuncio_error_message']);
+                    }
+                    ?>
+
+                    <?php
+                    // Mensagens de successo de novo anúncio
+                    if (isset($_SESSION['wt_new_anuncio_success_message']) && $_SESSION['wt_new_anuncio_success_message']) {
+                        echo wt_alert_small('success', $_SESSION['wt_new_anuncio_success_message']);
+                        unset($_SESSION['wt_new_anuncio_success_message']);
+                    }
+                    ?>
+
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
 
@@ -75,6 +91,8 @@ $user_type = get_user_meta($user->get('id'), 'wt_user_type', true);
 
                             <?php if ($user_type === 'vendedor') { ?>
                                 <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><?php _e('Configuração de categorias', 'wt'); ?></button>
+                            <?php } else { ?>
+                                <button class="nav-link" id="nav-new-anuncio-tab" data-bs-toggle="tab" data-bs-target="#nav-new-anuncio" type="button" role="tab" aria-controls="nav-new-anuncio" aria-selected="false"><?php _e('Novo Anúncio', 'wt'); ?></button>
                             <?php } ?>
                         </div>
                     </nav>
@@ -86,6 +104,10 @@ $user_type = get_user_meta($user->get('id'), 'wt_user_type', true);
                         <?php if ($user_type === 'vendedor') { ?>
                             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
                                 <?php get_template_part('template-parts/content/content-account-vendedor-page'); ?>
+                            </div>
+                        <?php } else { ?>
+                            <div class="tab-pane fade" id="nav-new-anuncio" role="tabpanel" aria-labelledby="nav-new-anuncio-tab" tabindex="0">
+                                <?php get_template_part('template-parts/content/content-account-new-anuncio-page'); ?>
                             </div>
                         <?php } ?>
                     </div>

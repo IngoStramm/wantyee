@@ -10,23 +10,23 @@ function wt_cmb_anuncio()
         'object_types'  => array('anuncios'), // Post type
     ));
 
-    $cmb->add_field(array(
-        'name'       => esc_html__('Telefone de contato', 'wt'),
-        'id'         => 'wt_fone',
-        'type'       => 'text',
-    ));
+    // $cmb->add_field(array(
+    //     'name'       => esc_html__('Telefone de contato', 'wt'),
+    //     'id'         => 'wt_fone',
+    //     'type'       => 'text',
+    // ));
 
-    $cmb->add_field(array(
-        'name'       => esc_html__('E-mail de contato', 'wt'),
-        'id'         => 'wt_email',
-        'type'       => 'text_email',
-    ));
+    // $cmb->add_field(array(
+    //     'name'       => esc_html__('E-mail de contato', 'wt'),
+    //     'id'         => 'wt_email',
+    //     'type'       => 'text_email',
+    // ));
 
-    $cmb->add_field(array(
-        'name'       => esc_html__('WhatsApp', 'wt'),
-        'id'         => 'wt_whatsapp',
-        'type'       => 'text',
-    ));
+    // $cmb->add_field(array(
+    //     'name'       => esc_html__('WhatsApp', 'wt'),
+    //     'id'         => 'wt_whatsapp',
+    //     'type'       => 'text',
+    // ));
 
     $group_field_id = $cmb->add_field(array(
         'id'          => 'wt_faq',

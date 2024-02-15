@@ -14,11 +14,11 @@
 
 <?php
 $author_id = get_the_author_meta('ID');
-$wt_email = get_post_meta(get_the_ID(), 'wt_email', true);
+$user_data = get_userdata($author_id);
+$wt_email = $user_data->user_email;
 $wt_whatsapp = get_user_meta($author_id, 'wt_user_whatsapp', true);
 $wt_phone = get_user_meta($author_id, 'wt_user_phone', true);
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
-$custom_post_types = 'anuncios';
 ?>
 
 <?php get_template_part('template-parts/breadcrumbs/breadcrumbs', null, array('anuncios')); ?>

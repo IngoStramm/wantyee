@@ -128,27 +128,6 @@ function wt_update_user_form_handle()
     exit;
 }
 
-function wt_anuncio_terms()
-{
-    $terms = get_terms(array(
-        'taxonomy'   => 'categoria-de-anuncio',
-        'hide_empty' => false,
-    ));
-    $array_terms = array();
-    foreach ($terms as $term) {
-        if (!$term->parent) {
-            $array_terms[$term->term_id] = $term->name;
-            foreach ($terms as $term2) {
-                if ($term2->parent === $term->term_id) {
-                    $array_terms[$term2->term_id] = $term2->name;
-                }
-            }
-        }
-    }
-    return $array_terms;
-}
-
-
 add_action('admin_post_wt_update_vendedor_terms_form', 'wt_update_vendedor_terms_form_handle');
 add_action('admin_post_nopriv_wt_update_vendedor_terms_form', 'wt_update_vendedor_terms_form_handle');
 
