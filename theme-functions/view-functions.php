@@ -47,6 +47,31 @@ function wt_show_anuncios_instead_posts($wp_query)
     }
 }
 
+/**
+ * wt_account_nav
+ *
+ * @param  string $curr_account_page_id ('account', 'editanuncio', 'catanuncioconfig')
+ * @return void
+ */
+function wt_account_nav($slug)
+{
+    $user = wp_get_current_user();
+    $user_type = get_user_meta($user->get('id'), 'wt_user_type', true);
+    $account_page_id = wt_get_page_id('account');
+    $account_edit_anuncio_page_id = wt_get_page_id('editanuncio');
+    $account_cat_config_anuncio_page_id = wt_get_page_id('catanuncioconfig');
+    $curr_account_page_id = wt_get_page_id($slug);
+    if ($account_edit_anuncio_page_id || $account_cat_config_anuncio_page_id) {
+        get_template_part('template-parts/content/account/content-account-nav', null, array(
+            'account' => $account_page_id,
+            'edit-anuncio' => $account_edit_anuncio_page_id,
+            'cat-config' => $account_cat_config_anuncio_page_id,
+            'curr-page' => $curr_account_page_id,
+            'user-type' => $user_type
+        ));
+    }
+}
+
 // add_action('wp_head', 'wt_test');
 function wt_test()
 {

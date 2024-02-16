@@ -125,7 +125,7 @@ $wt_add_form_register_new_user_nonce = wp_create_nonce('wt_form_register_new_use
                 </div>
 
             <?php } else {
-                get_template_part('template-parts/content/content-already-logged-user');
+                get_template_part('template-parts/content/login/content-already-logged-user');
             } ?>
 
         </div>

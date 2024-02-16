@@ -139,28 +139,27 @@ add_action('admin_post_nopriv_wt_update_vendedor_terms_form', 'wt_update_vendedo
 function wt_update_vendedor_terms_form_handle()
 {
     nocache_headers();
-    $account_page_id = wt_get_option('wt_account_page');
-    $account_page_url = $account_page_id ? get_page_link($account_page_id) : get_home_url();
+    $account_cat_anuncio_config_page_url = wt_get_page_url('catanuncioconfig');
     unset($_SESSION['wt_update_vendedor_terms_error_message']);
 
     if (!isset($_POST['wt_form_following_terms_user_nonce']) || !wp_verify_nonce($_POST['wt_form_following_terms_user_nonce'], 'wt_form_following_terms_user_nonce')) {
 
         $_SESSION['wt_update_vendedor_terms_error_message'] = __('Não foi possível validar a requisição.', 'wt');
-        wp_safe_redirect($account_page_url);
+        wp_safe_redirect($account_cat_anuncio_config_page_url);
         exit;
     }
 
     if (!isset($_POST['action']) || $_POST['action'] !== 'wt_update_vendedor_terms_form') {
 
         $_SESSION['wt_update_vendedor_terms_error_message'] = __('Formulário inválido.', 'wt');
-        wp_safe_redirect($account_page_url);
+        wp_safe_redirect($account_cat_anuncio_config_page_url);
         exit;
     }
 
     if (!isset($_POST['user_id']) || !$_POST['user_id']) {
 
         $_SESSION['wt_update_vendedor_terms_error_message'] = __('ID do usuário inválido.', 'wt');
-        wp_safe_redirect($account_page_url);
+        wp_safe_redirect($account_cat_anuncio_config_page_url);
         exit;
     }
     $user_id = $_POST['user_id'];
@@ -169,7 +168,7 @@ function wt_update_vendedor_terms_form_handle()
     if (!$check_user_exists) {
 
         $_SESSION['wt_update_vendedor_terms_error_message'] = __('Usuário inválido.', 'wt');
-        wp_safe_redirect($account_page_url);
+        wp_safe_redirect($account_cat_anuncio_config_page_url);
         exit;
     }
 
@@ -179,10 +178,69 @@ function wt_update_vendedor_terms_form_handle()
 
     $user = $check_user_exists;
 
-    $_SESSION['wt_update_user_success_message'] = __('Configuração de categorias de anúncio atualizadas!', 'wt');
+    $_SESSION['wt_update_vendedor_terms_success_message'] = __('Configuração de categorias de anúncio atualizadas!', 'wt');
 
     echo '<h3>' . __('Configuração de categorias de anúncio atualizadas com sucesso! Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';
 
-    wp_safe_redirect($account_page_url);
+    wp_safe_redirect($account_cat_anuncio_config_page_url);
     exit;
+}
+
+add_action('update_user_messages', 'wt_update_user_error_message');
+
+/**
+ * wt_update_user_error_message
+ *
+ * @return void
+ */
+function wt_update_user_error_message()
+{
+    // Mensagens de erro de atualização do usuário
+    if (isset($_SESSION['wt_update_user_error_message']) && $_SESSION['wt_update_user_error_message']) {
+        echo wt_alert_small('danger', $_SESSION['wt_update_user_error_message']);
+        unset($_SESSION['wt_update_user_error_message']);
+    }
+}
+
+add_action('update_user_messages', 'wt_update_user_success_message');
+
+function wt_update_user_success_message()
+{
+    // Mensagens de successo de atualização do usuário
+    if (isset($_SESSION['wt_update_user_success_message']) && $_SESSION['wt_update_user_success_message']) {
+        echo wt_alert_small('success', $_SESSION['wt_update_user_success_message']);
+        unset($_SESSION['wt_update_user_success_message']);
+    }
+}
+
+add_action('update_vendedor_terms_messages', 'wt_update_vendedor_terms_error_message');
+
+/**
+ * wt_update_vendedor_terms_error_message
+ *
+ * @return void
+ */
+function wt_update_vendedor_terms_error_message()
+{
+    // Mensagens de erro de atualização das configurações de categoria
+    if (isset($_SESSION['wt_update_vendedor_terms_error_message']) && $_SESSION['wt_update_vendedor_terms_error_message']) {
+        echo wt_alert_small('danger', $_SESSION['wt_update_vendedor_terms_error_message']);
+        unset($_SESSION['wt_update_vendedor_terms_error_message']);
+    }
+}
+
+add_action('update_vendedor_terms_messages', 'wt_update_vendedor_terms_success_message');
+
+/**
+ * wt_update_vendedor_terms_success_message
+ *
+ * @return void
+ */
+function wt_update_vendedor_terms_success_message()
+{
+    // Mensagens de sucesso de atualização das configurações de categoria
+    if (isset($_SESSION['wt_update_vendedor_terms_success_message']) && $_SESSION['wt_update_vendedor_terms_success_message']) {
+        echo wt_alert_small('success', $_SESSION['wt_update_vendedor_terms_success_message']);
+        unset($_SESSION['wt_update_vendedor_terms_success_message']);
+    }
 }

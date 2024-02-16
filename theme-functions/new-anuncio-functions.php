@@ -11,8 +11,8 @@ add_action('admin_post_nopriv_wt_new_anuncio_form', 'wt_new_anuncio_form_handle'
 function wt_new_anuncio_form_handle()
 {
     nocache_headers();
-    $account_page_id = wt_get_option('wt_account_page');
-    $account_page_url = $account_page_id ? get_page_link($account_page_id) : get_home_url();
+    $new_anuncio_page_id = wt_get_page_id('editanuncio');
+    $account_page_url = $new_anuncio_page_id ? wt_get_page_url('editanuncio') : get_home_url();
     unset($_SESSION['wt_new_anuncio_error_message']);
 
     if (!isset($_POST['wt_form_new_anuncio_nonce']) || !wp_verify_nonce($_POST['wt_form_new_anuncio_nonce'], 'wt_form_new_anuncio_nonce')) {
@@ -197,10 +197,33 @@ function wt_new_anuncio_form_handle()
         exit;
     }
 
-    $_SESSION['wt_new_anuncio_success_message'] = __('Novo anúncio criado com sucesso!', 'wt');
+    $new_anuncio_link = get_page_link($novo_anuncio_id);
+    $_SESSION['wt_new_anuncio_success_message'] = sprintf(__('Novo anúncio criado com sucesso! Ver <a href="%s">anúncio</a>.', 'wt'), $new_anuncio_link);
 
     echo '<h3>' . __('Novo anúncio criado com sucesso! Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';
 
     wp_safe_redirect($account_page_url);
     exit;
+}
+
+add_action('update_anuncio_messages', 'wt_new_anuncio_error_message');
+
+function wt_new_anuncio_error_message()
+{
+    // Mensagens de erro de novo anúncio
+    if (isset($_SESSION['wt_new_anuncio_error_message']) && $_SESSION['wt_new_anuncio_error_message']) {
+        echo wt_alert_small('danger', $_SESSION['wt_new_anuncio_error_message']);
+        unset($_SESSION['wt_new_anuncio_error_message']);
+    }
+}
+
+add_action('update_anuncio_messages', 'wt_new_anuncio_success_message');
+
+function wt_new_anuncio_success_message()
+{
+    // Mensagens de successo de novo anúncio
+    if (isset($_SESSION['wt_new_anuncio_success_message']) && $_SESSION['wt_new_anuncio_success_message']) {
+        echo wt_alert_small('success', $_SESSION['wt_new_anuncio_success_message']);
+        unset($_SESSION['wt_new_anuncio_success_message']);
+    }
 }

@@ -16,7 +16,7 @@ get_header();
 /* Start the Loop */
 while (have_posts()) :
     the_post();
-    get_template_part('template-parts/content/content-register-new-user-page');
+    get_template_part('template-parts/content/login/content-register-new-user-page');
 
 endwhile; // End of the loop.
 

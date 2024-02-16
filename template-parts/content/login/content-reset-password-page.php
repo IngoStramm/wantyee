@@ -90,7 +90,7 @@ if (!$key) {
                 </div>
 
             <?php } else {
-                get_template_part('template-parts/content/content-already-logged-user');
+                get_template_part('template-parts/content/login/content-already-logged-user');
             } ?>
 
         </div>

@@ -91,7 +91,7 @@ $wt_add_form_login_nonce = wp_create_nonce('wt_form_login_nonce');
                 </div>
 
             <?php } else {
-                get_template_part('template-parts/content/content-already-logged-user');
+                get_template_part('template-parts/content/login/content-already-logged-user');
             } ?>
 
         </div>

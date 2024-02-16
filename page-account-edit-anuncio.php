@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Template Name: Login Page
+ * Template Name: Create/Edit Anuncio Post Type
  * 
- * The template for login page
+ * The template for Create/Edit Anuncio Post Type User Account Page
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
  *
@@ -16,7 +16,7 @@ get_header();
 /* Start the Loop */
 while (have_posts()) :
     the_post();
-    get_template_part('template-parts/content/login/content-login-page');
+    get_template_part('template-parts/content/account/content-account-new-anuncio-page');
 
 endwhile; // End of the loop.
 

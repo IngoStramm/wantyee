@@ -106,7 +106,7 @@ function wt_get_url()
 /**
  * wt_get_page_id
  *
- * @param  string $slug
+ * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig')
  * @return string
  */
 function wt_get_page_id($slug)
@@ -148,6 +148,20 @@ function wt_get_page_id($slug)
             }
             break;
 
+        case 'editanuncio':
+            $account_edit_anuncio_page_id = wt_get_option('wt_edit_anuncio_page');
+            if ($account_edit_anuncio_page_id) {
+                $return_id = $account_edit_anuncio_page_id;
+            }
+            break;
+
+        case 'catanuncioconfig':
+            $account_cat_config_anuncio_page_id = wt_get_option('wt_categorias_settings_page');
+            if ($account_cat_config_anuncio_page_id) {
+                $return_id = $account_cat_config_anuncio_page_id;
+            }
+            break;
+
         default:
             $return_id = get_option('page_for_posts');
             break;
@@ -158,7 +172,7 @@ function wt_get_page_id($slug)
 /**
  * wt_get_page_url
  *
- * @param  string $slug
+ * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig')
  * @return string
  */
 function wt_get_page_url($slug)
@@ -197,6 +211,20 @@ function wt_get_page_url($slug)
             $account_page_id = wt_get_page_id('account');
             if ($account_page_id) {
                 $return_url = get_page_link($account_page_id);
+            }
+            break;
+
+        case 'editanuncio':
+            $account_edit_anuncio_page_id = wt_get_page_id('editanuncio');
+            if ($account_edit_anuncio_page_id) {
+                $return_url = get_page_link($account_edit_anuncio_page_id);
+            }
+            break;
+
+        case 'catanuncioconfig':
+            $account_cat_config_anuncio_page_id = wt_get_page_id('catanuncioconfig');
+            if ($account_cat_config_anuncio_page_id) {
+                $return_url = get_page_link($account_cat_config_anuncio_page_id);
             }
             break;
 

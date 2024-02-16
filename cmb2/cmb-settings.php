@@ -116,4 +116,36 @@ function wt_register_theme_options_metabox()
         },
         'required'      => true
     ));
+
+    $cmb_options->add_field(array(
+        'name'    => esc_html__('Página de edição/criação do anúncio', 'wt'),
+        'id'      => 'wt_edit_anuncio_page',
+        'type'    => 'select',
+        'options' => function () {
+            $pages = wt_get_pages();
+            $array = [];
+            $array[''] = __('Selecione uma página', 'wt');
+            foreach ($pages as $id => $title) {
+                $array[$id] = $title;
+            }
+            return $array;
+        },
+        'required'      => true
+    ));
+
+    $cmb_options->add_field(array(
+        'name'    => esc_html__('Página de configuração de Categorias do Anúncio', 'wt'),
+        'id'      => 'wt_categorias_settings_page',
+        'type'    => 'select',
+        'options' => function () {
+            $pages = wt_get_pages();
+            $array = [];
+            $array[''] = __('Selecione uma página', 'wt');
+            foreach ($pages as $id => $title) {
+                $array[$id] = $title;
+            }
+            return $array;
+        },
+        'required'      => true
+    ));
 }
