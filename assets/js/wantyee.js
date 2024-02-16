@@ -222,23 +222,51 @@
 
             wtAddNewFaqItemEvent(addItemBtn, faq);
             wtAddRemoveFaqItemEvent(faq);
-            wtRecalcFaqItems(faq);
         });
     }
 
     function wtRecalcFaqItems(faq) {
-        const listItems = faq.querySelector('.wt-faq-group-list');
+        const faqList = faq.querySelector('.wt-faq-group-list');
         const items = faq.querySelectorAll('.list-group-item');
 
         if (typeof items === undefined || !items || items.length <= 0) {
             console.error('Não foi encontrado nenhum item da lista de perguntas e respostas (FAQ).');
             return;
         }
-        if (typeof listItems === undefined || !listItems) {
+        if (typeof faqList === undefined || !faqList) {
             console.error('Não foi encontrado a lista de itens de perguntas e respostas (FAQ).');
             return;
         }
-        console.log(items.length);
+
+
+        Array.from(items).forEach((item, i) => {
+            item.dataset.faqGroupItemId = i;
+            const perguntaId = `anuncio_faq-pergunta-${i}`;
+            const respostaId = `anuncio_faq-resposta-${i}`;
+            const labels = item.querySelectorAll('label');
+            const inputs = item.querySelectorAll('input');
+            const textareas = item.querySelectorAll('textarea');
+            labels.forEach((label, i) => {
+                if (i === 0) {
+                    label.setAttribute('for', perguntaId);
+                } else {
+                    label.setAttribute('for', respostaId);
+                }
+            });
+            inputs.forEach((input, i) => {
+                if (i === 0) {
+                    input.id = perguntaId;
+                }
+            });
+            textareas.forEach((textarea, i) => {
+                if (i === 0) {
+                    textarea.id = respostaId;
+                }
+            });
+            console.log('i', i);
+        });
+        console.log('items.length', items.length);
+        return items.length;
     }
 
     function wtAddNewFaqItemEvent(addItemBtn, faq) {
@@ -338,8 +366,16 @@
 
     function wtRemoveFaqItem(faq, e) {
         e.preventDefault();
-        e.target.closest('.wt-faq-group-item').remove();
-        wtRecalcFaqItems(faq);
+        const itemsLength = wtRecalcFaqItems(faq);
+        const item = e.target.closest('.wt-faq-group-item');
+        if (itemsLength > 1) {
+            item.remove();
+        } else {
+            const input = item.querySelector('input');
+            const textarea = item.querySelector('textarea');
+            input.value = '';
+            textarea.value = '';
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
