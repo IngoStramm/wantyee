@@ -148,4 +148,14 @@ function wt_register_theme_options_metabox()
         },
         'required'      => true
     ));
+
+    $cmb_options->add_field(array(
+        'name' => esc_html__('Imagem padrão', 'cmb2'),
+        'desc' => esc_html__('A imagem padrão será exibido quando o comprador não definir uma imagem para o anúncio.', 'cmb2'),
+        'id'   => 'wt_anuncio_default_image',
+        'type' => 'file',
+        'attributes' => array(
+            'accept' => '.jpg,.jpeg,.png'
+        )
+    ));
 }

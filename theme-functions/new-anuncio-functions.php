@@ -61,13 +61,13 @@ function wt_new_anuncio_form_handle()
     }
     $content = $_POST['anuncio-content'];
 
-    if (!isset($_POST['terms']) || !$_POST['terms']) {
+    // if (!isset($_POST['terms']) || !$_POST['terms']) {
 
-        $_SESSION['wt_new_anuncio_error_message'] = __('Categoria(s) inválida(s).', 'wt');
-        wp_safe_redirect($account_page_url);
-        exit;
-    }
-    $terms_id = $_POST['terms'];
+    //     $_SESSION['wt_new_anuncio_error_message'] = __('Categoria(s) inválida(s).', 'wt');
+    //     wp_safe_redirect($account_page_url);
+    //     exit;
+    // }
+    $terms_id = isset($_POST['terms']) && $_POST['terms'] ? $_POST['terms'] : null;
 
     if (!isset($_POST['anuncio_faq-perguntas']) || !$_POST['anuncio_faq-perguntas']) {
 
@@ -85,29 +85,23 @@ function wt_new_anuncio_form_handle()
     }
     $faq_respostas = $_POST['anuncio_faq-respostas'];
 
-    if (!isset($_FILES['anuncio_image']['tmp_name']) || !$_FILES['anuncio_image']['tmp_name']) {
+    // if (!isset($_FILES['anuncio_image']['tmp_name']) || !$_FILES['anuncio_image']['tmp_name']) {
 
-        $_SESSION['wt_new_anuncio_error_message'] = __('Imagem inválida.', 'wt');
-        wp_safe_redirect($account_page_url);
-        exit;
-    }
-    $file = $_FILES['anuncio_image']['tmp_name'];
-    $filename = $_FILES['anuncio_image']['name'];
-    $file_size = $_FILES['anuncio_image']['size'];
-
-    if ($file_size > 2097152) {
-        $_SESSION['wt_new_anuncio_error_message'] = __('O arquivo é muito pesado, o tamanho máximo permitido é de 2MB..', 'wt');
-        wp_safe_redirect($account_page_url);
-        exit;
-    }
+    //     $_SESSION['wt_new_anuncio_error_message'] = __('Imagem inválida.', 'wt');
+    //     wp_safe_redirect($account_page_url);
+    //     exit;
+    // }
+    $file = isset($_FILES['anuncio_image']['tmp_name']) || $_FILES['anuncio_image']['tmp_name'] ? $_FILES['anuncio_image']['tmp_name'] : null;
 
     $faq = [];
     foreach ($faq_perguntas as $key => $pergunta) {
-        $item = array(
-            'question'          => $pergunta,
-            'answer'            => $faq_respostas[$key]
-        );
-        $faq[] = $item;
+        if (!is_null($pergunta) && !empty($pergunta)) {
+            $item = array(
+                'question'          => $pergunta,
+                'answer'            => $faq_respostas[$key]
+            );
+            $faq[] = $item;
+        }
     }
 
     $args = array(
@@ -133,18 +127,27 @@ function wt_new_anuncio_form_handle()
         exit;
     }
 
-    // Converte para int os IDs dos termos no array
-    // Isso é necessário para que a função 'wp_set_object_terms' entenda que se trata de IDs,
-    // senão ela irá criar novos termos tratando os IDs como se fossem títulos (ou slugs) dos termos
-    // como não irá encontrar estes termos, então irá criar novos termos usando os IDs como título
-    $int_terms_id = [];
-    foreach ($terms_id as $term) {
-        $int_terms_id[] = intval($term);
-    }
+    $insert_terms = '';
 
-    // os termos precisam ser inseridos após o post ser criado, 
-    // porque o usuário não tem permissãi para criar termos
-    $insert_terms = wp_set_object_terms($novo_anuncio_id, $int_terms_id, 'categoria-de-anuncio');
+    if ($terms_id) {
+
+        // Converte para int os IDs dos termos no array
+        // Isso é necessário para que a função 'wp_set_object_terms' entenda que se trata de IDs,
+        // senão ela irá criar novos termos tratando os IDs como se fossem títulos (ou slugs) dos termos
+        // como não irá encontrar estes termos, então irá criar novos termos usando os IDs como título
+        $int_terms_id = [];
+        foreach ($terms_id as $term) {
+            $int_terms_id[] = intval($term);
+        }
+
+        // os termos precisam ser inseridos após o post ser criado, 
+        // porque o usuário não tem permissãi para criar termos
+        $insert_terms = wp_set_object_terms($novo_anuncio_id, $int_terms_id, 'categoria-de-anuncio');
+    } else {
+        $tax = get_taxonomy('categoria-de-anuncio');
+        $default_term = ($tax->default_term);
+        $insert_terms = wp_set_object_terms($novo_anuncio_id, $default_term['slug'], 'categoria-de-anuncio');
+    }
 
     if (is_wp_error($insert_terms)) {
         $_SESSION['wt_new_anuncio_error_message'] = $insert_terms->get_error_message();
@@ -152,49 +155,61 @@ function wt_new_anuncio_form_handle()
         exit;
     }
 
-    /*
- * $filename is the path to your uploaded file (for example as set in the $_FILE posted file array)
- * $file is the name of the file
- * first we need to upload the file into the wp upload folder.
- */
-    $upload_file = wp_upload_bits($filename, null, @file_get_contents($file));
-    if (!$upload_file['error']) {
-        // Check the type of file. We'll use this as the 'post_mime_type'.
-        $filetype = wp_check_filetype($filename, null);
+    if ($file) {
 
-        // Get the path to the upload directory.
-        $wp_upload_dir = wp_upload_dir();
+        $filename = $_FILES['anuncio_image']['name'];
+        $file_size = $_FILES['anuncio_image']['size'];
 
-        // Prepare an array of post data for the attachment.
-        $attachment = array(
-            'post_mime_type' => $filetype['type'],
-            'post_title'     => preg_replace('/\.[^.]+$/', '', $filename),
-            'post_content'   => '',
-            'post_status'    => 'inherit',
-            'post_parent'    => $novo_anuncio_id
-        );
+        if ($file_size > 2097152) {
+            $_SESSION['wt_new_anuncio_error_message'] = __('O arquivo é muito pesado, o tamanho máximo permitido é de 2MB..', 'wt');
+            wp_safe_redirect($account_page_url);
+            exit;
+        }
 
-        // Insert the attachment.
-        $attach_id = wp_insert_attachment($attachment, $upload_file['file'], $novo_anuncio_id);
+        $upload_file = wp_upload_bits($filename, null, @file_get_contents($file));
+        if (!$upload_file['error']) {
+            // Check the type of file. We'll use this as the 'post_mime_type'.
+            $filetype = wp_check_filetype($filename, null);
 
-        if (!is_wp_error($attach_id)) {
-            // Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
-            require_once(ABSPATH . 'wp-admin/includes/image.php');
+            // Get the path to the upload directory.
+            $wp_upload_dir = wp_upload_dir();
 
-            // Generate the metadata for the attachment, and update the database record.
-            $attach_data = wp_generate_attachment_metadata($attach_id, $upload_file['file']);
-            wp_update_attachment_metadata($attach_id, $attach_data);
+            // Prepare an array of post data for the attachment.
+            $attachment = array(
+                'post_mime_type' => $filetype['type'],
+                'post_title'     => preg_replace('/\.[^.]+$/', '', $filename),
+                'post_content'   => '',
+                'post_status'    => 'inherit',
+                'post_parent'    => $novo_anuncio_id
+            );
 
-            set_post_thumbnail($novo_anuncio_id, $attach_id);
+            // Insert the attachment.
+            $attach_id = wp_insert_attachment($attachment, $upload_file['file'], $novo_anuncio_id);
+
+            if (!is_wp_error($attach_id)) {
+                // Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+                require_once(ABSPATH . 'wp-admin/includes/image.php');
+
+                // Generate the metadata for the attachment, and update the database record.
+                $attach_data = wp_generate_attachment_metadata($attach_id, $upload_file['file']);
+                wp_update_attachment_metadata($attach_id, $attach_data);
+
+                set_post_thumbnail($novo_anuncio_id, $attach_id);
+            } else {
+                $_SESSION['wt_new_anuncio_error_message'] = $attach_id->get_error_message();
+                wp_safe_redirect($account_page_url);
+                exit;
+            }
         } else {
-            $_SESSION['wt_new_anuncio_error_message'] = $attach_id->get_error_message();
+            $_SESSION['wt_new_anuncio_error_message'] = __('Ocorreu um erro ao tentar fazer o upload do arquivo.', 'wt');
             wp_safe_redirect($account_page_url);
             exit;
         }
     } else {
-        $_SESSION['wt_new_anuncio_error_message'] = __('Ocorreu um erro ao tentar fazer o upload do arquivo.', 'wt');
-        wp_safe_redirect($account_page_url);
-        exit;
+        $default_image = wt_get_option('wt_anuncio_default_image_id');
+        if ($default_image) {
+            set_post_thumbnail($novo_anuncio_id, $default_image);
+        }
     }
 
     $new_anuncio_link = get_page_link($novo_anuncio_id);

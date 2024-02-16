@@ -29,21 +29,21 @@ $wt_add_form_new_anuncio_nonce = wp_create_nonce('wt_form_new_anuncio_nonce');
                 <form name="new-anuncio-form" id="new-anuncio-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
                     <div class="row">
                         <div class="mb-3">
-                            <label for="anuncio_title" class="form-label"><?php _e('Título', 'wt'); ?></label>
+                            <label for="anuncio_title" class="form-label"><?php _e('Título', 'wt'); ?><span class="text-danger" data-bs-toggle="tooltip" data-bs-title="<?php _e('Campo obrigatório.', 'wt'); ?>">*</span></label>
                             <input type="text" class="form-control" id="anuncio_title" name="anuncio_title" tabindex="1" required>
-                            <div class="form-text"><?php _e('Dica: procure usar um título que seja auto-explicativo. Evite títulos desnecessariamente longos.'); ?></div>
+                            <div class="form-text"><?php _e('Procure usar um título que seja auto-explicativo. Evite títulos desnecessariamente longos.'); ?></div>
                             <div class="invalid-feedback"><?php _e('Campo obrigatório', 'wt'); ?></div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="anuncio_content" class="form-label"><?php _e('Descrição', 'wt'); ?></label>
-                            <div class="form-text mb-2"><?php _e('Quanto mais completa for a descrição, mais fácil será o entendimento sobre a questão que o anúncio aborda.'); ?></div>
+                            <label for="anuncio_content" class="form-label"><?php _e('Descrição', 'wt'); ?><span class="text-danger" data-bs-toggle="tooltip" data-bs-title="<?php _e('Campo obrigatório.', 'wt'); ?>">*</span></label>
+                            <div class="form-text mb-2"><?php _e('Quanto mais completa for a descrição, mais fácil será o entendimento sobre o anúncio.'); ?></div>
                             <?php echo do_shortcode('[wt_editor name="anuncio-content" tabindex="2"]'); ?>
                         </div>
 
                         <div class="mb-3">
                             <label for="terms" class="form-label" tabindex="3"><?php _e('Categorias', 'wt'); ?></label>
-                            <div class="form-text mb-2"><?php _e('Categorias ajudam a encontrar mais facilmente o seu anúncio. Se nenhuma categoria for escolhida, o anúncio será atribuído à categoria "Geral".'); ?></div>
+                            <div class="form-text mb-2"><?php _e('Categorias ajudam a encontrar mais facilmente o seu anúncio. Se nenhuma categoria for escolhida, o anúncio será atribuído à categoria <strong>"Geral"</strong>.'); ?></div>
                             <ul class="list-group checkbox-terms-list">
                                 <?php foreach ($terms as $term) { ?>
                                     <?php if (!$term->parent) { ?>
@@ -87,9 +87,9 @@ $wt_add_form_new_anuncio_nonce = wp_create_nonce('wt_form_new_anuncio_nonce');
                                 <ul class="list-group wt-faq-group-list">
                                     <li class="wt-faq-group-item list-group-item" id="wt-faq-group-item-1" data-faq-group-item-id="1">
                                         <label for=" anuncio_faq-pergunta-1" class="form-label"><?php _e('Pergunta', 'wt') ?></label>
-                                        <input type="text" class="form-control" id="anuncio_faq-pergunta-1" name="anuncio_faq-perguntas[]" tabindex="5" required>
+                                        <input type="text" class="form-control" id="anuncio_faq-pergunta-1" name="anuncio_faq-perguntas[]" tabindex="5">
                                         <label for="anuncio_faq-resposta-2" class="form-label"><?php _e('Resposta', 'wt') ?></label>
-                                        <textarea class="form-control" id="anuncio_faq-resposta-2" name="anuncio_faq-respostas[]" tabindex="6" required></textarea>
+                                        <textarea class="form-control" id="anuncio_faq-resposta-2" name="anuncio_faq-respostas[]" tabindex="6"></textarea>
                                         <div class="invalid-feedback"><?php _e('Campo obrigatório', 'wt'); ?></div>
                                         <d class="d-flex">
                                             <a href="#" class="wt-delete-faq-group btn btn-danger btn-sm mt-2 ms-auto"><i class="bi bi-x-circle-fill"></i> <?php _e('Remover item', 'wt'); ?></a>

@@ -16,6 +16,7 @@ function wt_editor($atts)
         'textarea_rows'     => get_option('default_post_edit_rows', 10), //Determine the number of rows.
         'quicktags'         => false, // Remove view as HTML button.
         'tabindex'          => $a['tabindex'],
+        'required'          => true,
         'teeny'             => false,
         'tinymce'           => array(
             'toolbar1'      => 'bold,italic,underline,separator,alignleft,aligncenter,alignright,separator,undo,redo',

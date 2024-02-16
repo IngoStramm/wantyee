@@ -13,9 +13,10 @@
 ?>
 
 <?php
+$curr_user = wp_get_current_user();
 $author_id = get_the_author_meta('ID');
-$user_data = get_userdata($author_id);
-$wt_email = $user_data->user_email;
+$author_data = get_userdata($author_id);
+$wt_email = $author_data->user_email;
 $wt_whatsapp = get_user_meta($author_id, 'wt_user_whatsapp', true);
 $wt_phone = get_user_meta($author_id, 'wt_user_phone', true);
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
@@ -26,6 +27,23 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="container">
         <div class="row">
+
+            <?php if (
+                // current_user_can('edit_posts') || 
+                // Parei aqui
+                // Ainda precisa criar a função para redirecionar para a página de edição
+                // salvar na SESSÃO o id do anúncio
+            ($curr_user->ID === $author_data->ID)) { ?>
+                <?php $wt_add_form_edit_anuncio_nonce = wp_create_nonce('wt_form_edit_anuncio_nonce'); ?>
+                <div class="d-flex justify-content-end mb-3">
+                    <form id="edit-anuncio-form" name="edit-anuncio-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+                        <input type="hidden" name="action" value="wt_edit_anuncio_form">
+                        <input type="hidden" name="post_id" value="<?php echo get_the_ID(); ?>">
+                        <input type="hidden" name="wt_form_edit_anuncio_nonce" value="<?php echo $wt_add_form_edit_anuncio_nonce; ?>">
+                        <button class="btn btn-success btn-sm"><i class="bi bi-pencil-fill me-2"></i><?php _e('Editar Anúncio', 'wt'); ?></button>
+                    </form>
+                </div>
+            <?php } ?>
 
             <div class="col-md-6">
 
@@ -88,7 +106,7 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
                 </div>
             <?php } ?>
 
-            <div class="col-md-6">
+            <div class="<?php echo $wt_faq ? 'col-md-6' : 'col-md-12'; ?>">
 
                 <?php if (is_user_logged_in()) { ?>
 

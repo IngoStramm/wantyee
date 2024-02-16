@@ -18,7 +18,11 @@ function wt_categoria_anuncio_tax()
 
     $video->set_arguments(
         array(
-            'hierarchical' => true
+            'hierarchical' => true,
+            'default_term' => array(
+                'name' => __('Geral', 'wt'),
+                'slug' => 'geral',
+            )
         )
     );
 }

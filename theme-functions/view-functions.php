@@ -75,5 +75,10 @@ function wt_account_nav($slug)
 // add_action('wp_head', 'wt_test');
 function wt_test()
 {
-    echo do_shortcode('[wt_editor]');
+    $default_image = wt_get_option('wt_anuncio_default_image_id');
+    // $filetype = wp_check_filetype($default_image, null);
+    // $filename = basename($default_image);
+    wt_debug($default_image);
+    // wt_debug($filetype);
+    // wt_debug($filename);
 }

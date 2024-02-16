@@ -304,7 +304,7 @@
         perguntaInput.classList.add('form-control');
         perguntaInput.id = 'anuncio_faq-pergunta-';
         perguntaInput.name = 'anuncio_faq-perguntas[]';
-        perguntaInput.setAttribute('required', '');
+        // perguntaInput.setAttribute('required', '');
 
         listItem.append(perguntaInput);
 
@@ -322,7 +322,7 @@
         respostaTextarea.classList.add('form-control');
         respostaTextarea.id = 'anuncio_faq-resposta-';
         respostaTextarea.name = 'anuncio_faq-respostas[]';
-        respostaTextarea.setAttribute('required', '');
+        // respostaTextarea.setAttribute('required', '');
 
         listItem.append(respostaTextarea);
 
@@ -378,6 +378,18 @@
         }
     }
 
+    function wtTooltips() {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
+
+    function wtEditorRequired() {
+        const wtEditors = document.querySelectorAll('textarea[name="anuncio-content"]');
+        wtEditors.forEach(item => {
+            item.required = true;
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -387,6 +399,8 @@
         wtGoBackBtn();
         checkboxTermsList();
         wtFaq();
+        wtTooltips();
+        // wtEditorRequired();
     }, false);
 
 })();
