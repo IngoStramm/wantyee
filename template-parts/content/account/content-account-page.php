@@ -23,23 +23,7 @@ $user_type = get_user_meta($user->get('id'), 'wt_user_type', true);
                     <?php $user_id = $user->get('ID'); ?>
 
                     <h3><?php echo sprintf(__('Olá, %s!'), $user->display_name); ?></h3>
-                    <p><?php _e('Nesta área você pode alterar os seus dados pessoais:', 'wt') ?></p>
-                    <ul>
-                        <li><?php _e('Nome', 'wt'); ?></li>
-                        <li><?php _e('Sobrenome', 'wt'); ?></li>
-                        <li><?php _e('E-mail', 'wt'); ?></li>
-                        <li><?php _e('Telefone/WhatsApp', 'wt') ?></li>
-                        <li><?php _e('Senha', 'wt'); ?></li>
-                    </ul>
-
-                    <?php if ($user_type === 'comprador') { ?>
-                        <p><?php _e('Você também pode visualizar e fazer a gestão dos seus anúncios, assim como visualizar as notificações de novas solicitações de contato (leads).', 'wt'); ?></p>
-
-                    <?php } else { ?>
-
-                        <p><?php _e('Você pode visualizar os anúncios que solicitou entrar em contato. Além disso, também pode configurar quais categorias deseja acompanhar.', 'wt'); ?></p>
-
-                    <?php } ?>
+                    <p class="mb-5"><?php _e('Nesta página você pode alterar os seus dados pessoais.', 'wt') ?></p>
 
                     <?php echo wt_account_nav('account'); ?>
 

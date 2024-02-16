@@ -18,6 +18,10 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
 
             <?php if ($user_type === 'vendedor') { ?>
 
+                <h3><?php echo sprintf(__('Olá, %s!'), $user->display_name); ?></h3>
+
+                <p class="mb-5"><?php _e('Nesta página, você pode configurar quais categorias de anúncio deseja seguir. Quando novos anúncios das categorias que você segue forem, criados, você será notificado.', 'wt'); ?></p>
+
                 <?php echo wt_account_nav('catanuncioconfig'); ?>
 
                 <?php do_action('update_vendedor_terms_messages'); ?>

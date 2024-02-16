@@ -16,6 +16,10 @@ $wt_add_form_new_anuncio_nonce = wp_create_nonce('wt_form_new_anuncio_nonce');
 
             <?php if ($user_type === 'comprador') { ?>
 
+                <h3><?php echo sprintf(__('Olá, %s!'), $user->display_name); ?></h3>
+
+                <p class="mb-5"><?php _e('Nesta página, você pode criar um novo anúncio.', 'wt'); ?></p>
+
                 <?php echo wt_account_nav('editanuncio'); ?>
 
                 <?php do_action('update_anuncio_messages'); ?>
@@ -27,16 +31,19 @@ $wt_add_form_new_anuncio_nonce = wp_create_nonce('wt_form_new_anuncio_nonce');
                         <div class="mb-3">
                             <label for="anuncio_title" class="form-label"><?php _e('Título', 'wt'); ?></label>
                             <input type="text" class="form-control" id="anuncio_title" name="anuncio_title" tabindex="1" required>
+                            <div class="form-text"><?php _e('Dica: procure usar um título que seja auto-explicativo. Evite títulos desnecessariamente longos.'); ?></div>
                             <div class="invalid-feedback"><?php _e('Campo obrigatório', 'wt'); ?></div>
                         </div>
 
                         <div class="mb-3">
                             <label for="anuncio_content" class="form-label"><?php _e('Descrição', 'wt'); ?></label>
+                            <div class="form-text mb-2"><?php _e('Quanto mais completa for a descrição, mais fácil será o entendimento sobre a questão que o anúncio aborda.'); ?></div>
                             <?php echo do_shortcode('[wt_editor name="anuncio-content" tabindex="2"]'); ?>
                         </div>
 
                         <div class="mb-3">
                             <label for="terms" class="form-label" tabindex="3"><?php _e('Categorias', 'wt'); ?></label>
+                            <div class="form-text mb-2"><?php _e('Categorias ajudam a encontrar mais facilmente o seu anúncio. Se nenhuma categoria for escolhida, o anúncio será atribuído à categoria "Geral".'); ?></div>
                             <ul class="list-group checkbox-terms-list">
                                 <?php foreach ($terms as $term) { ?>
                                     <?php if (!$term->parent) { ?>
@@ -70,6 +77,7 @@ $wt_add_form_new_anuncio_nonce = wp_create_nonce('wt_form_new_anuncio_nonce');
                         <div class="mb-3">
                             <label for="anuncio_image" class="form-label"><?php _e('Imagem', 'wt') ?></label>
                             <input type="file" class="form-control" id="anuncio_image" name="anuncio_image" accept=".jpg,.jpeg,.png" tabindex="4">
+                            <div class="form-text"><?php _e('Arquivos aceitos: ".jpg" e ".png". Tamanho máximo permitido: 2MB.'); ?></div>
                             <div class="invalid-feedback"><?php _e('Campo obrigatório', 'wt'); ?></div>
                         </div>
 
