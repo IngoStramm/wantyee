@@ -28,18 +28,21 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
     <div class="container">
         <div class="row">
 
+            <div class="col-md-12"><?php do_action('redirect_anuncio_messages'); ?></div>
+
             <?php if (
                 // current_user_can('edit_posts') || 
                 // Parei aqui
                 // Ainda precisa criar a função para redirecionar para a página de edição
                 // salvar na SESSÃO o id do anúncio
-            ($curr_user->ID === $author_data->ID)) { ?>
-                <?php $wt_add_form_edit_anuncio_nonce = wp_create_nonce('wt_form_edit_anuncio_nonce'); ?>
+                ($curr_user->ID === $author_data->ID)
+            ) { ?>
+                <?php $wt_add_form_redirect_anuncio_nonce = wp_create_nonce('wt_form_redirect_anuncio_nonce'); ?>
                 <div class="d-flex justify-content-end mb-3">
-                    <form id="edit-anuncio-form" name="edit-anuncio-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
-                        <input type="hidden" name="action" value="wt_edit_anuncio_form">
+                    <form id="redirect-anuncio-form" name="redirect-anuncio-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+                        <input type="hidden" name="action" value="wt_redirect_anuncio_form">
                         <input type="hidden" name="post_id" value="<?php echo get_the_ID(); ?>">
-                        <input type="hidden" name="wt_form_edit_anuncio_nonce" value="<?php echo $wt_add_form_edit_anuncio_nonce; ?>">
+                        <input type="hidden" name="wt_form_redirect_anuncio_nonce" value="<?php echo $wt_add_form_redirect_anuncio_nonce; ?>">
                         <button class="btn btn-success btn-sm"><i class="bi bi-pencil-fill me-2"></i><?php _e('Editar Anúncio', 'wt'); ?></button>
                     </form>
                 </div>

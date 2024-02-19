@@ -6,10 +6,11 @@ function wt_editor($atts)
 {
     $a = shortcode_atts(array(
         'name' => 'wt_editor',
-        'tabindex' => -1
+        'tabindex' => -1,
+        'post_id' => ''
     ), $atts);
-    $content = '';
     $editor_id = 'wt_editor';
+    $content = $a['post_id'] ? get_the_content(null, null, $a['post_id']) : null;
     $args = array(
         'media_buttons'     => false, // This setting removes the media button.
         'textarea_name'     => $a['name'], // Set custom name.

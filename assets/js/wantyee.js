@@ -390,6 +390,36 @@
         });
     }
 
+    function wtFileImagePreview() {
+        const containers = document.querySelectorAll('.wt-file-image-preview');
+        containers.forEach(container => {
+            const fileInput = container.querySelector('input[type="file"]');
+            const imagePreview = container.querySelector('.image-preview');
+            const btnClearImage = container.querySelector('.btn-clear-image');
+            const changedThumbnail = container.querySelector('input[name="changed-thumbnail"]');
+            btnClearImage.addEventListener('click', e => {
+                e.preventDefault();
+                fileInput.value = null;
+                imagePreview.src = '';
+                btnClearImage.style.display = 'none';
+                changedThumbnail.value = 'true';
+                console.log('changedThumbnail', changedThumbnail.value);
+            });
+            fileInput.addEventListener('change', e => {
+                imagePreview.src = URL.createObjectURL(event.target.files[0]);
+                btnClearImage.style.display = 'block';
+                changedThumbnail.value = 'true';
+                console.log('changedThumbnail', changedThumbnail.value);
+            });
+            console.log('imagePreview', imagePreview.src);
+            // fileInput.value = imagePreview.src;
+            console.log('changedThumbnail', changedThumbnail.value);
+            console.log('fileInput', fileInput.value);
+            // const event = new Event('change');
+            // fileInput.dispatchEvent(event);
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -400,7 +430,7 @@
         checkboxTermsList();
         wtFaq();
         wtTooltips();
-        // wtEditorRequired();
+        wtFileImagePreview();
     }, false);
 
 })();

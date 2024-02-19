@@ -10,6 +10,7 @@ require_once(WT_DIR . '/theme-functions/update-user-functions.php');
 require_once(WT_DIR . '/theme-functions/lost-password-functions.php');
 require_once(WT_DIR . '/theme-functions/reset-password-functions.php');
 require_once(WT_DIR . '/theme-functions/new-anuncio-functions.php');
+require_once(WT_DIR . '/theme-functions/edit-anuncio-functions.php');
 require_once(WT_DIR . '/theme-functions/toasts-messages.php');
 require_once(WT_DIR . '/theme-functions/post-type.php');
 require_once(WT_DIR . '/theme-functions/taxonomy.php');
