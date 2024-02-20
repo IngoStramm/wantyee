@@ -34,13 +34,17 @@ function wt_breadcrumbs($custom_post_types = false)
             if (is_category()) {
                 $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_permalink(get_page(get_the_category($post->ID)))) . '">' . get_the_category($post->ID)[0]->name . '</a></li>';
             }
-            if (is_archive()) {
+            if (is_archive() && !is_author()) {
                 $current_term = get_queried_object();
                 if ($current_term->parent) {
                     $parent = get_term_by('term_id', $current_term->parent, 'categoria-de-anuncio');
                     $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
                 }
                 $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($current_term, 'categoria-de-anuncio')) . '">' . $current_term->name . '</a></li>';
+            }
+            if (is_author()) {
+                $author = get_queried_object();
+                $output .= '<li class="breadcrumb-item active">' . $author->data->display_name . '</li>';
             }
             if ($is_custom_post) {
                 $slug = get_post_type_object(get_post_type($post))->name;
