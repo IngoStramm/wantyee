@@ -36,3 +36,40 @@ function wt_anuncio_post_type()
         )
     );
 }
+
+add_action('init', 'wt_lead_post_type', 1);
+
+function wt_lead_post_type()
+{
+    $portfolio = new WT_Post_Type(
+        'Lead', // Nome (Singular) do Post Type.
+        'leads' // Slug do Post Type.;
+    );
+
+    $portfolio->set_labels(
+        array(
+            'name'               => __('Lead', 'wt'),
+            'singular_name'      => __('Lead', 'wt'),
+            'menu_name'          => __('Leads', 'wt'),
+            'name_admin_bar'     => __('Lead', 'wt'),
+            'add_new'            => __('Adicionar Lead', 'wt'),
+            'add_new_item'       => __('Adicionar Novo Lead', 'wt'),
+            'new_item'           => __('Novo Lead', 'wt'),
+            'edit_item'          => __('Editar Lead', 'wt'),
+            'view_item'          => __('Visualizar Lead', 'wt'),
+            'all_items'          => __('Todos os Leads', 'wt'),
+            'search_items'       => __('Pesquisar Leads', 'wt'),
+            'parent_item_colon'  => __('Leads Pai', 'wt'),
+            'not_found'          => __('Nenhum Lead encontrado', 'wt'),
+            'not_found_in_trash' => __('Nenhum Lead encontrado na lixeira.', 'wt'),
+        )
+    );
+
+    $portfolio->set_arguments(
+        array(
+            'supports'             => array('title', 'revisions'),
+            'menu_icon'         => 'dashicons-id',
+            'show_in_nav_menus' => true
+        )
+    );
+}

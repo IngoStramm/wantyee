@@ -37,8 +37,34 @@ function wt_lead_anuncio_form_handle()
         exit;
     }
 
-    $post_id = $_POST['post_id'];
-    $post_link = get_page_link($post_id);
+    $anuncio_id = $_POST['post_id'];
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    $author_anuncio_id = get_post_field('post_author', $anuncio_id);
+    $author_anuncio_data = get_userdata($author_anuncio_id);
+    $anuncio_title = get_the_title($anuncio_id);
+    $title = sprintf(__('Lead criado para o anúncio %s, do comprador %s, pelo vendedor %s.'), $anuncio_title, $author_anuncio_data->display_name, $curr_user->display_name);
+
+    $args = array(
+        'post_title'                    => $title,
+        'post_status'                   => 'publish',
+        'post_author'                   => $user_id,
+        'post_type'                     => 'leads',
+        'meta_input'                    => array(
+            'wt_anuncio_id'             => $anuncio_id,
+            'wt_author_anuncio_id'      => $author_anuncio_id,
+        ),
+    );
+
+    $novo_lead_id = wp_insert_post($args, true);
+
+    if (is_wp_error($novo_lead_id)) {
+        $_SESSION['wt_lead_anuncio_error_message'] = $novo_lead_id->get_error_message();
+        wp_safe_redirect($http_origem);
+        exit;
+    }
+
+    $post_link = get_page_link($anuncio_id);
     $_SESSION['wt_lead_anuncio_success_message'] = __('O comprador irá receber a sua solicitação de contato. Além disso, você também pode entrar em contato com ele usando os dados abaixo.');
     echo '<h3>' . __('Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';
 

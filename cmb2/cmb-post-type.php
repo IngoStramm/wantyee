@@ -10,24 +10,6 @@ function wt_cmb_anuncio()
         'object_types'  => array('anuncios'), // Post type
     ));
 
-    // $cmb->add_field(array(
-    //     'name'       => esc_html__('Telefone de contato', 'wt'),
-    //     'id'         => 'wt_fone',
-    //     'type'       => 'text',
-    // ));
-
-    // $cmb->add_field(array(
-    //     'name'       => esc_html__('E-mail de contato', 'wt'),
-    //     'id'         => 'wt_email',
-    //     'type'       => 'text_email',
-    // ));
-
-    // $cmb->add_field(array(
-    //     'name'       => esc_html__('WhatsApp', 'wt'),
-    //     'id'         => 'wt_whatsapp',
-    //     'type'       => 'text',
-    // ));
-
     $group_field_id = $cmb->add_field(array(
         'id'          => 'wt_faq',
         'type'        => 'group',
@@ -53,5 +35,28 @@ function wt_cmb_anuncio()
         'options' => array(
             'textarea_rows' => 3,
         ),
+    ));
+}
+
+add_action('cmb2_admin_init', 'wt_cmb_lead');
+
+function wt_cmb_lead()
+{
+    $cmb = new_cmb2_box(array(
+        'id'            => 'wt_lead_metabox',
+        'title'         => esc_html__('Opções', 'wt'),
+        'object_types'  => array('leads'), // Post type
+    ));
+
+    $cmb->add_field(array(
+        'name'       => esc_html__('ID do Anúncio', 'wt'),
+        'id'         => 'wt_anuncio_id',
+        'type'       => 'text_small',
+    ));
+
+    $cmb->add_field(array(
+        'name'       => esc_html__('ID do Comprador', 'wt'),
+        'id'         => 'wt_author_anuncio_id',
+        'type'       => 'text_small',
     ));
 }

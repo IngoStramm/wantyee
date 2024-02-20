@@ -15,6 +15,5 @@ require_once(WT_DIR . '/theme-functions/lead-anuncio-functions.php');
 require_once(WT_DIR . '/theme-functions/toasts-messages.php');
 require_once(WT_DIR . '/theme-functions/post-type.php');
 require_once(WT_DIR . '/theme-functions/taxonomy.php');
-require_once(WT_DIR . '/theme-functions/cmb.php');
 require_once(WT_DIR . '/theme-functions/breadcrumbs-functions.php');
 require_once(WT_DIR . '/theme-functions/shortcodes.php');
