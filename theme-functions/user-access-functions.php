@@ -41,6 +41,15 @@ function wt_forcelogin()
 }
 
 
+function wt_alert($text)
+{
+    $output = '';
+    $output .= '<div class="alert alert-warning">';
+    $output .= $text;
+    $output .= '</div>';
+    return $output;
+}
+
 function wt_alert_not_logged_in($text)
 {
     $login_page_id = wt_get_page_id('login');

@@ -14,12 +14,14 @@
 
 <?php
 $curr_user = wp_get_current_user();
+$user_type = get_user_meta($curr_user->ID, 'wt_user_type', true);
 $author_id = get_the_author_meta('ID');
 $author_data = get_userdata($author_id);
 $wt_email = $author_data->user_email;
 $wt_whatsapp = get_user_meta($author_id, 'wt_user_whatsapp', true);
 $wt_phone = get_user_meta($author_id, 'wt_user_phone', true);
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
+
 ?>
 
 <?php get_template_part('template-parts/breadcrumbs/breadcrumbs', null, array('anuncios')); ?>
@@ -30,13 +32,7 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 
             <div class="col-md-12"><?php do_action('redirect_anuncio_messages'); ?></div>
 
-            <?php if (
-                // current_user_can('edit_posts') || 
-                // Parei aqui
-                // Ainda precisa criar a função para redirecionar para a página de edição
-                // salvar na SESSÃO o id do anúncio
-                ($curr_user->ID === $author_data->ID)
-            ) { ?>
+            <?php if (is_user_logged_in() && $curr_user->ID === $author_data->ID) { ?>
                 <?php $wt_add_form_redirect_anuncio_nonce = wp_create_nonce('wt_form_redirect_anuncio_nonce'); ?>
                 <div class="d-flex justify-content-end mb-3">
                     <form id="redirect-anuncio-form" name="redirect-anuncio-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
@@ -111,31 +107,51 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 
             <div class="<?php echo $wt_faq ? 'col-md-6' : 'col-md-12'; ?>">
 
-                <?php if (is_user_logged_in()) { ?>
+                <?php if (is_user_logged_in() && ($user_type === 'vendedor' || current_user_can('edit_posts'))) { ?>
 
-                    <h4><?php _e('Dados do Comprador', 'wt'); ?></h4>
-                    <dl class="row">
+                    <?php do_action('lead_anuncio_error_message') ?>
 
-                        <dt class="col-sm-3"><?php _e('Comprador', 'wt'); ?></dt>
-                        <dd class="col-sm-9"><?php echo get_the_author_meta('first_name') . ' ' . get_the_author_meta('last_name'); ?></a></dd>
+                    <?php if (current_user_can('edit_posts') || ($curr_user->ID === $author_data->ID || (isset($_SESSION['wt_lead_anuncio_success_message']) && $_SESSION['wt_lead_anuncio_success_message']))) { ?>
 
-                        <?php if ($wt_phone) { ?>
-                            <dt class="col-sm-3"><?php _e('Telefone', 'wt'); ?></dt>
-                            <dd class="col-sm-9"><a href="tel:+55<?php echo preg_replace('~\D~', '', $wt_phone); ?>"><?php echo $wt_phone; ?></a></dd>
-                        <?php } ?>
+                        <?php do_action('lead_anuncio_success_message') ?>
 
-                        <?php if ($wt_email) { ?>
-                            <dt class="col-sm-3"><?php _e('E-mail', 'wt'); ?></dt>
-                            <dd class="col-sm-9"><a href="mailto:<?php echo $wt_email; ?>"><?php echo $wt_email; ?></a></dd>
-                        <?php } ?>
+                        <h4><?php _e('Dados do Comprador', 'wt'); ?></h4>
+                        <dl class="row">
 
-                        <?php if ($wt_whatsapp) { ?>
-                            <dt class="col-sm-3"><?php _e('WhatsApp', 'wt'); ?></dt>
-                            <dd class="col-sm-9"><a href="https://wa.me/55<?php echo preg_replace('~\D~', '', $wt_whatsapp); ?>" target="_blank"><?php echo $wt_whatsapp; ?></a></dd>
-                        <?php } ?>
-                    </dl>
+                            <dt class="col-sm-3"><?php _e('Comprador', 'wt'); ?></dt>
+                            <dd class="col-sm-9"><?php echo get_the_author_meta('first_name') . ' ' . get_the_author_meta('last_name'); ?></a></dd>
 
-                <?php } else {
+                            <?php if ($wt_phone) { ?>
+                                <dt class="col-sm-3"><?php _e('Telefone', 'wt'); ?></dt>
+                                <dd class="col-sm-9"><a href="tel:+55<?php echo preg_replace('~\D~', '', $wt_phone); ?>"><?php echo $wt_phone; ?></a></dd>
+                            <?php } ?>
+
+                            <?php if ($wt_email) { ?>
+                                <dt class="col-sm-3"><?php _e('E-mail', 'wt'); ?></dt>
+                                <dd class="col-sm-9"><a href="mailto:<?php echo $wt_email; ?>"><?php echo $wt_email; ?></a></dd>
+                            <?php } ?>
+
+                            <?php if ($wt_whatsapp) { ?>
+                                <dt class="col-sm-3"><?php _e('WhatsApp', 'wt'); ?></dt>
+                                <dd class="col-sm-9"><a href="https://wa.me/55<?php echo preg_replace('~\D~', '', $wt_whatsapp); ?>" target="_blank"><?php echo $wt_whatsapp; ?></a></dd>
+                            <?php } ?>
+                        </dl>
+
+                    <?php } else { ?>
+                        <?php $wt_add_form_lead_anuncio_nonce = wp_create_nonce('wt_form_lead_anuncio_nonce'); ?>
+                        <div class="d-flex justify-content-end mb-3">
+                            <form id="lead-anuncio-form" name="lead-anuncio-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+                                <input type="hidden" name="action" value="wt_lead_anuncio_form">
+                                <input type="hidden" name="post_id" value="<?php echo get_the_ID(); ?>">
+                                <input type="hidden" name="wt_form_lead_anuncio_nonce" value="<?php echo $wt_add_form_lead_anuncio_nonce; ?>">
+                                <button class="btn btn-warning btn-sm"><i class="bi bi-chat-text-fill me-2"></i><?php _e('Visualizar dados de contato', 'wt'); ?></button>
+                            </form>
+                        </div>
+                    <?php } ?>
+
+                <?php } else if ($user_type !== 'vendedor') {
+                    echo wt_alert(__('Apenas vendedores podem visualizar dados de contato de outros compradores.', 'wt'));
+                } else {
                     echo wt_alert_not_logged_in(__('É preciso estar logado para visualizar as informações de contato do vendedor.', 'wt'));
                 } ?>
 
