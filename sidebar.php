@@ -27,9 +27,9 @@ $terms = get_terms(array(
                         <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#<?php echo $term_slug; ?>" aria-expanded="false"></button>
                         <a href="<?php echo $term_link; ?>" class="parent-term-name"><?php echo $term_name; ?></a>
 
-                        <?php foreach ($terms as $term_child) { ?>
-                            <div class="collapse" id="<?php echo $term_slug; ?>">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <div class="collapse" id="<?php echo $term_slug; ?>">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <?php foreach ($terms as $term_child) { ?>
                                     <?php if ($term_child->parent === $term_id) { ?>
                                         <?php
                                         $term_child_id = $term_child->term_id;
@@ -39,9 +39,9 @@ $terms = get_terms(array(
                                         ?>
                                         <li><a href="<?php echo $term_child_link; ?>" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><?php echo $term_child_name; ?></a></li>
                                     <?php } ?>
-                                </ul>
-                            </div>
-                        <?php } ?>
+                                <?php } ?>
+                            </ul>
+                        </div>
 
                     </li>
                 <?php } ?>
