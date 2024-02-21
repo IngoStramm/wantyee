@@ -29,13 +29,15 @@ function wt_breadcrumbs($custom_post_types = false)
         }
         $output .= '</a></li>';
     }
-    if (is_archive() || is_category() || is_single() || $is_custom_post) {
+    if (is_search()) {
+        $output .= '<li class="breadcrumb-item active">' . __('Resultados para:', 'wt') . ' "' . get_search_query() . '"</li>';
+    } elseif (is_archive() || is_category() || is_single() || $is_custom_post) {
         if (is_category()) {
             $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_permalink(get_page(get_the_category($post->ID)))) . '">' . get_the_category($post->ID)[0]->name . '</a></li>';
         }
-        if (is_archive() && !is_author()) {
+        if (is_archive() && !is_author() && !is_search()) {
             $current_term = get_queried_object();
-            if ($current_term->parent) {
+            if (isset($current_term->parent) && $current_term->parent) {
                 $parent = get_term_by('term_id', $current_term->parent, 'categoria-de-anuncio');
                 $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
             }
