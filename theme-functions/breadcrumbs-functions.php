@@ -12,99 +12,101 @@ function wt_breadcrumbs($custom_post_types = false)
     $output = '';
     $is_custom_post = $custom_post_types ? is_singular('anuncios') : false;
 
-    if (!is_front_page() && !is_home()) {
-        $output .= '<ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">';
-        $output .= '<li class="breadcrumb-item"><a class="link-body-emphasis" href="';
-        $output .= get_option('home');
-        $output .= '">';
-        $output .= '<i class="bi bi-house-door-fill"></i>';
-        $output .= '<span class="visually-hidden">' . get_bloginfo('name') . '</span>';
-        $output .= "</a></li>";
-        if (has_category()) {
-            $output .= '<li class="breadcrumb-item active" aria-current="page"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_permalink(get_page(get_the_category($post->ID)))) . '">';
-            $category = get_the_category();
-            if (!is_array($category)) {
-                $output .= get_the_category(', ');
-            } else {
-                $output .= $category[0]->name;
-            }
-            $output .= '</a></li>';
+    $output .= '<ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">';
+    $output .= '<li class="breadcrumb-item"><a class="link-body-emphasis" href="';
+    $output .= get_option('home');
+    $output .= '">';
+    $output .= '<i class="bi bi-house-door-fill"></i>';
+    $output .= '<span class="visually-hidden">' . get_bloginfo('name') . '</span>';
+    $output .= "</a></li>";
+    if (has_category()) {
+        $output .= '<li class="breadcrumb-item active" aria-current="page"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_permalink(get_page(get_the_category($post->ID)))) . '">';
+        $category = get_the_category();
+        if (!is_array($category)) {
+            $output .= get_the_category(', ');
+        } else {
+            $output .= $category[0]->name;
         }
-        if (is_archive() || is_category() || is_single() || $is_custom_post) {
-            if (is_category()) {
-                $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_permalink(get_page(get_the_category($post->ID)))) . '">' . get_the_category($post->ID)[0]->name . '</a></li>';
-            }
-            if (is_archive() && !is_author()) {
-                $current_term = get_queried_object();
-                if ($current_term->parent) {
-                    $parent = get_term_by('term_id', $current_term->parent, 'categoria-de-anuncio');
-                    $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
-                }
-                $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($current_term, 'categoria-de-anuncio')) . '">' . $current_term->name . '</a></li>';
-            }
-            if (is_author()) {
-                $author = get_queried_object();
-                $output .= '<li class="breadcrumb-item active">' . $author->data->display_name . '</li>';
-            }
-            if ($is_custom_post) {
-                $slug = get_post_type_object(get_post_type($post))->name;
-                if ($slug !== 'anuncios') {
-                    $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . get_option('home') . '/' . $slug . '">' . get_post_type_object(get_post_type($post))->label . '</a></li>';
-                }
-                if (has_term('', 'categoria-de-anuncio', $post)) {
-                    $terms = get_the_terms($post, 'categoria-de-anuncio');
-                    $children = '';
-                    $parent = '';
-                    foreach ($terms as $term) {
-                        if ($term->parent) {
-                            $children = $term;
-                        } else {
-                            $parent = $term;
-                        }
-                    }
-                    if ($children) {
-                        $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent->slug, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
-                        $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($children->slug, 'categoria-de-anuncio')) . '">' . $children->name . '</a></li>';
-                    } else {
-                        $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent->slug, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
-                    }
-                }
-                if ($post->post_parent) {
-                    $home = get_page(get_option('page_on_front'));
-                    for ($i = count($post->ancestors) - 1; $i >= 0; $i--) {
-                        if (($home->ID) != ($post->ancestors[$i])) {
-                            $output .= '<li class="breadcrumb-item"><a class="link-body-emphasis fw-semibold text-decoration-none" href="';
-                            $output .= get_permalink($post->ancestors[$i]);
-                            $output .= '">';
-                            $output .= get_the_title($post->ancestors[$i]);
-                            $output .= "</a></li>";
-                        }
-                    }
-                }
-            }
-            if (is_single()) {
-                $output .= '<li class="breadcrumb-item active">' . get_the_title($post->ID) . '</li>';
-            }
-        } elseif (is_page() && $post->post_parent) {
-            $home = get_page(get_option('page_on_front'));
-            for ($i = count($post->ancestors) - 1; $i >= 0; $i--) {
-                if (($home->ID) != ($post->ancestors[$i])) {
-                    $output .= '<li class="breadcrumb-item"><a class="link-body-emphasis fw-semibold text-decoration-none" href="';
-                    $output .= get_permalink($post->ancestors[$i]);
-                    $output .= '">';
-                    $output .= get_the_title($post->ancestors[$i]);
-                    $output .= "</a></li>";
-                }
-            }
-            $output .= '<li class="breadcrumb-item active">' . get_the_title($post->ID) . '</li>';
-        } elseif (is_page()) {
-            $output .= '<li class="breadcrumb-item active">' . get_the_title($post->ID) . '</li>';
-        } elseif (is_404()) {
-            $output .= '<li class="breadcrumb-item active">404</li>';
-        }
-        $output .= '<li class="ms-auto"><a class="go-back-btn link-body-emphasis fw-semibold text-decoration-none" href="#">' . __('Voltar', 'wt') . '</a></li>';
-        $output .= '</ol>';
+        $output .= '</a></li>';
     }
+    if (is_archive() || is_category() || is_single() || $is_custom_post) {
+        if (is_category()) {
+            $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_permalink(get_page(get_the_category($post->ID)))) . '">' . get_the_category($post->ID)[0]->name . '</a></li>';
+        }
+        if (is_archive() && !is_author()) {
+            $current_term = get_queried_object();
+            if ($current_term->parent) {
+                $parent = get_term_by('term_id', $current_term->parent, 'categoria-de-anuncio');
+                $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
+            }
+            $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($current_term, 'categoria-de-anuncio')) . '">' . $current_term->name . '</a></li>';
+        }
+        if (is_author()) {
+            $author_data = get_queried_object();
+            $display_name = $author_data->get('first_name') && $author_data->get('last_name') ? $author_data->get('first_name') . ' ' . $author_data->get('last_name') : $author_data->get('display_name');
+            $output .= '<li class="breadcrumb-item active">' . $display_name . '</li>';
+        }
+        if ($is_custom_post) {
+            $slug = get_post_type_object(get_post_type($post))->name;
+            if ($slug !== 'anuncios') {
+                $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . get_option('home') . '/' . $slug . '">' . get_post_type_object(get_post_type($post))->label . '</a></li>';
+            }
+            if (has_term('', 'categoria-de-anuncio', $post)) {
+                $terms = get_the_terms($post, 'categoria-de-anuncio');
+                $children = '';
+                $parent = '';
+                foreach ($terms as $term) {
+                    if ($term->parent) {
+                        $children = $term;
+                    } else {
+                        $parent = $term;
+                    }
+                }
+                if ($children) {
+                    $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent->slug, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
+                    $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($children->slug, 'categoria-de-anuncio')) . '">' . $children->name . '</a></li>';
+                } else {
+                    $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent->slug, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
+                }
+            }
+            if ($post->post_parent) {
+                $home = get_page(get_option('page_on_front'));
+                for ($i = count($post->ancestors) - 1; $i >= 0; $i--) {
+                    if (($home->ID) != ($post->ancestors[$i])) {
+                        $output .= '<li class="breadcrumb-item"><a class="link-body-emphasis fw-semibold text-decoration-none" href="';
+                        $output .= get_permalink($post->ancestors[$i]);
+                        $output .= '">';
+                        $output .= get_the_title($post->ancestors[$i]);
+                        $output .= "</a></li>";
+                    }
+                }
+            }
+        }
+        if (is_single()) {
+            $output .= '<li class="breadcrumb-item active">' . get_the_title($post->ID) . '</li>';
+        }
+    } elseif (is_page() && $post->post_parent) {
+        $home = get_page(get_option('page_on_front'));
+        for ($i = count($post->ancestors) - 1; $i >= 0; $i--) {
+            if (($home->ID) != ($post->ancestors[$i])) {
+                $output .= '<li class="breadcrumb-item"><a class="link-body-emphasis fw-semibold text-decoration-none" href="';
+                $output .= get_permalink($post->ancestors[$i]);
+                $output .= '">';
+                $output .= get_the_title($post->ancestors[$i]);
+                $output .= "</a></li>";
+            }
+        }
+        $output .= '<li class="breadcrumb-item active">' . get_the_title($post->ID) . '</li>';
+    } elseif (is_page()) {
+        $output .= '<li class="breadcrumb-item active">' . get_the_title($post->ID) . '</li>';
+    } elseif (is_404()) {
+        $output .= '<li class="breadcrumb-item active">404</li>';
+    }
+
+    if (!is_home() && !is_front_page()) {
+        $output .= '<li class="ms-auto"><a class="go-back-btn link-body-emphasis fw-semibold text-decoration-none" href="#">' . __('Voltar', 'wt') . '</a></li>';
+    }
+    $output .= '</ol>';
     return $output;
 }
 

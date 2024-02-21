@@ -7,7 +7,11 @@
 </div>
 
 <div class="col-md-4 col-lg-3 col-sm-12 mb-4">
-    <?php get_sidebar(); ?>
+    <?php if (is_author()) {
+        get_sidebar('author');
+    } else {
+        get_sidebar();
+    } ?>
 </div>
 
 <div class="col-md-8 col-lg-9 col-sm-12">

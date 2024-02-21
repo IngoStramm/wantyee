@@ -11,6 +11,14 @@
 
 ?>
 
+<div class="row">
+    <div class="col">
+        <header class="page-header alignwide">
+            <?php echo wt_breadcrumbs('anuncios'); ?>
+        </header><!-- .page-header -->
+    </div>
+</div>
+
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="container">
         <div class="row">
