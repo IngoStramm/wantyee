@@ -17,3 +17,4 @@ require_once(WT_DIR . '/theme-functions/post-type.php');
 require_once(WT_DIR . '/theme-functions/taxonomy.php');
 require_once(WT_DIR . '/theme-functions/breadcrumbs-functions.php');
 require_once(WT_DIR . '/theme-functions/shortcodes.php');
+require_once(WT_DIR . '/theme-functions/email-functions.php');

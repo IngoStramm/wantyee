@@ -44,27 +44,48 @@ function wt_lead_anuncio_form_handle()
     $author_anuncio_data = get_userdata($author_anuncio_id);
     $anuncio_title = get_the_title($anuncio_id);
     $title = sprintf(__('Lead criado para o anúncio %s, do comprador %s, pelo vendedor %s.'), $anuncio_title, $author_anuncio_data->display_name, $curr_user->display_name);
+    $has_leads = wt_get_leads($curr_user->ID, $anuncio_id, $author_anuncio_id);
 
-    $args = array(
-        'post_title'                    => $title,
-        'post_status'                   => 'publish',
-        'post_author'                   => $user_id,
-        'post_type'                     => 'leads',
-        'meta_input'                    => array(
-            'wt_anuncio_id'             => $anuncio_id,
-            'wt_author_anuncio_id'      => $author_anuncio_id,
-        ),
-    );
+    // Verifica se ainda não existe um lead deste vendedor para este anúncio
+    // verificação dobrada (já ocorre na exibição do form no frontend)
+    if (!$has_leads) {
 
-    $novo_lead_id = wp_insert_post($args, true);
+        $args = array(
+            'post_title'                    => $title,
+            'post_status'                   => 'publish',
+            'post_author'                   => $user_id,
+            'post_type'                     => 'leads',
+            'meta_input'                    => array(
+                'wt_anuncio_id'             => $anuncio_id,
+                'wt_author_anuncio_id'      => $author_anuncio_id,
+            ),
+        );
 
-    if (is_wp_error($novo_lead_id)) {
-        $_SESSION['wt_lead_anuncio_error_message'] = $novo_lead_id->get_error_message();
-        wp_safe_redirect($http_origem);
-        exit;
+        $novo_lead_id = wp_insert_post($args, true);
+
+        if (is_wp_error($novo_lead_id)) {
+            $_SESSION['wt_lead_anuncio_error_message'] = $novo_lead_id->get_error_message();
+            wp_safe_redirect($http_origem);
+            exit;
+        }
     }
 
     $post_link = get_page_link($anuncio_id);
+
+    $to = $author_anuncio_data->get('user_email');
+    $subject = sprintf(__('Novo Lead para o seu anúncio "%s"', 'wt'), get_the_title($anuncio_id));
+    $body = '<h3>' . sprintf(__('O vendedor "%s" deseja entrar em contato com você', 'wt'), $curr_user->display_name) . '</h3>';
+    $body .= '<p>' . __('Se quiser se adiantar e procurá-lo primeiro, estes são seus dados de contato:') . '</p>';
+    $body .= '<ul>';
+    if (get_user_meta($user_id, 'wt_user_whatsapp', true)) {
+        $body .= '<li>' . __('WhatsApp: ', 'wt') . wt_format_phone_number(get_user_meta($user_id, 'wt_user_whatsapp', true)) . '</li>';
+    }
+    if (get_user_meta($user_id, 'wt_user_phone', true)) {
+        $body .= '<li>' . __('Telefone: ', 'wt') . wt_format_phone_number(get_user_meta($user_id, 'wt_user_phone', true)) . '</li>';
+    }
+    $body .= '</ul>';
+    $send_email_notification = wt_mail($to, $subject, $body);
+
     $_SESSION['wt_lead_anuncio_success_message'] = __('O comprador irá receber a sua solicitação de contato. Além disso, você também pode entrar em contato com ele usando os dados abaixo.');
     echo '<h3>' . __('Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';
 

@@ -21,7 +21,7 @@ $wt_email = $author_data->user_email;
 $wt_whatsapp = get_user_meta($author_id, 'wt_user_whatsapp', true);
 $wt_phone = get_user_meta($author_id, 'wt_user_phone', true);
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
-
+$has_leads = wt_get_leads($curr_user->ID, get_the_ID(), $author_id);
 ?>
 
 <?php get_template_part('template-parts/breadcrumbs/breadcrumbs', null, array('anuncios')); ?>
@@ -107,11 +107,18 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 
             <div class="<?php echo $wt_faq ? 'col-md-6' : 'col-md-12'; ?>">
 
-                <?php if (is_user_logged_in() && ($user_type === 'vendedor' || current_user_can('edit_posts'))) { ?>
+                <?php if (!is_user_logged_in()) { // Se não estiver logado
+
+                    echo wt_alert_not_logged_in(__('É preciso estar logado para visualizar as informações de contato do vendedor.', 'wt'));
+                } else if (($user_type !== 'vendedor') && !current_user_can('edit_posts')) { // Se não for um vendedor e adminstrador
+
+                    echo wt_alert(__('Apenas vendedores podem visualizar dados de contato de outros compradores.', 'wt'));
+                } else { // É vendedor ou admim
+                ?>
 
                     <?php do_action('lead_anuncio_error_message') ?>
 
-                    <?php if (current_user_can('edit_posts') || ($curr_user->ID === $author_data->ID || (isset($_SESSION['wt_lead_anuncio_success_message']) && $_SESSION['wt_lead_anuncio_success_message']))) { ?>
+                    <?php if (current_user_can('edit_posts') || $curr_user->ID === $author_data->ID || $has_leads) { ?>
 
                         <?php do_action('lead_anuncio_success_message') ?>
 
@@ -123,7 +130,7 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 
                             <?php if ($wt_phone) { ?>
                                 <dt class="col-sm-3"><?php _e('Telefone', 'wt'); ?></dt>
-                                <dd class="col-sm-9"><a href="tel:+55<?php echo preg_replace('~\D~', '', $wt_phone); ?>"><?php echo $wt_phone; ?></a></dd>
+                                <dd class="col-sm-9"><a href="tel:+55<?php echo preg_replace('~\D~', '', $wt_phone); ?>"><?php echo wt_format_phone_number($wt_phone); ?></a></dd>
                             <?php } ?>
 
                             <?php if ($wt_email) { ?>
@@ -133,7 +140,7 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 
                             <?php if ($wt_whatsapp) { ?>
                                 <dt class="col-sm-3"><?php _e('WhatsApp', 'wt'); ?></dt>
-                                <dd class="col-sm-9"><a href="https://wa.me/55<?php echo preg_replace('~\D~', '', $wt_whatsapp); ?>" target="_blank"><?php echo $wt_whatsapp; ?></a></dd>
+                                <dd class="col-sm-9"><a href="https://wa.me/55<?php echo preg_replace('~\D~', '', $wt_whatsapp); ?>" target="_blank"><?php echo wt_format_phone_number($wt_whatsapp); ?></a></dd>
                             <?php } ?>
                         </dl>
 
@@ -149,11 +156,7 @@ $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
                         </div>
                     <?php } ?>
 
-                <?php } else if ($user_type !== 'vendedor') {
-                    echo wt_alert(__('Apenas vendedores podem visualizar dados de contato de outros compradores.', 'wt'));
-                } else {
-                    echo wt_alert_not_logged_in(__('É preciso estar logado para visualizar as informações de contato do vendedor.', 'wt'));
-                } ?>
+                <?php } ?>
 
             </div>
         </div>

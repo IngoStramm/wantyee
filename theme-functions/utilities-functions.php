@@ -377,3 +377,53 @@ if (!function_exists('wt_paging_nav')) {
         echo wt_pagination($mid, $end, false);
     }
 }
+
+/**
+ * wt_get_leads
+ *
+ * @param  string/int $vendedor_id
+ * @param  string/int $anuncio_id
+ * @param  string/int $comprador_id
+ * @return void
+ */
+function wt_get_leads($vendedor_id, $anuncio_id, $comprador_id)
+{
+    $leads = get_posts(
+        array(
+            'post_type'             => 'leads',
+            'posts_per_page'        => -1,
+            'status'                => 'published',
+            'author'                => $vendedor_id,
+            'meta_query'            => array(
+                'relation'          => 'AND',
+                array(
+                    'key'      => 'wt_anuncio_id',
+                    'value'    => $anuncio_id,
+                ),
+                array(
+                    'key'      => 'wt_author_anuncio_id',
+                    'value'    => $comprador_id,
+                ),
+            )
+        )
+    );
+    wp_reset_postdata();
+    return count($leads) > 0;
+}
+
+/**
+ * wt_format_phone_number
+ *
+ * @param  string $phone
+ * @return string
+ */
+function wt_format_phone_number($phone)
+{
+    $formated_phone = preg_replace('/[^0-9]/', '', $phone);
+    $matches = [];
+    preg_match('/^([0-9]{2})([0-9]{4,5})([0-9]{4})$/', $formated_phone, $matches);
+    if ($matches) {
+        return '('.$matches[1].') '.$matches[2].'-'.$matches[3];
+    }
+    return $phone;
+}
