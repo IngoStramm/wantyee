@@ -124,10 +124,16 @@ function wt_show_anuncio_terms_nav($terms)
 // add_action('wp_head', 'wt_test');
 function wt_test()
 {
-    $default_image = wt_get_option('wt_anuncio_default_image_id');
+    // $default_image = wt_get_option('wt_anuncio_default_image_id');
     // $filetype = wp_check_filetype($default_image, null);
     // $filename = basename($default_image);
-    wt_debug($default_image);
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    delete_user_meta($user_id, '_wt_new_leads');
+    $meta_value = 'Opa';
+    // $new_user_meta = add_user_meta($user_id, '_wt_new_leads', $meta_value, false);
+    $get_new_user_meta = get_user_meta($user_id, '_wt_new_leads', false);
+    wt_debug($get_new_user_meta);
     // wt_debug($filetype);
     // wt_debug($filename);
 }

@@ -20,33 +20,38 @@ $login_page_id = wt_get_page_id('login');
 
                 <?php get_template_part('template-parts/header/site-nav'); ?>
 
-                <?php if (is_user_logged_in()) { ?>
-                    <?php $user = wp_get_current_user(); ?>
-                    <?php if ($account_page_id) { ?>
-                        <a href="<?php echo wt_get_page_url('account'); ?>" class="nav-link d-block text-center px-2">
-                            <i class="bi bi-person-circle d-block fs-3"></i>
-                            <?php /* ?><small class="d-block"><?php echo $user->display_name; ?></small><?php */ ?>
-                        </a>
+                <ul class="nav my-2 justify-content-between justify-content-md-center my-md-0 text-small align-items-center gap-1">
+
+                    <?php if (is_user_logged_in()) { ?>
+                        <?php $user = wp_get_current_user(); ?>
+                        <?php if ($account_page_id) { ?>
+                            <li>
+                                <a href="<?php echo wt_get_page_url('account'); ?>" class="nav-link d-block text-center px-2">
+                                    <i class="bi bi-person-circle d-block fs-3"></i>
+                                    <small class="d-block"><?php echo $user->display_name; ?></small>
+                                </a>
+                            </li>
+                        <?php } ?>
+                        <li>
+                            <a class="nav-link d-block text-center px-2" href="<?php echo wp_logout_url(); ?>">
+                                <i class="bi bi-box-arrow-left d-block fs-3"></i>
+                                <small class="d-block"><?php _e('Sair', 'wt'); ?></small>
+                            </a>
+                        </li>
+                    <?php } else { ?>
+                        <?php if ($login_page_id) { ?>
+                            <?php
+                            $login_page_url = wt_get_page_url('login');
+                            ?>
+                            <li>
+                                <div class="d-grid d-md-block">
+                                    <a class="btn btn-secondary btn-sm" href="<?php echo $login_page_url; ?>"><?php _e('Entrar', 'wt'); ?></a>
+                                </div>
+                            </li>
+                        <?php } ?>
                     <?php } ?>
 
-                    <div class="d-grid d-md-block">
-                        <a class="btn btn-danger btn-sm" href="<?php echo wp_logout_url(); ?>"><?php _e('Sair', 'wt'); ?></a>
-                    </div>
-                <?php } else { ?>
-                    <?php if ($login_page_id) { ?>
-                        <?php
-                        $login_page_url = wt_get_page_url('login');
-                        ?>
-                        <div class="d-grid d-md-block">
-                            <a class="btn btn-secondary btn-sm" href="<?php echo $login_page_url; ?>"><?php _e('Entrar', 'wt'); ?></a>
-                        </div>
-                    <?php } ?>
-                <?php } ?>
-
-                <!-- <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form> -->
+                </ul>
             </div>
         </div>
     </nav>

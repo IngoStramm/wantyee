@@ -1,13 +1,13 @@
 <footer class="mt-5 bg-body-tertiary">
     <div class="container">
         <div class="row">
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <div class="col-md-6 d-flex justify-content-center justify-content-md-start align-items-center">
                 <a href="<?php echo get_home_url() ?>">
                     <?php echo wt_logo(); ?>
                 </a>
             </div>
 
-            <div class="col-md-6 d-flex justify-content-center align-items-center text-align-center">
+            <div class="col-md-6 d-flex justify-content-center justify-content-md-end align-items-center text-align-center">
                 <p class="mb-0">© 2023 Company, Inc</p>
             </div>
 

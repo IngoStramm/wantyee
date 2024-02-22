@@ -68,6 +68,8 @@ function wt_lead_anuncio_form_handle()
             wp_safe_redirect($http_origem);
             exit;
         }
+
+        add_user_meta($user_id, '_wt_new_leads', $novo_lead_id, false);
     }
 
     $post_link = get_page_link($anuncio_id);

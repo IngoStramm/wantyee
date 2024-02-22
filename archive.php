@@ -17,10 +17,8 @@ get_header();
         <?php if (have_posts()) { ?>
             <?php get_template_part('template-parts/archive/archive', 'anuncios'); ?>
         <?php } else { ?>
-            <div class="row">
-                <div class="col">
-                    <?php get_template_part('template-parts/content/content-none'); ?>
-                </div>
+            <div class="col">
+                <?php get_template_part('template-parts/content/content-none'); ?>
             </div>
         <?php } ?>
         <?php wt_paging_nav(); ?>
