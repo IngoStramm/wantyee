@@ -48,8 +48,7 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                                 <tr>
                                     <td class="nome_vendedor"><?php echo $lead_vendedor_data->first_name && $lead_vendedor_data->last_name ? $lead_vendedor_data->first_name . ' ' . $lead_vendedor_data->last_name : $lead_vendedor_data->display_name
                                                                 ?></td>
-                                    <td class="email_vendedor"><?php echo $lead_vendedor_data->user_email
-                                                                ?></td>
+                                    <td class="email_vendedor"><a href="mailto:<?php echo $lead_vendedor_data->user_email; ?>"><?php echo $lead_vendedor_data->user_email; ?></a></td>
                                     <td class="titulo_anuncio"><?php echo get_the_title($anuncio_id);
                                                                 ?></td>
                                     <td class="data_anuncio"><?php echo get_the_date('', $lead_id);

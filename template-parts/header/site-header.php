@@ -27,7 +27,10 @@ $login_page_id = wt_get_page_id('login');
                         <?php if ($account_page_id) { ?>
                             <li>
                                 <a href="<?php echo wt_get_page_url('account'); ?>" class="nav-link d-block text-center px-2">
-                                    <i class="bi bi-person-circle d-block fs-3"></i>
+
+                                    <i class="bi bi-person-circle d-block fs-3  nav-user-icon">
+                                        <?php do_action('wt_user_icon_warning') ?>
+                                    </i>
                                     <small class="d-block"><?php echo $user->display_name; ?></small>
                                 </a>
                             </li>

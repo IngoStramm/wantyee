@@ -115,9 +115,9 @@ function wt_lead_anuncio_error_message()
     }
 }
 
-add_action('account_announces', 'wt_new_lead_announce');
+add_action('account_announces', 'wt_new_lead_announce_alert');
 
-function wt_new_lead_announce()
+function wt_new_lead_announce_alert()
 {
     $curr_user = wp_get_current_user();
     $user_id = $curr_user->ID;
@@ -153,6 +153,33 @@ function wt_new_lead_announce()
     $output .= wt_alert(sprintf(__('Você possui <strong class="ms-1">novos leads</strong>, clique <a href="%s" class="link-offset-1 link-underline link-underline-opacity-50 px-1">aqui</a> para visualizá-los', 'wt'), $page_my_leads_url));
 
     $output .= '</div></div></div>';
+    echo $output;
+}
+
+add_action('wt_user_icon_warning', 'wt_show_new_lead_icon_warning');
+
+/**
+ * wt_new_lead_icon_warning
+ *
+ * @return void
+ */
+function wt_show_new_lead_icon_warning()
+{
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    $user_type = get_user_meta($user_id, 'wt_user_type', true);
+    if ($user_type !== 'comprador') {
+        return;
+    }
+    $new_leads = get_user_meta($user_id, '_wt_new_leads', false);
+    if (!$new_leads) {
+        return;
+    }
+    $page_my_leads_id = wt_get_page_id('myleads');
+    if (!$page_my_leads_id) {
+        return;
+    }
+    $output = '<i class="bi bi-exclamation-circle-fill text-danger nav-user-icon-alert" data-bs-toggle="tooltip" data-bs-title="' . __('Você possui novos leads.', 'wt') . '"></i>';
     echo $output;
 }
 
