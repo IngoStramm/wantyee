@@ -3,7 +3,14 @@ $curr_page = $args['curr-page'];
 $user_type = $args['user-type'];
 $links = [];
 $links[] = $args['account'];
-$links[] = $user_type === 'comprador' ? $args['edit-anuncio'] : $args['cat-config'];
+if ($user_type === 'comprador') {
+    $links[] = $args['edit-anuncio'];
+    $links[] = $args['new-leads'];
+    $links[] = $args['my-leads'];
+} else {
+    $links[] = $args['cat-config'];
+    $links[] = $args['contacted-anuncios'];
+}
 ?>
 <nav class="nav nav-pills nav-fill mb-4">
     <?php

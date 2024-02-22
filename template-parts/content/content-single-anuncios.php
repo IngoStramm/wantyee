@@ -21,7 +21,7 @@ $wt_email = $author_data->user_email;
 $wt_whatsapp = get_user_meta($author_id, 'wt_user_whatsapp', true);
 $wt_phone = get_user_meta($author_id, 'wt_user_phone', true);
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
-$has_leads = wt_get_leads($curr_user->ID, get_the_ID(), $author_id);
+$has_leads = wt_check_anuncio_has_leads($curr_user->ID, get_the_ID(), $author_id);
 ?>
 
 <?php get_template_part('template-parts/breadcrumbs/breadcrumbs', null, array('anuncios')); ?>

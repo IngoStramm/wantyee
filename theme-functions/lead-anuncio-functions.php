@@ -44,7 +44,7 @@ function wt_lead_anuncio_form_handle()
     $author_anuncio_data = get_userdata($author_anuncio_id);
     $anuncio_title = get_the_title($anuncio_id);
     $title = sprintf(__('Lead criado para o anúncio %s, do comprador %s, pelo vendedor %s.'), $anuncio_title, $author_anuncio_data->display_name, $curr_user->display_name);
-    $has_leads = wt_get_leads($curr_user->ID, $anuncio_id, $author_anuncio_id);
+    $has_leads = wt_check_anuncio_has_leads($curr_user->ID, $anuncio_id, $author_anuncio_id);
 
     // Verifica se ainda não existe um lead deste vendedor para este anúncio
     // verificação dobrada (já ocorre na exibição do form no frontend)
@@ -69,7 +69,7 @@ function wt_lead_anuncio_form_handle()
             exit;
         }
 
-        add_user_meta($user_id, '_wt_new_leads', $novo_lead_id, false);
+        $check_new_lead_meta = add_user_meta($author_anuncio_id, '_wt_new_leads', $novo_lead_id, false);
     }
 
     $post_link = get_page_link($anuncio_id);
@@ -113,4 +113,103 @@ function wt_lead_anuncio_error_message()
         echo wt_alert_small('danger', $_SESSION['wt_lead_anuncio_error_message']);
         unset($_SESSION['wt_lead_anuncio_error_message']);
     }
+}
+
+add_action('account_announces', 'wt_new_lead_announce');
+
+function wt_new_lead_announce()
+{
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    $user_type = get_user_meta($user_id, 'wt_user_type', true);
+    if ($user_type !== 'comprador') {
+        return;
+    }
+    $new_leads = get_user_meta($user_id, '_wt_new_leads', false);
+    if (!$new_leads) {
+        return;
+    }
+    $page_my_leads_id = wt_get_page_id('myleads');
+    if (!$page_my_leads_id) {
+        return;
+    }
+    $wt_add_form_new_leads_announce_nonce = wp_create_nonce('wt_form_new_leads_announce_nonce');
+    $page_my_leads_url = wt_get_page_url('myleads');
+    $output = '';
+    $output .= '<div class="container"><div class="row"><div class="col">';
+
+    // $form = '
+    // <form class="" name="update-user-form" id="update-user-form" action="' . esc_url(admin_url('admin-post.php')) . '" method="post">
+
+    // <button type="submit" class="btn btn-link link-offset-1 link-underline link-underline-opacity-50 px-1">aqui</button>
+
+    // <input type="hidden" name="wt_form_new_leads_announce_nonce" value="' .  $wt_add_form_new_leads_announce_nonce . '" />
+    // <input type="hidden" value="wt_new_leads_form" name="action">
+
+    // </form>';
+
+    // $output .= wt_alert(sprintf(__('Você possui <strong class="ms-1">novos leads</strong>, clique %s para visualizá-los', 'wt'), $form));
+
+    $output .= wt_alert(sprintf(__('Você possui <strong class="ms-1">novos leads</strong>, clique <a href="%s" class="link-offset-1 link-underline link-underline-opacity-50 px-1">aqui</a> para visualizá-los', 'wt'), $page_my_leads_url));
+
+    $output .= '</div></div></div>';
+    echo $output;
+}
+
+add_action('template_redirect', 'wt_reset_new_leads_count');
+
+/**
+ * wt_reset_new_leads_count
+ *
+ * @return void
+ */
+function wt_reset_new_leads_count()
+{
+    $page_my_leads_id = wt_get_page_id('myleads');
+    if (!is_page($page_my_leads_id)) {
+        return;
+    };
+
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    $user_type = get_user_meta($user_id, 'wt_user_type', true);
+    if ($user_type !== 'comprador') {
+        return;
+    }
+
+    delete_user_meta($user_id, '_wt_new_leads');
+    return;
+}
+
+add_action('admin_post_wt_new_leads_form', 'wt_new_leads_form_handle');
+add_action('admin_post_nopriv_wt_new_leads_form', 'wt_new_leads_form_handle');
+
+function wt_new_leads_form_handle()
+{
+    nocache_headers();
+    $http_origem = isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : get_home_url();
+    unset($_SESSION['wt_new_lead_error_message']);
+
+    $page_new_leads_url = wt_get_page_url('myleads');
+
+    if (!isset($_POST['wt_form_new_leads_announce_nonce']) || !wp_verify_nonce($_POST['wt_form_new_leads_announce_nonce'], 'wt_form_new_leads_announce_nonce')) {
+
+        $_SESSION['wt_new_lead_error_message'] = __('Não foi possível validar a requisição.', 'wt');
+        wp_safe_redirect($http_origem);
+        exit;
+    }
+
+    if (!isset($_POST['action']) || $_POST['action'] !== 'wt_new_leads_form') {
+
+        $_SESSION['wt_new_lead_error_message'] = __('Formulário inválido.', 'wt');
+        wp_safe_redirect($http_origem);
+        exit;
+    }
+
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    delete_user_meta($user_id, '_wt_new_leads');
+    echo '<h3>' . __('Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';
+    wp_safe_redirect($page_new_leads_url);
+    exit;
 }

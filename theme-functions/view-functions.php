@@ -60,6 +60,9 @@ function wt_account_nav($slug)
     $account_page_id = wt_get_page_id('account');
     $account_edit_anuncio_page_id = wt_get_page_id('editanuncio');
     $account_cat_config_anuncio_page_id = wt_get_page_id('catanuncioconfig');
+    $page_new_leads_id = wt_get_page_id('myleads');
+    $page_my_leads_id = wt_get_page_id('myanuncios');
+    $page_contacted_anuncios_id = wt_get_page_id('contactedanuncios');
     $curr_account_page_id = wt_get_page_id($slug);
     if ($account_edit_anuncio_page_id || $account_cat_config_anuncio_page_id) {
         get_template_part('template-parts/content/account/content-account-nav', null, array(
@@ -67,7 +70,10 @@ function wt_account_nav($slug)
             'edit-anuncio' => $account_edit_anuncio_page_id,
             'cat-config' => $account_cat_config_anuncio_page_id,
             'curr-page' => $curr_account_page_id,
-            'user-type' => $user_type
+            'new-leads' => $page_new_leads_id,
+            'my-leads' => $page_my_leads_id,
+            'contacted-anuncios' => $page_contacted_anuncios_id,
+            'user-type' => $user_type,
         ));
     }
 }
@@ -129,7 +135,7 @@ function wt_test()
     // $filename = basename($default_image);
     $curr_user = wp_get_current_user();
     $user_id = $curr_user->ID;
-    delete_user_meta($user_id, '_wt_new_leads');
+    // delete_user_meta($user_id, '_wt_new_leads');
     $meta_value = 'Opa';
     // $new_user_meta = add_user_meta($user_id, '_wt_new_leads', $meta_value, false);
     $get_new_user_meta = get_user_meta($user_id, '_wt_new_leads', false);

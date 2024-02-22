@@ -18,7 +18,10 @@ function wt_frontend_scripts()
 
     wp_register_script('bootstrap-script', WT_URL . '/assets/js/bootstrap.bundle.min.js', array('jquery'), $version, true);
 
-    wp_register_script('wantyee-script', WT_URL . '/assets/js/wantyee' . $min . '.js', array('jquery', 'bootstrap-script', 'imask-script'), $version, true);
+    wp_register_script('list-js', WT_URL . '/assets/js/list' . $min . '.js', array('jquery'), $version, true);
+
+
+    wp_register_script('wantyee-script', WT_URL . '/assets/js/wantyee' . $min . '.js', array('jquery', 'bootstrap-script', 'imask-script', 'list-js'), $version, true);
 
     wp_enqueue_script('wantyee-script');
 

@@ -379,8 +379,8 @@
     }
 
     function wtTooltips() {
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     }
 
     function wtEditorRequired() {
@@ -420,6 +420,22 @@
         });
     }
 
+    function wtSortTableList() {
+        const options = {
+            valueNames: ['nome_vendedor', 'email_vendedor', 'titulo_anuncio', 'data_anuncio'],
+            page: 10,
+            pagination: [{
+                item: `<li class="page-item"><a class="page page-link" href="#"></a></li>`
+            }]
+        };
+
+        const tablesList = document.querySelectorAll('.sort-table');
+        tablesList.forEach(item => {
+            console.log('item', item);
+            const tableList = new List(item, options);
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -431,6 +447,7 @@
         wtFaq();
         wtTooltips();
         wtFileImagePreview();
+        wtSortTableList();
     }, false);
 
 })();

@@ -185,6 +185,15 @@ module.exports = function (grunt) {
                         dest: '../assets/js/',
                         flatten: true,
                         filter: 'isFile'
+                    },
+                    {
+                        nonull: true,
+                        expand: true,
+                        // cwd: 'node_modules/', 
+                        src: 'node_modules/list.js/dist/**',
+                        dest: '../assets/js/',
+                        flatten: true,
+                        filter: 'isFile'
                     }
                 ]
             }

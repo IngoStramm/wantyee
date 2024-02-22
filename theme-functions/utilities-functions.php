@@ -106,7 +106,7 @@ function wt_get_url()
 /**
  * wt_get_page_id
  *
- * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig')
+ * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig', 'myleads', 'myanuncios', 'contactedanuncios')
  * @return string
  */
 function wt_get_page_id($slug)
@@ -162,6 +162,27 @@ function wt_get_page_id($slug)
             }
             break;
 
+        case 'myleads':
+            $account_new_leads_page_id = wt_get_option('wt_my_leads_page');
+            if ($account_new_leads_page_id) {
+                $return_id = $account_new_leads_page_id;
+            }
+            break;
+
+        case 'myanuncios':
+            $account_my_leads_page_id = wt_get_option('wt_my_anuncios_page');
+            if ($account_my_leads_page_id) {
+                $return_id = $account_my_leads_page_id;
+            }
+            break;
+
+        case 'contactedanuncios':
+            $account_contacted_anuncios_page_id = wt_get_option('wt_contacted_anuncios_page');
+            if ($account_contacted_anuncios_page_id) {
+                $return_id = $account_contacted_anuncios_page_id;
+            }
+            break;
+
         default:
             $return_id = get_option('page_for_posts');
             break;
@@ -172,7 +193,7 @@ function wt_get_page_id($slug)
 /**
  * wt_get_page_url
  *
- * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig')
+ * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig', 'myleads', 'myanuncios', 'contactedanuncios')
  * @return string
  */
 function wt_get_page_url($slug)
@@ -225,6 +246,27 @@ function wt_get_page_url($slug)
             $account_cat_config_anuncio_page_id = wt_get_page_id('catanuncioconfig');
             if ($account_cat_config_anuncio_page_id) {
                 $return_url = get_page_link($account_cat_config_anuncio_page_id);
+            }
+            break;
+
+        case 'myleads':
+            $account_my_leads_page_id = wt_get_page_id('myleads');
+            if ($account_my_leads_page_id) {
+                $return_url = get_page_link($account_my_leads_page_id);
+            }
+            break;
+
+        case 'myanuncios':
+            $account_my_leads_page_id = wt_get_page_id('myanuncios');
+            if ($account_my_leads_page_id) {
+                $return_url = get_page_link($account_my_leads_page_id);
+            }
+            break;
+
+        case 'contactedanuncios':
+            $account_contacted_anuncios_page_id = wt_get_page_id('contactedanuncios');
+            if ($account_contacted_anuncios_page_id) {
+                $return_url = get_page_link($account_contacted_anuncios_page_id);
             }
             break;
 
@@ -379,14 +421,14 @@ if (!function_exists('wt_paging_nav')) {
 }
 
 /**
- * wt_get_leads
+ * wt_check_anuncio_has_leads
  *
  * @param  string/int $vendedor_id
  * @param  string/int $anuncio_id
  * @param  string/int $comprador_id
  * @return void
  */
-function wt_get_leads($vendedor_id, $anuncio_id, $comprador_id)
+function wt_check_anuncio_has_leads($vendedor_id, $anuncio_id, $comprador_id)
 {
     $leads = get_posts(
         array(
@@ -412,6 +454,32 @@ function wt_get_leads($vendedor_id, $anuncio_id, $comprador_id)
 }
 
 /**
+ * wt_get_comprador_leads
+ *
+ * @param  string $comprador_id
+ * @return array
+ */
+function wt_get_comprador_leads($comprador_id)
+{
+    $leads = get_posts(
+        array(
+            'post_type'             => 'leads',
+            'posts_per_page'        => -1,
+            'status'                => 'published',
+            'meta_query'            => array(
+                'relation'          => 'AND',
+                array(
+                    'key'      => 'wt_author_anuncio_id',
+                    'value'    => $comprador_id,
+                ),
+            )
+        )
+    );
+    wp_reset_postdata();
+    return $leads;
+}
+
+/**
  * wt_format_phone_number
  *
  * @param  string $phone
@@ -423,7 +491,7 @@ function wt_format_phone_number($phone)
     $matches = [];
     preg_match('/^([0-9]{2})([0-9]{4,5})([0-9]{4})$/', $formated_phone, $matches);
     if ($matches) {
-        return '('.$matches[1].') '.$matches[2].'-'.$matches[3];
+        return '(' . $matches[1] . ') ' . $matches[2] . '-' . $matches[3];
     }
     return $phone;
 }

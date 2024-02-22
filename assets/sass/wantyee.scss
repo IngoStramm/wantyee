@@ -4,6 +4,8 @@
     --pwd-str-cl-medium: #ffd633;
     --pwd-str-cl-strong: #00b300;
     --pwd-str-cl-very-strong: #009900;
+    --primary: #0d6efd;
+    --primary-light: #cbe1ff;
 }
 
 // Logo, usado no totpo e no rodapé do site
@@ -106,4 +108,16 @@
 .image-preview {
     max-width: 100px;
     max-height: 100px;
+}
+
+.sort-table {
+    .sort {
+        &.asc,
+        &.desc {
+            background-color: var(--primary-light);
+        }
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }

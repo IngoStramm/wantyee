@@ -44,8 +44,9 @@ function wt_forcelogin()
 function wt_alert($text)
 {
     $output = '';
-    $output .= '<div class="alert alert-warning">';
-    $output .= $text;
+    $output .= '<div class="alert alert-warning d-flex align-items-center align-content-center" role="alert">';
+    $output .= '<i class="bi bi-exclamation-triangle-fill me-2"></i>';
+    $output .= '<div class="d-flex align-items-center">' . $text . '</div>';
     $output .= '</div>';
     return $output;
 }
