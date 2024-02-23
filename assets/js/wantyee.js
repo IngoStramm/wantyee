@@ -436,6 +436,16 @@
         });
     }
 
+    function wtSelectForm() {
+        const selectForms = document.querySelectorAll('.sort-anuncio-form');
+        selectForms.forEach(selectForm => {
+            const select = selectForm.querySelector('select');
+            select.addEventListener('change', e => {
+                selectForm.requestSubmit();
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -448,6 +458,7 @@
         wtTooltips();
         wtFileImagePreview();
         wtSortTableList();
+        wtSelectForm();
     }, false);
 
 })();

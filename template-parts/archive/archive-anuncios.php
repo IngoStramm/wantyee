@@ -15,6 +15,7 @@
     </div>
 
     <div class="col-md-8 col-lg-9 col-sm-12">
+        <?php get_template_part('template-parts/archive/archive-sort-anuncios-form'); ?>
         <div class="row row-cols-1 row-cols-md-2 g-3">
             <?php while (have_posts()) { ?>
                 <div class="col">

@@ -21,10 +21,15 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                 <?php echo wt_account_nav('myleads'); ?>
 
                 <h3 class="mt-2 mb-3"><?php _e('Leads', 'wt'); ?></h3>
+
                 <div id="table-leads" class="table-responsive sort-table">
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control form-control-sm search" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput"><?php _e('Pesquisar', 'wt'); ?></label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control form-control-sm search" id="table-search-input" placeholder="<?php _e('Pesquisar', 'wt'); ?>">
+                                <label for="table-search-input"><?php _e('Pesquisar', 'wt'); ?></label>
+                            </div>
+                        </div>
                     </div>
                     <table class=" table table-bordered">
                         <thead>
@@ -46,11 +51,19 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                                 $anuncio_id = get_post_meta($lead_id, 'wt_anuncio_id', true);
                             ?>
                                 <tr>
-                                    <td class="nome_vendedor"><?php echo $lead_vendedor_data->first_name && $lead_vendedor_data->last_name ? $lead_vendedor_data->first_name . ' ' . $lead_vendedor_data->last_name : $lead_vendedor_data->display_name
-                                                                ?></td>
+                                    <td class="nome_vendedor">
+                                        <a href="<?php echo get_author_posts_url($lead_vendedor_id); ?>">
+                                            <?php echo $lead_vendedor_data->first_name && $lead_vendedor_data->last_name ?
+                                                $lead_vendedor_data->first_name . ' ' . $lead_vendedor_data->last_name :
+                                                $lead_vendedor_data->display_name ?>
+                                        </a>
+                                    </td>
                                     <td class="email_vendedor"><a href="mailto:<?php echo $lead_vendedor_data->user_email; ?>"><?php echo $lead_vendedor_data->user_email; ?></a></td>
-                                    <td class="titulo_anuncio"><?php echo get_the_title($anuncio_id);
-                                                                ?></td>
+                                    <td class="titulo_anuncio">
+                                        <a href="<?php echo get_post_permalink($anuncio_id); ?>">
+                                            <?php echo get_the_title($anuncio_id); ?>
+                                        </a>
+                                    </td>
                                     <td class="data_anuncio"><?php echo get_the_date('', $lead_id);
                                                                 ?></td>
                                 </tr>
