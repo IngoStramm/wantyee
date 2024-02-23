@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template Name: Account Page
+ * Template Name: Página Minha Conta
  * 
  * The template for User Account Page
  *

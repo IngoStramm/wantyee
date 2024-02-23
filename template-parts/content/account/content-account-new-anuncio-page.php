@@ -15,8 +15,10 @@ unset($_SESSION['wp_anuncio_id']);
 $title = $post_id ? get_the_title($post_id) : null;
 $post_terms = $post_id ? get_the_terms($post_id, 'categoria-de-anuncio') : array();
 $post_terms_id = array();
-foreach ($post_terms as $post_term) {
-    $post_terms_id[] = $post_term->term_id;
+if (is_array($post_terms)) {
+    foreach ($post_terms as $post_term) {
+        $post_terms_id[] = $post_term->term_id;
+    }
 }
 $post_thumbnail = $post_id ? get_the_post_thumbnail($post_id, array('100', '100'), array('loading' => false, 'class' => 'img-fluid rounded my-2')) : null;
 $post_thumbnail_url = $post_id ? get_the_post_thumbnail_url($post_id, 'full') : null;
@@ -124,8 +126,15 @@ $wt_faq = $post_id ? get_post_meta($post_id, 'wt_faq', true) : array(array('ques
                             </div>
                         </div>
 
-                        <div class=" mb-3">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
                             <button type="submit" class="btn btn-primary" tabindex="7"><?php _e('Salvar', 'wt'); ?></button>
+
+                            <?php if ($post_id) { ?>
+                                <a href="#" class="btn btn-danger close-anuncio" data-bs-toggle="modal" data-bs-target="#close-anuncio-modal">
+                                    <i class="bi bi-x-circle-fill me-1"></i>
+                                    <?php _e('Encerrar anúncio', 'wt'); ?>
+                                </a>
+                            <?php } ?>
 
                         </div>
                     </div>

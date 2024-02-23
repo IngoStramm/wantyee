@@ -10,6 +10,17 @@ function wt_cmb_anuncio()
         'object_types'  => array('anuncios'), // Post type
     ));
 
+    $cmb->add_field(array(
+        'name'       => esc_html__('Status', 'wt'),
+        'id'         => 'wt_anuncio_status',
+        'type'       => 'select',
+        // 'show_option_none' => true,
+        'options'   => array(
+            'open'      => __('Aberto', 'wt'),
+            'closed'      => __('Fechado', 'wt'),
+        )
+    ));
+
     $group_field_id = $cmb->add_field(array(
         'id'          => 'wt_faq',
         'type'        => 'group',

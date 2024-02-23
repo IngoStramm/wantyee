@@ -2,10 +2,8 @@
 $user = wp_get_current_user();
 $user_id = $user->get('id');
 $user_type = get_user_meta($user_id, 'wt_user_type', true);
-$wt_user_following_terms = get_user_meta($user_id, 'wt_user_following_terms', true);
 $account_page_id = wt_get_option('wt_account_page');
 $redirect_to = $account_page_id ? get_page_link($account_page_id) : get_home_url();
-$wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_nonce');
 ?>
 
 <div class="container">
@@ -16,12 +14,13 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
 
                 <h3><?php echo sprintf(__('Olá, %s!'), $user->display_name); ?></h3>
 
-                <p class="mb-5"><?php _e('Nesta página, você pode visualizar os leads que os seus anúncios receberam.', 'wt'); ?></p>
+                <p class="mb-5"><?php _e('Nesta página, você pode visualizar os seus anúncios criados.', 'wt'); ?></p>
 
-                <?php echo wt_account_nav('myleads'); ?>
+                <?php echo wt_account_nav('myanuncios'); ?>
 
-                <h3 class="mt-2 mb-3"><?php _e('Leads', 'wt'); ?></h3>
-                <div id="table-leads">
+                <h3 class="mt-2 mb-3"><?php _e('Meus Anúncios', 'wt'); ?></h3>
+
+                <div id="table-anuncios">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
@@ -34,38 +33,38 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="sort" data-sort="nome" scope="col"><?php _e('Nome', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
-                                    <th class="sort" data-sort="email" scope="col"><?php _e('E-mail', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                     <th class="sort" data-sort="titulo" scope="col"><?php _e('Anúncio', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                     <th class="sort" data-sort="data" scope="col"><?php _e('Data', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
+                                    <th class="sort" data-sort="status" scope="col"><?php _e('Status', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                 </tr>
                             <tbody class="list">
                                 <?php
-                                $my_leads = wt_get_comprador_leads($user_id);
-                                foreach ($my_leads as $lead) {
-                                    // wt_debug($lead);
-                                    $lead_id = $lead->ID;
-                                    $lead_title = $lead->post_title;
-                                    $lead_vendedor_id = $lead->post_author;
-                                    $lead_vendedor_data = get_userdata($lead_vendedor_id);
-                                    $anuncio_id = get_post_meta($lead_id, 'wt_anuncio_id', true);
+                                $args = array(
+                                    'post_type' => 'anuncios',
+                                    'posts_per_page' => -1,
+                                    'author' => $user_id,
+                                    'status'    => 'published'
+                                );
+                                $my_anuncios = get_posts($args);
+                                foreach ($my_anuncios as $anuncio) {
+                                    $anuncio_id = $anuncio->ID;
+                                    $anuncio_title = $anuncio->post_title;
+                                    $anuncio_author_id = $anuncio->post_author;
+                                    $anuncio_author_data = get_userdata($anuncio_author_id);
+                                    $anuncio_status = get_post_meta($anuncio_id, 'wt_anuncio_status', true);
                                 ?>
                                     <tr>
-                                        <td class="nome">
-                                            <a href="<?php echo get_author_posts_url($lead_vendedor_id); ?>">
-                                                <?php echo $lead_vendedor_data->first_name && $lead_vendedor_data->last_name ?
-                                                    $lead_vendedor_data->first_name . ' ' . $lead_vendedor_data->last_name :
-                                                    $lead_vendedor_data->display_name ?>
-                                            </a>
-                                        </td>
-                                        <td class="email"><a href="mailto:<?php echo $lead_vendedor_data->user_email; ?>"><?php echo $lead_vendedor_data->user_email; ?></a></td>
                                         <td class="titulo">
                                             <a href="<?php echo get_post_permalink($anuncio_id); ?>">
                                                 <?php echo get_the_title($anuncio_id); ?>
                                             </a>
                                         </td>
-                                        <td class="data"><?php echo get_the_date('', $lead_id);
-                                                            ?></td>
+                                        <td class="data">
+                                            <?php echo get_the_date('', $anuncio_id); ?>
+                                        </td>
+                                        <td class="status">
+                                            <?php echo $anuncio_status === 'closed' ? __('Encerrado', 'wt') : __('Aberto', 'wt'); ?>
+                                        </td>
                                     </tr>
                                 <?php } ?>
                                 <?php wp_reset_postdata(); ?>

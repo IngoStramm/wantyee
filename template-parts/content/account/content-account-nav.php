@@ -6,7 +6,7 @@ $links[] = $args['account'];
 if ($user_type === 'comprador') {
     $links[] = $args['edit-anuncio'];
     $links[] = $args['new-leads'];
-    $links[] = $args['my-leads'];
+    $links[] = $args['my-anuncios'];
 } else {
     $links[] = $args['cat-config'];
     $links[] = $args['contacted-anuncios'];

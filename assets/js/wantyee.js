@@ -421,19 +421,30 @@
     }
 
     function wtSortTableList() {
-        const options = {
-            valueNames: ['nome_vendedor', 'email_vendedor', 'titulo_anuncio', 'data_anuncio'],
+
+        const optionsListAnuncios = {
+            valueNames: ['titulo', 'data', 'status'],
             page: 10,
             pagination: [{
                 item: `<li class="page-item"><a class="page page-link" href="#"></a></li>`
             }]
         };
 
-        const tablesList = document.querySelectorAll('.sort-table');
-        tablesList.forEach(item => {
-            console.log('item', item);
-            const tableList = new List(item, options);
-        });
+        const optionsLeads = {
+            valueNames: ['nome', 'email', 'titulo', 'data'],
+            page: 10,
+            pagination: [{
+                item: `<li class="page-item"><a class="page page-link" href="#"></a></li>`
+            }]
+        };
+
+        const tableAnuncios = document.getElementById('table-anuncios');
+        const tableListAnuncios = new List(tableAnuncios, optionsListAnuncios);
+        // console.log('tableListAnuncios', tableListAnuncios);
+
+        const tableLeads = document.getElementById('table-leads');
+        const tableListLeads = new List(tableLeads, optionsLeads);
+        // console.log('tableListLeads', tableListLeads);
     }
 
     function wtSelectForm() {

@@ -119,9 +119,10 @@ function wt_new_anuncio_form_handle()
         // ),
         'meta_input'        => array(
             'wt_faq' =>     $faq,
+            'wt_anuncio_status' => 'open'
         ),
     );
-
+    
     if ($post_id) {
         $args['ID'] = $_POST['post_id'];
     }
@@ -256,4 +257,51 @@ function wt_new_anuncio_success_message()
         echo wt_alert_small('success', $_SESSION['wt_new_anuncio_success_message']);
         unset($_SESSION['wt_new_anuncio_success_message']);
     }
+}
+
+add_action('wt_modal', 'wt_close_anuncio_modal');
+
+/**
+ * wt_close_anuncio_modal
+ *
+ * @return void
+ */
+function wt_close_anuncio_modal()
+{
+    $wt_add_form_close_anuncio_nonce = wp_create_nonce('wt_form_close_anuncio_nonce');
+    $post_id = isset($_SESSION['wp_anuncio_id']) && $_SESSION['wp_anuncio_id'] ? $_SESSION['wp_anuncio_id'] : null;
+    if (!$post_id) {
+        return;
+    }
+    $output = '';
+    $output .= '
+    <!-- Modal -->
+<div class="modal fade" id="close-anuncio-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="close-anuncio-modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="close-anuncio-modalLabel">' . __('Encerrar anúncio', 'wt') . '</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <h5>' . __('Tem certeza que deseja encerrar o anúncio?', 'wt') . '</h5>
+        <p>' . __('Uma vez encerrado, o anúncio não estará mais disponível para as outras pessoas, com excessão de você mesmo e os vendedores que geraram leads a partir dele.', 'wt') . '</p>
+        ' . wt_alert(__('<strong>Não</strong> é possível reabrir um anúncio encerrado.', 'wt')) . '
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . __('Cancelar', 'wt') . '</button>';
+    $output .= '        
+        <form id="close-anuncio-form" name="close-anuncio-form" action="' . esc_url(admin_url('admin-post.php')) . '" method="post">
+            <input type="hidden" name="action" value="wt_close_anuncio_form">
+            <input type="hidden" name="post_id" value="' .  $post_id . '">
+            <input type="hidden" name="wt_form_close_anuncio_nonce" value="' .  $wt_add_form_close_anuncio_nonce . '">
+            <button class="btn btn-primary">' . __(' Confirmar', 'wt') . '</button>
+        </form>';
+    $output .= '
+      </div>
+    </div>
+  </div>
+</div>
+    ';
+    echo $output;
 }

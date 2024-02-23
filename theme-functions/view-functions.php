@@ -42,8 +42,9 @@ add_action('pre_get_posts', 'wt_show_anuncios_instead_posts');
 function wt_show_anuncios_instead_posts($wp_query)
 {
     if ((is_home() || is_author()) && is_main_query() && !is_admin() && $wp_query->get('post_type') !== 'nav_menu_item') {
-        // wt_debug($wp_query->get('post_type'));
         $wp_query->set('post_type', array('anuncios'));
+        $wp_query->set('meta_key', 'wt_anuncio_status');
+        $wp_query->set('meta_value', 'open');
     }
 }
 
@@ -61,7 +62,7 @@ function wt_account_nav($slug)
     $account_edit_anuncio_page_id = wt_get_page_id('editanuncio');
     $account_cat_config_anuncio_page_id = wt_get_page_id('catanuncioconfig');
     $page_new_leads_id = wt_get_page_id('myleads');
-    $page_my_leads_id = wt_get_page_id('myanuncios');
+    $page_my_anuncios_id = wt_get_page_id('myanuncios');
     $page_contacted_anuncios_id = wt_get_page_id('contactedanuncios');
     $curr_account_page_id = wt_get_page_id($slug);
     if ($account_edit_anuncio_page_id || $account_cat_config_anuncio_page_id) {
@@ -71,7 +72,7 @@ function wt_account_nav($slug)
             'cat-config' => $account_cat_config_anuncio_page_id,
             'curr-page' => $curr_account_page_id,
             'new-leads' => $page_new_leads_id,
-            'my-leads' => $page_my_leads_id,
+            'my-anuncios' => $page_my_anuncios_id,
             'contacted-anuncios' => $page_contacted_anuncios_id,
             'user-type' => $user_type,
         ));

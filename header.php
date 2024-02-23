@@ -22,5 +22,6 @@
 </head>
 
 <body>
+    <?php do_action('wt_modal'); ?>
     <main>
         <?php get_template_part('template-parts/header/site-header'); ?>

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Template Name: My Leads
+ * Template Name: Página Meus Leads Recebidos
  * 
- * The template for My Recieved Leads
+ * The template for My Meus Leads Recebidos Page
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
  *

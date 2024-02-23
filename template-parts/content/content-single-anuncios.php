@@ -22,17 +22,23 @@ $wt_whatsapp = get_user_meta($author_id, 'wt_user_whatsapp', true);
 $wt_phone = get_user_meta($author_id, 'wt_user_phone', true);
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 $has_leads = wt_check_anuncio_has_leads($curr_user->ID, get_the_ID(), $author_id);
+$anuncio_status = get_post_meta(get_the_ID(), 'wt_anuncio_status', true);
 ?>
 
 <?php get_template_part('template-parts/breadcrumbs/breadcrumbs', null, array('anuncios')); ?>
+
+<?php /* wt_debug($anuncio_status); */ ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="container">
         <div class="row">
 
-            <div class="col-md-12"><?php do_action('redirect_anuncio_messages'); ?></div>
+            <div class="col-md-12">
+                <?php do_action('redirect_anuncio_messages'); ?>
+                <?php do_action('closed_anuncio_messages'); ?>
+            </div>
 
-            <?php if (is_user_logged_in() && $curr_user->ID === $author_data->ID) { ?>
+            <?php if ($anuncio_status !== 'closed' && is_user_logged_in() && $curr_user->ID === $author_data->ID) { ?>
                 <?php $wt_add_form_redirect_anuncio_nonce = wp_create_nonce('wt_form_redirect_anuncio_nonce'); ?>
                 <div class="d-flex justify-content-end mb-3">
                     <form id="redirect-anuncio-form" name="redirect-anuncio-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
@@ -110,8 +116,7 @@ $has_leads = wt_check_anuncio_has_leads($curr_user->ID, get_the_ID(), $author_id
                 <?php if (!is_user_logged_in()) { // Se não estiver logado
 
                     echo wt_alert_not_logged_in(__('É preciso estar logado para visualizar as informações de contato do vendedor.', 'wt'));
-                } else if (($user_type !== 'vendedor') && !current_user_can('edit_posts')) { // Se não for um vendedor e adminstrador
-
+                } else if ($curr_user->ID !== $author_data->ID && ($user_type !== 'vendedor' && !current_user_can('edit_posts'))) { // Se não for um vendedor e adminstrador
                     echo wt_alert(__('Apenas vendedores podem visualizar dados de contato de outros compradores.', 'wt'));
                 } else { // É vendedor ou admim
                 ?>
@@ -144,7 +149,7 @@ $has_leads = wt_check_anuncio_has_leads($curr_user->ID, get_the_ID(), $author_id
                             <?php } ?>
                         </dl>
 
-                    <?php } else { ?>
+                    <?php } elseif ($anuncio_status !== 'closed') { ?>
                         <?php $wt_add_form_lead_anuncio_nonce = wp_create_nonce('wt_form_lead_anuncio_nonce'); ?>
                         <div class="d-flex justify-content-end mb-3">
                             <form id="lead-anuncio-form" name="lead-anuncio-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">

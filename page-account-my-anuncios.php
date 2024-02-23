@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Template Name: Página Configuração de Categoria-de-Anúncio
+ * Template Name: Meus Anúncios
  * 
- * The template for Categoria-de-Anúncio Settings User Account Page
+ * The template for Meus Anúncios Criados
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
  *
@@ -18,7 +18,7 @@ do_action('account_announces');
 /* Start the Loop */
 while (have_posts()) :
     the_post();
-    get_template_part('template-parts/content/account/content-account-terms-settings-page');
+    get_template_part('template-parts/content/account/content-account-my-anuncios-page');
 
 endwhile; // End of the loop.
 

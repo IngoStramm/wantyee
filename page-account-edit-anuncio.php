@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template Name: Create/Edit Anuncio Post Type
+ * Template Name: Página para Criar/Editar Anúncios
  * 
  * The template for Create/Edit Anuncio Post Type User Account Page
  *
