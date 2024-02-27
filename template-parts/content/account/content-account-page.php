@@ -23,12 +23,14 @@ $user_type = get_user_meta($user->get('id'), 'wt_user_type', true);
                     <?php $user_id = $user->get('ID'); ?>
 
                     <h3><?php echo sprintf(__('Olá, %s!'), $user->display_name); ?></h3>
-                    <p class="mb-5"><?php _e('Nesta página você pode alterar os seus dados pessoais.', 'wt') ?></p>
+                    <p><?php _e('Nesta página você pode alterar os seus dados pessoais.', 'wt') ?></p>
+
+                    <p class="mb-5"><?php printf(__('Esta é uma conta de <strong>%s</strong>.', 'wt'), $user_type === 'comprador' ? __('comprador', 'wt') : __('vendedor', 'wt')) ?></p>
 
                     <?php echo wt_account_nav('account'); ?>
 
                     <?php do_action('update_user_messages'); ?>
-                                        
+
                     <h3 class="mt-2 mb-3"><?php _e('Dados pessoais', 'wt'); ?></h3>
 
                     <?php get_template_part('template-parts/content/account/content-account-update-user-form'); ?>

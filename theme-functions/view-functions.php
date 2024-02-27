@@ -51,7 +51,7 @@ function wt_show_anuncios_instead_posts($wp_query)
 /**
  * wt_account_nav
  *
- * @param  string $curr_account_page_id ('account', 'editanuncio', 'catanuncioconfig')
+ * @param  string $curr_account_page_id ('account', 'editanuncio', 'catanuncioconfig', 'myleads', 'myanuncios', 'contactedanuncios', 'followingtermsanuncios')
  * @return void
  */
 function wt_account_nav($slug)
@@ -64,6 +64,7 @@ function wt_account_nav($slug)
     $page_new_leads_id = wt_get_page_id('myleads');
     $page_my_anuncios_id = wt_get_page_id('myanuncios');
     $page_contacted_anuncios_id = wt_get_page_id('contactedanuncios');
+    $page_following_terms_anuncios_id = wt_get_page_id('followingtermsanuncios');
     $curr_account_page_id = wt_get_page_id($slug);
     if ($account_edit_anuncio_page_id || $account_cat_config_anuncio_page_id) {
         get_template_part('template-parts/content/account/content-account-nav', null, array(
@@ -74,6 +75,7 @@ function wt_account_nav($slug)
             'new-leads' => $page_new_leads_id,
             'my-anuncios' => $page_my_anuncios_id,
             'contacted-anuncios' => $page_contacted_anuncios_id,
+            'following-terms-anuncios' => $page_following_terms_anuncios_id,
             'user-type' => $user_type,
         ));
     }

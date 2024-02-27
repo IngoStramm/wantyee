@@ -13,6 +13,7 @@ $login_page_id = wt_get_page_id('login');
             <?php get_template_part('template-parts/header/site-branding'); ?>
 
             <button class=" navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <?php do_action('wt_user_icon_notification') ?>
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -29,7 +30,7 @@ $login_page_id = wt_get_page_id('login');
                                 <a href="<?php echo wt_get_page_url('account'); ?>" class="nav-link d-block text-center px-2">
 
                                     <i class="bi bi-person-circle d-block fs-3  nav-user-icon">
-                                        <?php do_action('wt_user_icon_warning') ?>
+                                        <?php do_action('wt_user_icon_notification') ?>
                                     </i>
                                     <small class="d-block"><?php echo $user->display_name; ?></small>
                                 </a>

@@ -115,13 +115,14 @@ function wt_lead_anuncio_error_message()
     }
 }
 
-add_action('account_announces', 'wt_new_lead_announce_alert');
+add_action('account_announces', 'wt_show_to_compradores_new_leads_alert');
 
-function wt_new_lead_announce_alert()
+function wt_show_to_compradores_new_leads_alert()
 {
     $curr_user = wp_get_current_user();
     $user_id = $curr_user->ID;
     $user_type = get_user_meta($user_id, 'wt_user_type', true);
+
     if ($user_type !== 'comprador') {
         return;
     }
@@ -156,15 +157,19 @@ function wt_new_lead_announce_alert()
     echo $output;
 }
 
-add_action('wt_user_icon_warning', 'wt_show_new_lead_icon_warning');
+add_action('wt_user_icon_notification', 'wt_show_to_comprador_new_leads_notification');
 
 /**
- * wt_new_lead_icon_warning
+ * wt_show_to_comprador_new_leads_notification
  *
  * @return void
  */
-function wt_show_new_lead_icon_warning()
+function wt_show_to_comprador_new_leads_notification()
 {
+    if (!is_user_logged_in()) {
+        return;
+    }
+
     $curr_user = wp_get_current_user();
     $user_id = $curr_user->ID;
     $user_type = get_user_meta($user_id, 'wt_user_type', true);
@@ -183,14 +188,14 @@ function wt_show_new_lead_icon_warning()
     echo $output;
 }
 
-add_action('template_redirect', 'wt_reset_new_leads_count');
+add_action('template_redirect', 'wt_reset_comprador_new_leads_count');
 
 /**
- * wt_reset_new_leads_count
+ * wt_reset_comprador_new_leads_count
  *
  * @return void
  */
-function wt_reset_new_leads_count()
+function wt_reset_comprador_new_leads_count()
 {
     $page_my_leads_id = wt_get_page_id('myleads');
     if (!is_page($page_my_leads_id)) {
@@ -207,6 +212,92 @@ function wt_reset_new_leads_count()
     delete_user_meta($user_id, '_wt_new_leads');
     return;
 }
+
+add_action('wt_user_icon_notification', 'show_to_vendedores_new_anuncios_notification');
+// add_action('wp_head', 'show_to_vendedores_new_anuncios_notification');
+
+function show_to_vendedores_new_anuncios_notification()
+{
+    if (!is_user_logged_in()) {
+        return;
+    }
+
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    $user_type = get_user_meta($user_id, 'wt_user_type', true);
+    if ($user_type !== 'vendedor') {
+        return;
+    }
+    $new_anuncios = wt_check_if_vendedor_has_new_anuncios($user_id);
+    // wt_debug(count($new_anuncios));
+    if ($new_anuncios) {
+        return;
+    }
+    $output = '<i class="bi bi-exclamation-circle-fill text-danger nav-user-icon-alert" data-bs-toggle="tooltip" data-bs-title="' . __('Novos anúncios nas categorias que você segue foram criados desde a sua última visita.', 'wt') . '"></i>';
+    echo $output;
+}
+
+add_action('account_announces', 'wt_show_to_vendedores_new_anuncios_alert');
+
+function wt_show_to_vendedores_new_anuncios_alert()
+{
+    if (!is_user_logged_in()) {
+        return;
+    }
+
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    $user_type = get_user_meta($user_id, 'wt_user_type', true);
+
+    if ($user_type !== 'vendedor') {
+        return;
+    }
+
+    $following_terms_page_id = wt_get_page_id('followingtermsanuncios');
+    if (!$following_terms_page_id) {
+        return;
+    }
+
+    $new_anuncios = wt_check_if_vendedor_has_new_anuncios($user_id);
+    if ($new_anuncios) {
+        return;
+    }
+
+    $following_terms_page_url = wt_get_page_url('followingtermsanuncios');
+    $output = '';
+    $output .= '<div class="container"><div class="row"><div class="col">';
+
+    $output .= wt_alert(sprintf(__('Você possui <strong class="ms-1">novos anúncios</strong> nas categorias que segue desde a sua última visita, clique <a href="%s" class="link-offset-1 link-underline link-underline-opacity-50 px-1">aqui</a> para visualizá-los', 'wt'), $following_terms_page_url));
+
+    $output .= '</div></div></div>';
+    echo $output;
+}
+
+add_action('template_redirect', 'wt_reset_vendedor_last_time_checked_for_new_anuncios');
+
+/**
+ * wt_reset_vendedor_last_time_checked_for_new_anuncios
+ *
+ * @return void
+ */
+function wt_reset_vendedor_last_time_checked_for_new_anuncios()
+{
+    $page_following_terms_anuncios_id = wt_get_page_id('followingtermsanuncios');
+    if (!is_page($page_following_terms_anuncios_id)) {
+        return;
+    };
+
+    $curr_user = wp_get_current_user();
+    $user_id = $curr_user->ID;
+    $user_type = get_user_meta($user_id, 'wt_user_type', true);
+    if ($user_type !== 'vendedor') {
+        return;
+    }
+    update_user_meta($user_id, '_last_time_checked_for_new_anuncios', strtotime('now'));
+    return;
+}
+
+
 
 add_action('admin_post_wt_new_leads_form', 'wt_new_leads_form_handle');
 add_action('admin_post_nopriv_wt_new_leads_form', 'wt_new_leads_form_handle');

@@ -10,6 +10,7 @@ if ($user_type === 'comprador') {
 } else {
     $links[] = $args['cat-config'];
     $links[] = $args['contacted-anuncios'];
+    $links[] = $args['following-terms-anuncios'];
 }
 ?>
 <nav class="nav nav-pills nav-fill mb-4">

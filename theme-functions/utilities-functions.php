@@ -106,7 +106,7 @@ function wt_get_url()
 /**
  * wt_get_page_id
  *
- * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig', 'myleads', 'myanuncios', 'contactedanuncios')
+ * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig', 'myleads', 'myanuncios', 'contactedanuncios', 'followingtermsanuncios')
  * @return string
  */
 function wt_get_page_id($slug)
@@ -183,6 +183,13 @@ function wt_get_page_id($slug)
             }
             break;
 
+        case 'followingtermsanuncios':
+            $account_following_terms_anuncios_page_id = wt_get_option('wt_following_terms_anuncios_page');
+            if ($account_following_terms_anuncios_page_id) {
+                $return_id = $account_following_terms_anuncios_page_id;
+            }
+            break;
+
         default:
             $return_id = get_option('page_for_posts');
             break;
@@ -193,7 +200,7 @@ function wt_get_page_id($slug)
 /**
  * wt_get_page_url
  *
- * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig', 'myleads', 'myanuncios', 'contactedanuncios')
+ * @param  string $slug ('login', 'newuser', 'lostpassword', 'resetpassword', 'account', 'editanuncio', 'catanuncioconfig', 'myleads', 'myanuncios', 'contactedanuncios', 'followingtermsanuncios')
  * @return string
  */
 function wt_get_page_url($slug)
@@ -267,6 +274,13 @@ function wt_get_page_url($slug)
             $account_contacted_anuncios_page_id = wt_get_page_id('contactedanuncios');
             if ($account_contacted_anuncios_page_id) {
                 $return_url = get_page_link($account_contacted_anuncios_page_id);
+            }
+            break;
+
+        case 'followingtermsanuncios':
+            $account_following_terms_anuncios_page_id = wt_get_page_id('followingtermsanuncios');
+            if ($account_following_terms_anuncios_page_id) {
+                $return_url = get_page_link($account_following_terms_anuncios_page_id);
             }
             break;
 
@@ -479,6 +493,31 @@ function wt_get_comprador_leads($comprador_id)
     return $leads;
 }
 
+function wt_get_vendedor_following_terms_anuncios($vendedor_id)
+{
+    $user_type = get_user_meta($vendedor_id, 'wt_user_type', true);
+    if ($user_type !== 'vendedor') {
+        return;
+    }
+    $wt_user_following_terms = get_user_meta($vendedor_id, 'wt_user_following_terms', true);
+    $args = array(
+        'post_type' => 'anuncios',
+        'posts_per_page' => -1,
+        'status'    => 'published',
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'categoria-de-anuncio',
+                'field' => 'term_id',
+                'terms' => $wt_user_following_terms,
+            ),
+        ),
+    );
+    $anuncios = get_posts($args);
+    wp_reset_postdata();
+    return $anuncios;
+}
+
+
 /**
  * wt_format_phone_number
  *
@@ -494,4 +533,67 @@ function wt_format_phone_number($phone)
         return '(' . $matches[1] . ') ' . $matches[2] . '-' . $matches[3];
     }
     return $phone;
+}
+
+/**
+ * wt_check_if_vendedor_has_new_anuncios
+ *
+ * @param  int $user_id
+ * @return boolean
+ */
+function wt_check_if_vendedor_has_new_anuncios($user_id)
+{
+    if (!isset($user_id) || !$user_id) {
+        return false;
+    }
+
+    $last_time_checked_for_new_anuncios = get_user_meta($user_id, '_last_time_checked_for_new_anuncios', true);
+    $wt_user_following_terms = get_user_meta($user_id, 'wt_user_following_terms', true);
+    $args = array(
+        'post_type' => 'anuncios',
+        'posts_per_page' => -1,
+        'status'    => 'published',
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'categoria-de-anuncio',
+                'field' => 'term_id',
+                'terms' => $wt_user_following_terms,
+            ),
+        ),
+        // 'date_query' => array(
+        //     'after' =>
+        //     array(
+        //         'year' => date('Y', intval($last_time_checked_for_new_anuncios)),
+        //         'month' => date('m', intval($last_time_checked_for_new_anuncios)),
+        //         'day' => date('d', intval($last_time_checked_for_new_anuncios)),
+        //     )
+        // )
+    );
+    $last_anuncios_from_day_before = get_posts($args);
+    $new_anuncios = [];
+    // converte para data
+    $last_time_checked_for_new_anuncios = intval($last_time_checked_for_new_anuncios);
+    // wt_debug(number_format($last_time_checked_for_new_anuncios, 0, ',', '.'));
+
+    foreach ($last_anuncios_from_day_before as $anuncio) {
+
+        // converte para data
+        // usando post_date_gmt para a data do post ser consistente com a data do servidor
+        $post_date_timestamp = strtotime($anuncio->post_date_gmt);
+
+        // Por segurnaça, converte para número inteiro
+        $post_date_timestamp = intval($post_date_timestamp);
+        // wt_debug(number_format($post_date_timestamp, 0, ',', '.'));
+
+        // Verifica se a data do post é mais nova (maior) que a data do login
+        $is_new_post = $post_date_timestamp > $last_time_checked_for_new_anuncios;
+        // wt_debug($is_new_post);
+
+        // Caso afirmativo, salva o post no array
+        if ($is_new_post) {
+            $new_anuncios[] = $anuncio;
+        }
+    }
+    wp_reset_postdata();
+    return !count($new_anuncios);
 }
