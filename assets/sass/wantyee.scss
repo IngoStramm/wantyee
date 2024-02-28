@@ -124,6 +124,12 @@
     }
 }
 
+.pagination {
+    .page-link {
+        cursor: pointer;
+    }
+}
+
 .nav-user-icon {
     position: relative;
     .nav-user-icon-alert {

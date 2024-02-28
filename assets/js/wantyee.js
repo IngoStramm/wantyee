@@ -425,9 +425,9 @@
         const defaultOptions = {
             page: 10,
             pagination: [{
-                item: `<li class="page-item"><a class="page page-link" href="#"></a></li>`
+                item: `<li class="page-item"><a class="page page-link"></a></li>`
             }]
-        }
+        };
 
         const optionsListAnuncios = {
             ...defaultOptions,
@@ -463,7 +463,7 @@
     }
 
     function wtSelectForm() {
-        const selectForms = document.querySelectorAll('.sort-anuncio-form');
+        const selectForms = document.querySelectorAll('.filters-form');
         selectForms.forEach(selectForm => {
             const select = selectForm.querySelector('select');
             select.addEventListener('change', e => {
@@ -484,7 +484,7 @@
         wtTooltips();
         wtFileImagePreview();
         wtSortTableList();
-        wtSelectForm();
+        // wtSelectForm();
     }, false);
 
 })();

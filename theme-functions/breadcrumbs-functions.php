@@ -41,7 +41,14 @@ function wt_breadcrumbs($custom_post_types = false)
                 $parent = get_term_by('term_id', $current_term->parent, 'categoria-de-anuncio');
                 $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($parent, 'categoria-de-anuncio')) . '">' . $parent->name . '</a></li>';
             }
-            $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($current_term, 'categoria-de-anuncio')) . '">' . $current_term->name . '</a></li>';
+            // checa se é mesmo um termo
+            if (isset($current_term->term_id)) {
+                $output .= '<li class="breadcrumb-item active"><a class="link-body-emphasis fw-semibold text-decoration-none" href="' . esc_url(get_term_link($current_term, 'categoria-de-anuncio')) . '">' . $current_term->name . '</a></li>';
+            } elseif (isset($current_term->labels) && isset($current_term->labels->name)) {
+                $output .= '<li class="breadcrumb-item active">' . $current_term->labels->name . '</li>';
+            } else {
+                $output .= '<li class="breadcrumb-item active">' . $current_term->name . '</li>';
+            }
         }
         if (is_author()) {
             $author_data = get_queried_object();

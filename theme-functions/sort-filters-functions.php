@@ -62,29 +62,29 @@ function wt_db_filter_user_query(&$user_query)
     return $user_query;
 }
 
-add_action('pre_get_posts', 'wt_custom_query');
+add_action('pre_get_posts', 'wt_sort_ordering_query');
 
 /**
- * wt_custom_query
+ * wt_sort_ordering_query
  *
  * @param  mixed $query
  * @return void
  */
-function wt_custom_query($wp_query)
+function wt_sort_ordering_query($wp_query)
 {
-    if (!isset($_POST['wt_form_sort_anuncio_nonce']) || !wp_verify_nonce($_POST['wt_form_sort_anuncio_nonce'], 'wt_form_sort_anuncio_nonce')) {
-        return;
-    }
-    
-    if (!isset($_POST['action']) || $_POST['action'] !== 'wt_sort_anuncio_form') {
+    // if (!isset($_GET['wt_form_sort_anuncio_nonce']) || !wp_verify_nonce($_GET['wt_form_sort_anuncio_nonce'], 'wt_form_sort_anuncio_nonce')) {
+    //     return;
+    // }
+
+    if (!isset($_GET['action']) || $_GET['action'] !== 'wt_sort_anuncio_form') {
         return;
     }
 
-    if (!isset($_POST['orderby']) || !$_POST['orderby']) {
+    if (!isset($_GET['orderby']) || !$_GET['orderby']) {
         return;
     }
 
-    $orderby = $_POST['orderby'];
+    $orderby = $_GET['orderby'];
     $order_array = array(
         'date_asc' => array(
             'orderby'   => 'date',
@@ -104,9 +104,37 @@ function wt_custom_query($wp_query)
         ),
     );
 
-    if ((is_home() || is_author()) && is_main_query() && !is_admin() && $wp_query->get('post_type') !== 'nav_menu_item') {
+    $start_date = isset($_GET['start-date']) && $_GET['start-date'] ? $_GET['start-date'] : null;
+    $end_date = isset($_GET['end-date']) && $_GET['end-date'] ? $_GET['end-date'] : null;
 
+    if ((is_home() || is_author() || is_search() || is_archive()) && is_main_query() && !is_admin() && $wp_query->get('post_type') !== 'nav_menu_item') {
         $wp_query->set('orderby', $order_array[$orderby]['orderby']);
         $wp_query->set('order', $order_array[$orderby]['order']);
+
+        $date_query_array = array();
+
+        if ($start_date) {
+            $start_date = strtotime($start_date . '-1 day');
+            $date_query_array['after'] = array(
+                'day' => date('d', $start_date),
+                'month' => date('m', $start_date),
+                'year' => date('Y', $start_date),
+            );
+        }
+
+        if ($end_date) {
+            $end_date = strtotime($end_date . '+1 day');
+            $date_query_array['before'] = array(
+                'day' => date('d', $end_date),
+                'month' => date('m', $end_date),
+                'year' => date('Y', $end_date),
+            );
+        }
+
+        // wt_debug($date_query_array);
+
+        if (count($date_query_array) > 0) {
+            $wp_query->set('date_query', $date_query_array);
+        }
     }
 }
