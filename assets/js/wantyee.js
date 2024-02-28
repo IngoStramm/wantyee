@@ -422,40 +422,44 @@
 
     function wtSortTableList() {
 
-        const optionsListAnuncios = {
-            valueNames: ['titulo', 'data', 'status'],
+        const defaultOptions = {
             page: 10,
             pagination: [{
                 item: `<li class="page-item"><a class="page page-link" href="#"></a></li>`
             }]
+        }
+
+        const optionsListAnuncios = {
+            ...defaultOptions,
+            valueNames: ['titulo', 'data', 'status']
         };
 
         const optionsLeads = {
+            ...defaultOptions,
             valueNames: ['nome', 'email', 'titulo', 'data'],
-            page: 10,
-            pagination: [{
-                item: `<li class="page-item"><a class="page page-link" href="#"></a></li>`
-            }]
         };
 
         const optionsFollowingTermsAnuncios = {
+            ...defaultOptions,
             valueNames: ['nome', 'categorias', 'titulo', 'data'],
-            page: 10,
-            pagination: [{
-                item: `<li class="page-item"><a class="page page-link" href="#"></a></li>`
-            }]
+        };
+
+        const optionsContactedAnuncios = {
+            ...defaultOptions,
+            valueNames: ['titulo', 'nome', 'data', 'status'],
         };
 
         const tableAnuncios = document.getElementById('table-anuncios');
         const tableListAnuncios = new List(tableAnuncios, optionsListAnuncios);
-        // console.log('tableListAnuncios', tableListAnuncios);
 
         const tableLeads = document.getElementById('table-leads');
         const tableListLeads = new List(tableLeads, optionsLeads);
 
         const tableFollowingTermsAnuncios = document.getElementById('table-following-terms-anuncios');
         const tableListFollowingTermsAnuncios = new List(tableFollowingTermsAnuncios, optionsFollowingTermsAnuncios);
-        // console.log('tableListLeads', tableListLeads);
+
+        const tableContactedAnuncios = document.getElementById('table-contacted-anuncios');
+        const tableListContactedAnuncios = new List(tableContactedAnuncios, optionsContactedAnuncios);
     }
 
     function wtSelectForm() {

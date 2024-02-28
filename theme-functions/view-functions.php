@@ -41,7 +41,7 @@ add_action('pre_get_posts', 'wt_show_anuncios_instead_posts');
  */
 function wt_show_anuncios_instead_posts($wp_query)
 {
-    if ((is_home() || is_author()) && is_main_query() && !is_admin() && $wp_query->get('post_type') !== 'nav_menu_item') {
+    if ((is_home() || is_author() || is_search()) && is_main_query() && !is_admin() && $wp_query->get('post_type') !== 'nav_menu_item') {
         $wp_query->set('post_type', array('anuncios'));
         $wp_query->set('meta_key', 'wt_anuncio_status');
         $wp_query->set('meta_value', 'open');

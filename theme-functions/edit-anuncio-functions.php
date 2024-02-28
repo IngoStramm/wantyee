@@ -91,7 +91,7 @@ function wt_close_anuncio_form_handle()
         // exit;
     }
     $post_id = $_POST['post_id'];
-    wt_debug($post_id);
+    // wt_debug($post_id);
     // Por segurança, caso o valor do meta field seja um array é melhor apagar tudo
     $status_deleted = delete_post_meta($post_id, 'wt_anuncio_status');
     // wt_debug($status_deleted);
@@ -103,8 +103,8 @@ function wt_close_anuncio_form_handle()
     // $_SESSION['wt_close_anuncio_success_message'] = __('Anúncio encerrado com sucesso.', 'wt');
     echo '<h3>' . __('Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';
 
-    // wp_safe_redirect(get_permalink($post_id));
-    // exit;
+    wp_safe_redirect(get_permalink($post_id));
+    exit;
 }
 
 
