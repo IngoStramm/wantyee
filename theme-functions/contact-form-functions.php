@@ -26,7 +26,8 @@ function wt_contact_form()
         $data[$name] = wt_get_field_value($name);
     }
 
-    $to = 'teste@teste.com';
+    $send_to_emails = wt_get_option('wt_contact_form_emails');
+    $to = $send_to_emails;
     $subject = sprintf(__('Nova mensagem de contato | %s', 'wt'), get_bloginfo('name'));
     $body = '';
     $body .= '<p>' . sprintf(__('Nome: "%s"', 'wt'), $data['nome']) . '</p>';
@@ -37,7 +38,7 @@ function wt_contact_form()
     if (!$send_email_notification) {
         wp_send_json_error(array('msg' => __('Ocorreu um erro ao tentar enviar a sua mensagem.', 'wt')), 200);
     }
-    
+
     $response = array(
         'msg'                   => __('Mensagem enviada com sucesso!', 'wt'),
     );

@@ -38,6 +38,14 @@ function wt_register_theme_options_metabox()
     ));
 
     $cmb_options->add_field(array(
+        'name'    => esc_html__('E-mails que receberão as mensagens do formulário de contato.', 'wt'),
+        'id'      => 'wt_contact_form_emails',
+        'type'    => 'text_email',
+        'repeatable'    => true,
+        'required'      => true
+    ));
+
+    $cmb_options->add_field(array(
         'name'    => esc_html__('Página de login', 'wt'),
         'id'      => 'wt_login_page',
         'type'    => 'select',
