@@ -11,7 +11,6 @@
 function wt_mail($to, $subject, $body)
 {
     $headers = array('Content-Type: text/html; charset=UTF-8');
-    $headers = array('Content-Type: text/html; charset=UTF-8');
     $send_email_notification = wp_mail($to, $subject, $body, $headers);
     return $send_email_notification;
 }

@@ -487,6 +487,87 @@
         });
     }
 
+    function wt_show_alert(alertPlaceholder, message, type) {
+        console.log(message);
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = [
+            `<div id="contact-form-alert" class="alert alert-${type} alert-dismissible" role="alert">`,
+            `   <div>${message}</div>`,
+            '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+            '</div>'
+        ].join('');
+        alertPlaceholder.append(wrapper);
+    }
+
+    function wt_contact_form() {
+        const contactForms = document.querySelectorAll('.wt-contact-form');
+        contactForms.forEach(contactForm => {
+            contactForm.addEventListener('submit', e => {
+                e.preventDefault();
+
+                if (typeof document.getElementById('contact-form-alert') !== undefined && document.getElementById('contact-form-alert')) {
+                    const contactFormAlert = bootstrap.Alert.getOrCreateInstance('#contact-form-alert');
+                    contactFormAlert.close();
+                }
+
+                if (!contactForm.checkValidity()) {
+                    return;
+                }
+                contactForm.classList.add('was-validated');
+
+                const nomeInput = contactForm.querySelector('#nome');
+                const emailInput = contactForm.querySelector('#email');
+                const mensagemTextarea = contactForm.querySelector('#mensagem');
+                const btn = contactForm.querySelector('button');
+
+                if (typeof btn === undefined || !btn) {
+                    return;
+                }
+
+                if (btn.disabled) {
+                    return;
+                }
+                btn.disabled = true;
+                const originalBtntext = btn.innerText;
+                btn.innerText = 'Enviando...';
+
+                const ajaxUrl = ajax_object.ajax_url;
+                const data = new FormData(contactForm);
+                const action = data.get('action');
+
+                // console.log(data.get('action'));
+
+                // for (const [key, value] of data) {
+                //     console.log('data', `${key}: ${value}\n`);
+                // }
+
+                const alertPlaceholder = document.getElementById('contact-form-alert-placeholder');
+
+                fetch(ajaxUrl, {
+                    method: 'POST',
+                    body: data
+                })
+                    .then((response) => response.json())
+                    .then((response) => {
+                        wt_show_alert(alertPlaceholder, response.data.msg, 'success');
+                        nomeInput.value = '';
+                        emailInput.value = '';
+                        mensagemTextarea.value = '';
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        wt_show_alert(alertPlaceholder, error, 'danger');
+                    })
+                    .finally(() => {
+                        btn.disabled = false;
+                        btn.innerText = originalBtntext;
+                        contactForm.classList.remove('was-validated');
+                    });
+
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -500,6 +581,7 @@
         wtFileImagePreview();
         wtSortTableList();
         wtClearInputValue();
+        wt_contact_form();
     }, false);
 
 })();
