@@ -130,7 +130,7 @@ function wt_show_anuncio_terms_nav($terms)
     return $output;
 }
 
-add_action('wp_head', 'wt_test');
+// add_action('wp_head', 'wt_test');
 function wt_test()
 {
     $emails = wt_get_option('wt_contact_form_emails');
