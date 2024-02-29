@@ -25,6 +25,14 @@ $login_page_id = wt_get_page_id('login');
 
                     <?php if (is_user_logged_in()) { ?>
                         <?php $user = wp_get_current_user(); ?>
+                        <?php if (current_user_can('editor') || current_user_can('administrator')) { ?>
+                            <li>
+                                <a href="/leads" class="nav-link d-block text-center px-2">
+                                    <i class="bi bi-file-text-fill fs-3"></i>
+                                    <small class="d-block"><?php _e('Leads', 'wt'); ?></small>
+                                </a>
+                            </li>
+                        <?php } ?>
                         <?php if ($account_page_id) { ?>
                             <li>
                                 <a href="<?php echo wt_get_page_url('account'); ?>" class="nav-link d-block text-center px-2">

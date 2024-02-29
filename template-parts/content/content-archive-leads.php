@@ -15,14 +15,18 @@ $anuncio_status = get_post_meta($anuncio_id, 'wt_anuncio_status', true);
     </a>
 </td>
 <td class="comprador">
-    <?php echo $anuncio_author_data->first_name && $anuncio_author_data->last_name ?
-        $anuncio_author_data->first_name . ' ' . $anuncio_author_data->last_name :
-        $anuncio_author_data->display_name ?>
+    <a href="<?php echo get_admin_url(null, '/user-edit.php?user_id=' . $anuncio_author_data->id); ?>" target="_blank">
+        <?php echo $anuncio_author_data->first_name && $anuncio_author_data->last_name ?
+            $anuncio_author_data->first_name . ' ' . $anuncio_author_data->last_name :
+            $anuncio_author_data->display_name ?>
+    </a>
 </td>
 <td class="vendedor">
-    <?php echo $lead_author_data->first_name && $lead_author_data->last_name ?
-        $lead_author_data->first_name . ' ' . $lead_author_data->last_name :
-        $lead_author_data->display_name ?>
+    <a href="<?php echo get_admin_url(null, '/user-edit.php?user_id=' . $lead_author_data->id); ?>" target="_blank">
+        <?php echo $lead_author_data->first_name && $lead_author_data->last_name ?
+            $lead_author_data->first_name . ' ' . $lead_author_data->last_name :
+            $lead_author_data->display_name ?>
+    </a>
 </td>
 <td class="data">
     <?php echo get_the_date('', $lead_id); ?>

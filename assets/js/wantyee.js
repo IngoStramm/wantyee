@@ -383,6 +383,7 @@
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     }
 
+    // Não mais usado, guardado para referência
     function wtEditorRequired() {
         const wtEditors = document.querySelectorAll('textarea[name="anuncio-content"]');
         wtEditors.forEach(item => {
@@ -462,12 +463,26 @@
         const tableListContactedAnuncios = new List(tableContactedAnuncios, optionsContactedAnuncios);
     }
 
+    // Não mais usado, guardado para referência
     function wtSelectForm() {
         const selectForms = document.querySelectorAll('.filters-form');
         selectForms.forEach(selectForm => {
             const select = selectForm.querySelector('select');
             select.addEventListener('change', e => {
                 selectForm.requestSubmit();
+            });
+        });
+    }
+
+    function wtClearInputValue() {
+        const clearInputValueLink = document.querySelectorAll('.clear-input-value');
+        clearInputValueLink.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const input = document.getElementById(link.dataset.input);
+                if (typeof input !== undefined && input) {
+                    input.value = '';
+                }
             });
         });
     }
@@ -484,7 +499,7 @@
         wtTooltips();
         wtFileImagePreview();
         wtSortTableList();
-        // wtSelectForm();
+        wtClearInputValue();
     }, false);
 
 })();

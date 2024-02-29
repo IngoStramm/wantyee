@@ -14,21 +14,25 @@ $end_date = isset($_GET['end-date']) && $_GET['end-date'] ? $_GET['end-date'] : 
 
     <div class="d-md-flex justify-content-start align-items-center gap-3 mb-4 mb-md-0">
 
-        <?php 
+        <?php
         // Parei aqui
-        // Colocar opção de limpar o valor dos campos de data
         // Testar filtros nas categorias e no autor
-        // adicionar link dos autores na tabela de leads
-         ?>
+        ?>
         <label class="form-label flex-shrink-0 mb-0" for="start-date">
             <?php _e('Data inicial', 'wt'); ?>
         </label>
-        <input type="date" class="form-control mb-3 mb-md-0" name="start-date" id="start-date" value="<?php echo $start_date ? $start_date : ''; ?>" />
+        <span class="d-flex align-items-start">
+            <input type="date" class="form-control mb-3 mb-md-0" name="start-date" id="start-date" value="<?php echo $start_date ? $start_date : ''; ?>" />
+            <a href="#" class="clear-input-value link-danger ms-1" data-input="start-date"><i class="bi bi-x"></i></a>
+        </span>
 
         <label class="form-label flex-shrink-0 mb-0" for="end-date">
             <?php _e('Data final', 'wt'); ?>
         </label>
-        <input type="date" class="form-control" name="end-date" id="end-date" value="<?php echo $end_date ? $end_date : ''; ?>" />
+        <span class="d-flex align-items-start">
+            <input type="date" class="form-control" name="end-date" id="end-date" value="<?php echo $end_date ? $end_date : ''; ?>" />
+            <a href="#" class="clear-input-value link-danger ms-1" data-input="end-date"><i class="bi bi-x"></i></a>
+        </span>
 
     </div>
 
