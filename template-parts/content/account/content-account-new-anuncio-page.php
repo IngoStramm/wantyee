@@ -23,7 +23,9 @@ if (is_array($post_terms)) {
 $post_thumbnail = $post_id ? get_the_post_thumbnail($post_id, array('100', '100'), array('loading' => false, 'class' => 'img-fluid rounded my-2')) : null;
 $post_thumbnail_url = $post_id ? get_the_post_thumbnail_url($post_id, 'full') : null;
 $wt_faq = $post_id ? get_post_meta($post_id, 'wt_faq', true) : array(array('question' => '', 'answer' => ''));
-// wt_debug($wt_faq);
+if(count($wt_faq) === 0) {
+    $wt_faq = array(array('question' => '', 'answer' => ''));
+}
 ?>
 <div class="container">
     <div class="row">

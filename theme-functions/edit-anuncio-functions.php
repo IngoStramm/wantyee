@@ -4,7 +4,7 @@ add_action('admin_post_wt_redirect_anuncio_form', 'wt_redirect_anuncio_form_hand
 add_action('admin_post_nopriv_wt_redirect_anuncio_form', 'wt_redirect_anuncio_form_handle');
 
 /**
- * wt_register_new_user_handle
+ * wt_redirect_anuncio_form_handle
  *
  * @return void
  */
@@ -59,7 +59,7 @@ add_action('admin_post_wt_close_anuncio_form', 'wt_close_anuncio_form_handle');
 add_action('admin_post_nopriv_wt_close_anuncio_form', 'wt_close_anuncio_form_handle');
 
 /**
- * wt_register_new_user_handle
+ * wt_close_anuncio_form_handle
  *
  * @return void
  */

@@ -122,7 +122,7 @@ function wt_new_anuncio_form_handle()
             'wt_anuncio_status' => 'open'
         ),
     );
-    
+
     if ($post_id) {
         $args['ID'] = $_POST['post_id'];
     }
@@ -226,14 +226,14 @@ function wt_new_anuncio_form_handle()
 
     $new_anuncio_link = get_page_link($novo_anuncio_id);
     if ($post_id) {
-        $_SESSION['wt_new_anuncio_success_message'] = sprintf(__('Anúncio atualizado com sucesso! Ver <a href="%s">anúncio</a>.', 'wt'), $new_anuncio_link);
+        $_SESSION['wt_new_anuncio_success_message'] = __('Anúncio atualizado com sucesso!');
         echo '<h3>' . __('Anúncio atualizado com sucesso! Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';
     } else {
-        $_SESSION['wt_new_anuncio_success_message'] = sprintf(__('Novo anúncio criado com sucesso! Ver <a href="%s">anúncio</a>.', 'wt'), $new_anuncio_link);
+        $_SESSION['wt_new_anuncio_success_message'] = __('Novo anúncio criado com sucesso!');
         echo '<h3>' . __('Novo anúncio criado com sucesso! Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';
     }
 
-    wp_safe_redirect($account_page_url);
+    wp_safe_redirect($new_anuncio_link);
     exit;
 }
 

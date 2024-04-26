@@ -36,6 +36,7 @@ $anuncio_status = get_post_meta(get_the_ID(), 'wt_anuncio_status', true);
             <div class="col-md-12">
                 <?php do_action('redirect_anuncio_messages'); ?>
                 <?php do_action('closed_anuncio_messages'); ?>
+                <?php do_action('update_anuncio_messages'); ?>
             </div>
 
             <?php if ($anuncio_status !== 'closed' && is_user_logged_in() && $curr_user->ID === $author_data->ID) { ?>
