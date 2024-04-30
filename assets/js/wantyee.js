@@ -461,6 +461,9 @@
 
         const tableContactedAnuncios = document.getElementById('table-contacted-anuncios');
         const tableListContactedAnuncios = new List(tableContactedAnuncios, optionsContactedAnuncios);
+
+        const tableFollowingCatProdutos = document.getElementById('table-following-cat-produtos');
+        const tableListFollowingCatProdutos = new List(tableFollowingCatProdutos, defaultOptions);
     }
 
     // Não mais usado, guardado para referência
@@ -575,7 +578,7 @@
         wtInitToasts();
         inputMasks();
         wtGoBackBtn();
-        checkboxTermsList();
+        // checkboxTermsList();
         wtFaq();
         wtTooltips();
         wtFileImagePreview();

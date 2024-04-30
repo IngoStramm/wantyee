@@ -38,6 +38,7 @@ $redirect_to = $account_page_id ? get_page_link($account_page_id) : get_home_url
                                     <th class="sort" data-sort="data" scope="col"><?php _e('Data', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                     <th class="sort" data-sort="status" scope="col"><?php _e('Status', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                 </tr>
+                            </thead>
                             <tbody class="list">
                                 <?php
                                 $args = array(
@@ -89,7 +90,6 @@ $redirect_to = $account_page_id ? get_page_link($account_page_id) : get_home_url
                                 <?php } ?>
                                 <?php wp_reset_postdata(); ?>
                             </tbody>
-                            </thead>
                         </table>
                         <ul class="pagination"></ul>
                     </div>

@@ -140,3 +140,12 @@
         font-size: .6em;
     }
 }
+
+// Listagem de termos seguidos
+
+.child-term {
+    text-indent: 1em;
+    .parent-term-name {
+        font-size: 0.75em;
+    }
+}
