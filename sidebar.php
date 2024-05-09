@@ -13,5 +13,5 @@ $terms = get_terms(array(
         <button class="btn btn-secondary" type="button" id="button-addon2"><i class="bi bi-search"></i></button>
     </div>
 </form>
-
+<?php get_template_part('template-parts/archive/archive-sort-anuncios-form', '', array('post_type' => 'anuncios')); ?>
 <?php echo wt_show_anuncio_terms_nav($terms);

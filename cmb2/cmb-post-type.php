@@ -11,6 +11,12 @@ function wt_cmb_anuncio()
     ));
 
     $cmb->add_field(array(
+        'name'       => esc_html__('Preço', 'wt'),
+        'id'         => 'wt_anuncio_preco',
+        'type'       => 'text',
+        // 'show_option_none' => true,
+    ));
+    $cmb->add_field(array(
         'name'       => esc_html__('Status', 'wt'),
         'id'         => 'wt_anuncio_status',
         'type'       => 'select',

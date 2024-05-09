@@ -20,6 +20,9 @@ $author_data = get_userdata($author_id);
 $wt_email = $author_data->user_email;
 $wt_whatsapp = get_user_meta($author_id, 'wt_user_whatsapp', true);
 $wt_phone = get_user_meta($author_id, 'wt_user_phone', true);
+$wt_anuncio_preco = get_post_meta(get_the_ID(), 'wt_anuncio_preco', true);
+$formatter = new \NumberFormatter('pt-BR', \NumberFormatter::CURRENCY);
+$price = $wt_anuncio_preco ? $formatter->format(floatval($wt_anuncio_preco)) : 'R$ 0,00';
 $wt_faq = get_post_meta(get_the_ID(), 'wt_faq', true);
 $has_leads = wt_check_anuncio_has_leads($curr_user->ID, get_the_ID(), $author_id);
 $anuncio_status = get_post_meta(get_the_ID(), 'wt_anuncio_status', true);
@@ -86,6 +89,10 @@ $anuncio_status = get_post_meta(get_the_ID(), 'wt_anuncio_status', true);
                 <div class="entry-content">
                     <?php the_content(); ?>
                 </div><!-- .entry-content -->
+
+                <?php if ($price) { ?>
+                    <div class="price"><?php echo $price; ?></div>
+                <?php } ?>
             </div>
 
             <?php if ($wt_faq) { ?>

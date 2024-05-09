@@ -39,6 +39,7 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                                     <th class="sort" data-sort="titulo" scope="col"><?php _e('Anúncio', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                     <th class="sort" data-sort="data" scope="col"><?php _e('Data', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                 </tr>
+                            </thead>
                             <tbody class="list">
                                 <?php
                                 $anuncios = wt_get_vendedor_following_terms_anuncios($user_id);

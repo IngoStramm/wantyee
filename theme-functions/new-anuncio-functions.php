@@ -56,6 +56,14 @@ function wt_new_anuncio_form_handle()
     }
     $title = wp_strip_all_tags($_POST['anuncio_title']);
 
+    if (!isset($_POST['anuncio_price']) || !$_POST['anuncio_price']) {
+
+        $_SESSION['wt_new_anuncio_error_message'] = __('Preço inválido.', 'wt');
+        wp_safe_redirect($account_page_url);
+        exit;
+    }
+    $price = wp_strip_all_tags($_POST['anuncio_price']);
+
     if (!isset($_POST['anuncio-content']) || !$_POST['anuncio-content']) {
 
         $_SESSION['wt_new_anuncio_error_message'] = __('Descrição inválida.', 'wt');
@@ -117,8 +125,9 @@ function wt_new_anuncio_form_handle()
         // 'tax_input'         => array(
         //     'categoria-de-anuncio'     => $terms_id,
         // ),
-        'meta_input'        => array(
-            'wt_faq' =>     $faq,
+        'meta_input' => array(
+            'wt_anuncio_preco' =>   $price,
+            'wt_faq' =>             $faq,
             'wt_anuncio_status' => 'open'
         ),
     );

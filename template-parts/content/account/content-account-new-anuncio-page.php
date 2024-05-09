@@ -13,6 +13,7 @@ $wt_add_form_new_anuncio_nonce = wp_create_nonce('wt_form_new_anuncio_nonce');
 $post_id = isset($_SESSION['wp_anuncio_id']) && $_SESSION['wp_anuncio_id'] ? $_SESSION['wp_anuncio_id'] : null;
 unset($_SESSION['wp_anuncio_id']);
 $title = $post_id ? get_the_title($post_id) : null;
+$price = $post_id ? get_post_meta($post_id, 'wt_anuncio_preco', true) : null;
 $post_terms = $post_id ? get_the_terms($post_id, 'categoria-de-anuncio') : array();
 $post_terms_id = array();
 if (is_array($post_terms)) {
@@ -23,7 +24,7 @@ if (is_array($post_terms)) {
 $post_thumbnail = $post_id ? get_the_post_thumbnail($post_id, array('100', '100'), array('loading' => false, 'class' => 'img-fluid rounded my-2')) : null;
 $post_thumbnail_url = $post_id ? get_the_post_thumbnail_url($post_id, 'full') : null;
 $wt_faq = $post_id ? get_post_meta($post_id, 'wt_faq', true) : array(array('question' => '', 'answer' => ''));
-if(count($wt_faq) === 0) {
+if (count($wt_faq) === 0) {
     $wt_faq = array(array('question' => '', 'answer' => ''));
 }
 ?>
@@ -48,9 +49,17 @@ if(count($wt_faq) === 0) {
                         <div class="mb-3">
                             <label for="anuncio_title" class="form-label"><?php _e('Título', 'wt'); ?><span class="text-danger" data-bs-toggle="tooltip" data-bs-title="<?php _e('Campo obrigatório.', 'wt'); ?>">*</span></label>
                             <input type="text" class="form-control" id="anuncio_title" name="anuncio_title" tabindex="1" value="<?php echo $title ?>" required>
-                            <div class=" form-text"><?php _e('Procure usar um título que seja auto-explicativo. Evite títulos desnecessariamente longos.'); ?>
+                            <div class=" form-text"><?php _e('Procure usar um título que seja auto-explicativo. Evite títulos desnecessariamente longos.', 'wt'); ?>
                             </div>
                             <div class="invalid-feedback"><?php _e('Campo obrigatório', 'wt'); ?></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="anuncio_price" class="form-label"><?php _e('Preço', 'wt'); ?><span class="text-danger" data-bs-toggle="tooltip" data-bs-title="<?php _e('Campo obrigatório.', 'wt'); ?>">*</span></label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" class="form-control" id="anuncio_price" name="anuncio_price" aria-label="<?php _e('Apenas números', 'wt'); ?>" value="<?php echo $price; ?>">
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -62,38 +71,71 @@ if(count($wt_faq) === 0) {
                         <div class="mb-3">
                             <label for="terms" class="form-label" tabindex="3"><?php _e('Categorias', 'wt'); ?></label>
                             <div class="form-text mb-2"><?php _e('Categorias ajudam a encontrar mais facilmente o seu anúncio. Se nenhuma categoria for escolhida, o anúncio será atribuído à categoria <strong>"Geral"</strong>.'); ?></div>
-                            <ul class="list-group checkbox-terms-list">
-                                <?php foreach ($terms as $term) { ?>
-                                    <?php // wt_debug($term->term_id); 
-                                    ?>
-                                    <?php if (!$term->parent) { ?>
-                                        <?php $parent_checked = in_array($term->term_id, $post_terms_id) ? 'checked' : ''; ?>
-                                        <li class="list-group-item">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="<?php echo $term->term_id; ?>" name="terms[]" id="term-<?php echo $term->term_id; ?>" <?php echo $parent_checked; ?>>
-                                                <label class="form-check-label" for="term-<?php echo $term->term_id; ?>">
-                                                    <?php echo $term->name; ?>
-                                                </label>
-                                            </div>
-                                            <?php foreach ($terms as $term2) { ?>
-                                                <ul class="list-group">
-                                                    <?php if ($term2->parent === $term->term_id) { ?>
-                                                        <?php $child_checked = in_array($term2->term_id, $post_terms_id) ? 'checked' : ''; ?>
-                                                        <li class="list-group-item">
+
+                            <div id="table-cat-produtos">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="search" class="form-control form-control-sm search" id="table-search-input" placeholder="<?php _e('Pesquisar', 'wt'); ?>">
+                                            <label for="table-search-input"><?php _e('Pesquisar', 'wt'); ?></label>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive sort-table">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"></th>
+                                                <th scope="col"><?php _e('Nome', 'wt'); ?></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody class="list checkbox-terms-list">
+                                            <?php foreach ($terms as $term) { ?>
+                                                <?php if (!$term->parent) { ?>
+                                                    <?php $parent_checked = in_array($term->term_id, $post_terms_id) ? 'checked' : ''; ?>
+                                                    <tr>
+                                                        <td scope="row" class="text-center" width="70px">
+                                                            <input class="form-check-input" type="checkbox" value="<?php echo $term->term_id; ?>" name="terms[]" id="term-<?php echo $term->term_id; ?>" <?php echo $parent_checked; ?>>
+                                                        </td>
+                                                        <td>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="<?php echo $term2->term_id; ?>" name="terms[]" id="term-<?php echo $term2->term_id; ?>" data-parent="term-<?php echo $term2->parent; ?>" <?php echo $child_checked; ?>>
-                                                                <label class="form-check-label" for="term-<?php echo $term2->term_id; ?>">
-                                                                    <?php echo $term2->name; ?>
+
+                                                                <label class="form-check-label nome" for="term-<?php echo $term->term_id; ?>">
+                                                                    <?php echo $term->name; ?>
                                                                 </label>
                                                             </div>
-                                                        </li>
+                                                        </td>
+                                                    </tr>
+                                                    <?php foreach ($terms as $term2) { ?>
+                                                        <?php if ($term2->parent === $term->term_id) { ?>
+                                                            <?php $child_checked = in_array($term2->term_id, $post_terms_id) ? 'checked' : ''; ?>
+                                                            <tr>
+                                                                <td scope="row" class="text-center">
+                                                                    <input class="form-check-input" type="checkbox" value="<?php echo $term2->term_id; ?>" name="terms[]" id="term-<?php echo $term2->term_id; ?>" data-parent="term-<?php echo $term2->parent; ?>" <?php echo $child_checked; ?>>
+                                                                </td>
+                                                                <td class="child-term">
+                                                                    <div class="form-check">
+
+                                                                        <label class="form-check-label" for="term-<?php echo $term2->term_id; ?>">
+                                                                            <span class="nome"><?php echo $term2->name; ?></span> — <span class="parent-term-name"><?php echo $term->name; ?></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        <?php } ?>
                                                     <?php } ?>
-                                                </ul>
+                                                    </tr>
+                                                <?php } ?>
                                             <?php } ?>
-                                        </li>
-                                    <?php } ?>
-                                <?php } ?>
-                            </ul>
+                                        </tbody>
+                                    </table>
+                                    <ul class="pagination"></ul>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3 wt-file-image-preview">

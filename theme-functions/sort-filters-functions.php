@@ -106,6 +106,8 @@ function wt_sort_ordering_query($wp_query)
 
     $start_date = isset($_GET['start-date']) && $_GET['start-date'] ? $_GET['start-date'] : null;
     $end_date = isset($_GET['end-date']) && $_GET['end-date'] ? $_GET['end-date'] : null;
+    $min_price = isset($_GET['min-price']) && $_GET['min-price'] ? $_GET['min-price'] : null;
+    $max_price = isset($_GET['max-price']) && $_GET['max-price'] ? $_GET['max-price'] : null;
 
     if ((is_home() || is_author() || is_search() || is_archive()) && is_main_query() && !is_admin() && $wp_query->get('post_type') !== 'nav_menu_item') {
         $wp_query->set('orderby', $order_array[$orderby]['orderby']);
@@ -136,5 +138,99 @@ function wt_sort_ordering_query($wp_query)
         if (count($date_query_array) > 0) {
             $wp_query->set('date_query', $date_query_array);
         }
+
+        if ($min_price && $max_price) {
+            $meta_query = array(
+                'relation' => 'AND',
+                array(
+                    'key' => 'wt_anuncio_preco',
+                    'value' => floatval($min_price),
+                    'compare' => '>=',
+                    'type' => 'numeric'
+                ),
+                array(
+                    'key' => 'wt_anuncio_preco',
+                    'value' => floatval($max_price),
+                    'compare' => '<=',
+                    'type' => 'numeric'
+                )
+            );
+            $wp_query->set('meta_query', $meta_query);
+        }
     }
+}
+
+function wt_get_anuncios_by_price()
+{
+
+    $args = array(
+        'post_type' => 'anuncios',
+        'posts_per_page' => -1, // Get all posts
+    );
+
+    $query = new WP_Query($args);
+    $prices = [];
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $post_id = get_the_ID();
+            $wt_anuncio_preco = get_post_meta($post_id, 'wt_anuncio_preco', true);
+            if ($wt_anuncio_preco) {
+                $prices[] = floatval($wt_anuncio_preco);
+            }
+        }
+
+        wp_reset_postdata(); // Important to reset post data
+    }
+    sort($prices);
+    return $prices;
+}
+
+function wt_split_by_group_prices()
+{
+    $prices = wt_get_anuncios_by_price();
+    $max = max($prices);
+    $colunas = 20;
+    $price_divider = $max / $colunas;
+    $grupos = [];
+    for ($i = 0; $i < $colunas; $i++) {
+        $count = 0;
+        foreach ($prices as $k => $price) {
+            $item = new stdClass();
+            if ($price <= $price_divider * ($i + 1)) {
+                $count++;
+                unset($prices[$k]);
+            }
+            $item->qty = $count;
+            $item->divider = $price_divider * ($i + 1);
+            $grupos[$i] = $item;
+        }
+    }
+    return $grupos;
+}
+
+function wt_filter_by_price()
+{
+    $colunas = wt_split_by_group_prices();
+    $max = wt_get_coluna_max_qty($colunas);
+    $output = '';
+    $output .= '<div class="wt-bars-graph">';
+    foreach ($colunas as $item) {
+        $pct = ($item->qty / $max) * 100;
+        $output .= '<div class="bar" style="height: ' . ceil($pct) . '%;"></div>';
+    }
+    $output .= '</div>';
+    return $output;
+}
+
+function wt_get_coluna_max_qty($colunas)
+{
+    $max = 0;
+    foreach ($colunas as $item) {
+        $qty = $item->qty;
+        if ($qty > $max) {
+            $max = $qty;
+        }
+    }
+    return $max;
 }

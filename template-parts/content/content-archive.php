@@ -11,6 +11,12 @@
 
 ?>
 
+<?php
+$wt_anuncio_preco = get_post_meta(get_the_ID(), 'wt_anuncio_preco', true);
+$formatter = new \NumberFormatter('pt-BR', \NumberFormatter::CURRENCY);
+$price = $wt_anuncio_preco ? $formatter->format(floatval($wt_anuncio_preco)) : 'R$ 0,00';
+?>
+
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="card shadow-sm">
         <a href="<?php echo get_permalink(); ?>">
@@ -24,6 +30,9 @@
             </div>
             <p class="card-text"><?php the_excerpt(); ?></p>
             <div class="d-flex justify-content-between align-items-center">
+                <?php if ($price) { ?>
+                    <div class="price"><?php echo $price; ?></div>
+                <?php } ?>
                 <div class="btn-group">
                     <a href="<?php echo get_permalink(); ?>" class="btn btn-sm btn-outline-secondary"><?php _e('Ver mais', 'wt'); ?></a>
                 </div>

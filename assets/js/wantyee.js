@@ -450,6 +450,18 @@
             valueNames: ['titulo', 'nome', 'data', 'status'],
         };
 
+        const optionsCatProdutos = {
+            ...defaultOptions,
+            valueNames: ['nome'],
+            page: 10
+        };
+
+        const optionsRelatorioCat = {
+            ...defaultOptions,
+            valueNames: ['order', 'nome', 'minval', 'maxval', 'midval'],
+            page: 10
+        };
+
         const tableAnuncios = document.getElementById('table-anuncios');
         const tableListAnuncios = new List(tableAnuncios, optionsListAnuncios);
 
@@ -463,7 +475,14 @@
         const tableListContactedAnuncios = new List(tableContactedAnuncios, optionsContactedAnuncios);
 
         const tableFollowingCatProdutos = document.getElementById('table-following-cat-produtos');
-        const tableListFollowingCatProdutos = new List(tableFollowingCatProdutos, defaultOptions);
+        const tableListFollowingCatProdutos = new List(tableFollowingCatProdutos, optionsCatProdutos);
+
+        const tableCatProdutos = document.getElementById('table-cat-produtos');
+        const tableListCatProdutos = new List(tableCatProdutos, optionsCatProdutos);
+
+        const tableRelatorioCat = document.getElementById('table-relatorio-cat');
+        const tableListRelatorioCat = new List(tableRelatorioCat, optionsRelatorioCat);
+
     }
 
     // Não mais usado, guardado para referência
@@ -571,6 +590,300 @@
         });
     }
 
+    function wt_dual_range_filter() {
+        function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
+            const [from, to] = getParsed(fromInput, toInput);
+            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+            if (from > to) {
+                fromSlider.value = to;
+                fromInput.value = to;
+            } else {
+                fromSlider.value = from;
+            }
+        }
+
+        function controlToInput(toSlider, fromInput, toInput, controlSlider) {
+            const [from, to] = getParsed(fromInput, toInput);
+            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+            setToggleAccessible(toInput);
+            if (from <= to) {
+                toSlider.value = to;
+                toInput.value = to;
+            } else {
+                toInput.value = from;
+            }
+        }
+
+        function controlFromSlider(fromSlider, toSlider, fromInput) {
+            const [from, to] = getParsed(fromSlider, toSlider);
+            fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+            if (from > to) {
+                fromSlider.value = to;
+                fromInput.value = to;
+            } else {
+                fromInput.value = from;
+            }
+        }
+
+        function controlToSlider(fromSlider, toSlider, toInput) {
+            const [from, to] = getParsed(fromSlider, toSlider);
+            fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+            setToggleAccessible(toSlider);
+            if (from <= to) {
+                toSlider.value = to;
+                toInput.value = to;
+            } else {
+                toInput.value = from;
+                toSlider.value = from;
+            }
+        }
+
+        function getParsed(currentFrom, currentTo) {
+            const from = parseInt(currentFrom.value, 10);
+            const to = parseInt(currentTo.value, 10);
+            return [from, to];
+        }
+
+        function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
+            const rangeDistance = to.max - to.min;
+            const fromPosition = from.value - to.min;
+            const toPosition = to.value - to.min;
+            controlSlider.style.background = `linear-gradient(
+      to right,
+      ${sliderColor} 0%,
+      ${sliderColor} ${(fromPosition) / (rangeDistance) * 100}%,
+      ${rangeColor} ${((fromPosition) / (rangeDistance)) * 100}%,
+      ${rangeColor} ${(toPosition) / (rangeDistance) * 100}%, 
+      ${sliderColor} ${(toPosition) / (rangeDistance) * 100}%, 
+      ${sliderColor} 100%)`;
+        }
+
+        function setToggleAccessible(currentTarget) {
+            const toSlider = document.querySelector('#toSlider');
+            if (Number(currentTarget.value) <= 0) {
+                toSlider.style.zIndex = 2;
+            } else {
+                toSlider.style.zIndex = 0;
+            }
+        }
+
+        const fromSlider = document.querySelector('#fromSlider');
+        const toSlider = document.querySelector('#toSlider');
+        const fromInput = document.querySelector('#fromInput');
+        const toInput = document.querySelector('#toInput');
+        if (
+            (typeof fromSlider === undefined || !fromSlider) ||
+            (typeof toSlider === undefined || !toSlider) ||
+            (typeof fromInput === undefined || !fromInput) ||
+            (typeof toInput === undefined || !toInput)
+        ) {
+            return;
+        }
+        fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+        setToggleAccessible(toSlider);
+
+        fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
+        toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
+        fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
+        toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+    }
+
+    function wtGetArrayRandomColors(arr) {
+        const bgColors = [];
+        arr.forEach(cat => {
+            let newColor = wtGetRandomColor();
+            while (bgColors.includes(newColor)) {
+                newColor = wtGetRandomColor();
+            }
+            bgColors.push(wtGetRandomColor());
+        });
+        return bgColors;
+    }
+
+    function wtTotalAnunciosChart() {
+        if (typeof ajax_object.anuncios_ativos === undefined || !ajax_object.anuncios_ativos) {
+            return;
+        }
+        if (typeof ajax_object.anuncios_encerrados === undefined || !ajax_object.anuncios_encerrados) {
+            return;
+        }
+        const xValues = ['Ativos', 'Encerrados'];
+        const yValues = [ajax_object.anuncios_ativos, ajax_object.anuncios_encerrados];
+        const barColors = wtGetArrayRandomColors([ajax_object.anuncios_ativos, ajax_object.anuncios_encerrados]);
+        new Chart('chart-total-anuncios', {
+            type: 'pie',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            }
+        });
+    }
+
+    function wtValoresAnunciosChart() {
+        if (typeof ajax_object.min_price === undefined || !ajax_object.min_price) {
+            return;
+        }
+        if (typeof ajax_object.max_price === undefined || !ajax_object.max_price) {
+            return;
+        }
+        if (typeof ajax_object.media_price === undefined || !ajax_object.media_price) {
+            return;
+        }
+        const xValues = ['Mínimo', 'Máximo', 'Médio'];
+        const yValues = [ajax_object.min_price, ajax_object.max_price, ajax_object.media_price];
+        const barColors = wtGetArrayRandomColors([ajax_object.min_price, ajax_object.max_price, ajax_object.media_price]);
+        new Chart('chart-valores-anuncios', {
+            type: 'bar',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: yValues,
+                    backgroundColor: barColors,
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    function wtTotalVendedoresChart() {
+        if (typeof ajax_object.total_compradores === undefined || !ajax_object.total_compradores) {
+            return;
+        }
+        if (typeof ajax_object.total_vendedores === undefined || !ajax_object.total_vendedores) {
+            return;
+        }
+        const xValues = ['Compradores', 'Vendedores'];
+        const yValues = [ajax_object.total_compradores, ajax_object.total_vendedores];
+        const barColors = wtGetArrayRandomColors([ajax_object.total_compradores, ajax_object.total_vendedores]);
+        new Chart('chart-total-usuarios', {
+            type: 'pie',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            }
+        });
+    }
+
+    function wtGetRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function wtMinValCategoriasChart() {
+        if (typeof ajax_object.nomes_cat === undefined || !ajax_object.nomes_cat) {
+            return;
+        }
+        if (typeof ajax_object.cat_minvalues === undefined || !ajax_object.cat_minvalues) {
+            return;
+        }
+        const xValues = ajax_object.nomes_cat;
+        const yValues = ajax_object.cat_minvalues;
+        const barColors = wtGetArrayRandomColors(ajax_object.nomes_cat);
+        new Chart('chart-categorias-minval', {
+            type: 'bar',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: yValues,
+                    backgroundColor: barColors,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    function wtMaxValCategoriasChart() {
+        if (typeof ajax_object.nomes_cat === undefined || !ajax_object.nomes_cat) {
+            return;
+        }
+        if (typeof ajax_object.cat_maxvalues === undefined || !ajax_object.cat_maxvalues) {
+            return;
+        }
+        const xValues = ajax_object.nomes_cat;
+        const yValues = ajax_object.cat_maxvalues;
+        const barColors = wtGetArrayRandomColors(ajax_object.nomes_cat);
+        new Chart('chart-categorias-maxval', {
+            type: 'bar',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: yValues,
+                    backgroundColor: barColors,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    function wtMidValCategoriasChart() {
+        if (typeof ajax_object.nomes_cat === undefined || !ajax_object.nomes_cat) {
+            return;
+        }
+        if (typeof ajax_object.cat_midvalues === undefined || !ajax_object.cat_midvalues) {
+            return;
+        }
+        const xValues = ajax_object.nomes_cat;
+        const yValues = ajax_object.cat_midvalues;
+        const barColors = wtGetArrayRandomColors(ajax_object.nomes_cat);
+        new Chart('chart-categorias-midval', {
+            type: 'bar',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: yValues,
+                    backgroundColor: barColors,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    function wtChartsInit() {
+        wtTotalAnunciosChart();
+        wtValoresAnunciosChart();
+        wtTotalVendedoresChart();
+        wtMinValCategoriasChart();
+        wtMaxValCategoriasChart();
+        wtMidValCategoriasChart();
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -585,6 +898,8 @@
         wtSortTableList();
         wtClearInputValue();
         wt_contact_form();
+        wt_dual_range_filter();
+        wtChartsInit();
     }, false);
 
 })();

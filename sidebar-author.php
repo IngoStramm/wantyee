@@ -27,4 +27,5 @@ foreach ($author_posts as $author_post) {
 }
 wp_reset_postdata();
 ksort($author_terms);
+get_template_part('template-parts/archive/archive-sort-anuncios-form', '', array('post_type' => 'anuncios'));
 echo wt_show_anuncio_terms_nav($author_terms);

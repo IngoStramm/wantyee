@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Template Name: Página Padrão
+ * Template Name: Página Relatório
  * 
- * The template for Página Padrão
+ * The template for Página Relatório
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
  *
@@ -16,7 +16,7 @@ get_header();
 /* Start the Loop */
 while (have_posts()) :
     the_post();
-    get_template_part('template-parts/content/content-page');
+    get_template_part('template-parts/content/content-relatorio-page');
 
 endwhile; // End of the loop.
 

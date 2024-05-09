@@ -20,3 +20,5 @@ require_once(WT_DIR . '/theme-functions/shortcodes.php');
 require_once(WT_DIR . '/theme-functions/email-functions.php');
 require_once(WT_DIR . '/theme-functions/sort-filters-functions.php');
 require_once(WT_DIR . '/theme-functions/contact-form-functions.php');
+require_once(WT_DIR . '/theme-functions/dual-range-slider.php');
+require_once(WT_DIR . '/theme-functions/relatorio-functions.php');
