@@ -268,6 +268,21 @@ function wt_new_anuncio_success_message()
     }
 }
 
+function wt_get_anuncio_leads($anuncio_id)
+{
+    $args = array(
+        'post_type' => 'leads',
+        'posts_per_page' => -1,
+        'status'    => 'published',
+        'meta_key' => 'wt_anuncio_id',
+        'meta_value' => $anuncio_id,
+        'meta_compare' => '='
+    );
+    $leads = get_posts($args);
+    wp_reset_postdata();
+    return $leads;
+}
+
 add_action('wt_modal', 'wt_close_anuncio_modal');
 
 /**
@@ -278,7 +293,8 @@ add_action('wt_modal', 'wt_close_anuncio_modal');
 function wt_close_anuncio_modal()
 {
     $wt_add_form_close_anuncio_nonce = wp_create_nonce('wt_form_close_anuncio_nonce');
-    $post_id = isset($_SESSION['wp_anuncio_id']) && $_SESSION['wp_anuncio_id'] ? $_SESSION['wp_anuncio_id'] : null;
+    $post_id = isset($_REQUEST['wt_anuncio_id']) && $_REQUEST['wt_anuncio_id'] ? $_REQUEST['wt_anuncio_id'] : null;
+    $current_user = wp_get_current_user();
     if (!$post_id) {
         return;
     }
@@ -295,17 +311,87 @@ function wt_close_anuncio_modal()
       <div class="modal-body">
       <h5>' . __('Tem certeza que deseja encerrar o anúncio?', 'wt') . '</h5>
         <p>' . __('Uma vez encerrado, o anúncio não estará mais disponível para as outras pessoas, com excessão de você mesmo e os vendedores que geraram leads a partir dele.', 'wt') . '</p>
-        ' . wt_alert(__('<strong>Não</strong> é possível reabrir um anúncio encerrado.', 'wt')) . '
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . __('Cancelar', 'wt') . '</button>';
+        ' . wt_alert(__('<strong>Não</strong> é possível reabrir um anúncio encerrado.', 'wt'));
+
     $output .= '        
-        <form id="close-anuncio-form" name="close-anuncio-form" action="' . esc_url(admin_url('admin-post.php')) . '" method="post">
-            <input type="hidden" name="action" value="wt_close_anuncio_form">
-            <input type="hidden" name="post_id" value="' .  $post_id . '">
-            <input type="hidden" name="wt_form_close_anuncio_nonce" value="' .  $wt_add_form_close_anuncio_nonce . '">
-            <button class="btn btn-primary">' . __(' Confirmar', 'wt') . '</button>
-        </form>';
+          <form id="close-anuncio-form" name="close-anuncio-form" action="' . esc_url(admin_url('admin-post.php')) . '" method="post" class="needs-validation" novalidate>';
+
+    $leads = wt_get_anuncio_leads($post_id);
+    $output .= '<label class="form-label" for="vendedor-id">' . __('Qual o vendedor que atendeu o seu anúncio?', 'wt') . '</label>';
+    $output .= '<select class="form-select" id="vendedor-id" name="vendedor-id" required>';
+    $output .= '<option value="">' . __('Selecione uma opção', 'wt') . '</option>';
+    foreach ($leads as $lead) {
+        $author_data = get_user_by('ID', $lead->post_author);
+        $output .= '<option value="' . $lead->post_author . '" data-lead-id="' . $lead->ID . '">' . $author_data->display_name . '</option>';
+    }
+    $output .= '<option value="none">' . __('Não se aplica.', 'wt') . '</option>';
+    $output .= '</select>';
+
+    $output .= '<div class="invalid-feedback">' . __('Campo obrigatório', 'wt') . '</div>';
+
+    $output .= '<input type="hidden" id="vendedor-lead-id" name="vendedor-lead-id" />';
+
+    $output .= '<div id="avaliacao-nota-wrapper" class="mt-3" style="display: none;">';
+    $output .= '<label>' . __('Dê uma nota para o vendedor', 'wt') . '</label>';
+    $output .= '<div class="form-check">';
+    $output .= '<input class="form-check-input" type="radio" name="avaliacao-nota" id="avaliacao-nota-1" value="1" disabled />';
+    $output .= '<label class="form-check-label" for="avaliacao-nota-1">
+        <i class="bi bi-star-fill"></i>
+        </label>';
+    $output .= '</div>';
+    $output .= '<div class="form-check">';
+    $output .= '<input class="form-check-input" type="radio" name="avaliacao-nota" id="avaliacao-nota-2" value="2" disabled />';
+    $output .= '<label class="form-check-label" for="avaliacao-nota-2">
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        </label>';
+    $output .= '</div>';
+    $output .= '<div class="form-check">';
+    $output .= '<input class="form-check-input" type="radio" name="avaliacao-nota" id="avaliacao-nota-3" value="3" disabled />';
+    $output .= '<label class="form-check-label" for="avaliacao-nota-3">
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        </label>';
+    $output .= '</div>';
+    $output .= '<div class="form-check">';
+    $output .= '<input class="form-check-input" type="radio" name="avaliacao-nota" id="avaliacao-nota-4" value="4" checked disabled />';
+    $output .= '<label class="form-check-label" for="avaliacao-nota-4">
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        </label>';
+    $output .= '</div>';
+    $output .= '<div class="form-check">';
+    $output .= '<input class="form-check-input" type="radio" name="avaliacao-nota" id="avaliacao-nota-5" value="5" disabled />';
+    $output .= '<label class="form-check-label" for="avaliacao-nota-5">
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        <i class="bi bi-star-fill"></i>
+        </label>';
+    $output .= '</div>';
+
+    $output .=  '<div class="mt-3">';
+    $output .=  '<label class="form-label" for="avaliacao-comentario">' . __('Deixe um comentário sobre como foi a sua experiência com o vendedor', 'wt') . '</label>';
+    $output .=   '<textarea id="avaliacao-comentario" name="avaliacao-comentario" class="form-control"></textarea>';
+    $output .=  '</div>';
+
+    $output .= '</div>';
+
+    $output .=
+        '<input type="hidden" name="action" value="wt_close_anuncio_form">
+              <input type="hidden" name="wt_anuncio_id" value="' .  $post_id . '">
+              <input type="hidden" name="wt_user_id" value="' .   $current_user->ID . '">
+              <input type="hidden" name="wt_form_close_anuncio_nonce" value="' .  $wt_add_form_close_anuncio_nonce . '">
+              <button class="btn btn-primary mt-3">' . __(' Confirmar', 'wt') . '</button>
+          </form>';
+    $output .= '</div>';
+    $output .=
+        '<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . __('Cancelar', 'wt') . '</button>';
     $output .= '
       </div>
     </div>

@@ -60,7 +60,7 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                                                 </td>
                                                 <td>
                                                     <div class="form-check">
-                                                        <label class="form-check-label" for="term-<?php echo $term->term_id; ?>">
+                                                        <label class="form-check-label nome" for="term-<?php echo $term->term_id; ?>">
                                                             <?php echo $term->name; ?>
                                                         </label>
                                                     </div>
@@ -76,7 +76,7 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                                                         <td class="child-term">
                                                             <div class="form-check">
                                                                 <label class="form-check-label" for="term-<?php echo $term2->term_id; ?>">
-                                                                    <span><?php echo $term2->name; ?></span> — <span class="parent-term-name"><?php echo $term->name; ?></span>
+                                                                    <span class="nome"><?php echo $term2->name; ?></span> — <span class="parent-term-name"><?php echo $term->name; ?></span>
                                                                 </label>
                                                             </div>
                                                         </td>

@@ -701,6 +701,10 @@
     }
 
     function wtTotalAnunciosChart() {
+        const chartId = document.getElementById('chart-total-anuncios');
+        if (typeof chartId === undefined || !chartId) {
+            return;
+        }
         if (typeof ajax_object.anuncios_ativos === undefined || !ajax_object.anuncios_ativos) {
             return;
         }
@@ -723,6 +727,10 @@
     }
 
     function wtValoresAnunciosChart() {
+        const chartId = document.getElementById('chart-valores-anuncios');
+        if (typeof chartId === undefined || !chartId) {
+            return;
+        }
         if (typeof ajax_object.min_price === undefined || !ajax_object.min_price) {
             return;
         }
@@ -755,6 +763,10 @@
     }
 
     function wtTotalVendedoresChart() {
+        const chartId = document.getElementById('chart-total-usuarios');
+        if (typeof chartId === undefined || !chartId) {
+            return;
+        }
         if (typeof ajax_object.total_compradores === undefined || !ajax_object.total_compradores) {
             return;
         }
@@ -786,6 +798,10 @@
     }
 
     function wtMinValCategoriasChart() {
+        const chartId = document.getElementById('chart-categorias-minval');
+        if (typeof chartId === undefined || !chartId) {
+            return;
+        }
         if (typeof ajax_object.nomes_cat === undefined || !ajax_object.nomes_cat) {
             return;
         }
@@ -816,6 +832,10 @@
     }
 
     function wtMaxValCategoriasChart() {
+        const chartId = document.getElementById('chart-categorias-maxval');
+        if (typeof chartId === undefined || !chartId) {
+            return;
+        }
         if (typeof ajax_object.nomes_cat === undefined || !ajax_object.nomes_cat) {
             return;
         }
@@ -846,6 +866,10 @@
     }
 
     function wtMidValCategoriasChart() {
+        const chartId = document.getElementById('chart-categorias-midval');
+        if (typeof chartId === undefined || !chartId) {
+            return;
+        }
         if (typeof ajax_object.nomes_cat === undefined || !ajax_object.nomes_cat) {
             return;
         }
@@ -884,6 +908,61 @@
         wtMidValCategoriasChart();
     }
 
+    function wtSelectVendedorCloseAnuncioForm() {
+        const selectVendedorId = document.getElementById('vendedor-id');
+        if (typeof selectVendedorId === undefined || !selectVendedorId) {
+            console.log('selectVendedorId não encontrado');
+            return;
+        }
+        const inputVendedorLeadId = document.getElementById('vendedor-lead-id');
+        if (typeof inputVendedorLeadId === undefined || !inputVendedorLeadId) {
+            console.log('vendedorLeadId não encontrado');
+            return;
+        }
+        selectVendedorId.addEventListener('change', e => {
+            const avaliacaoNotaWrapper = document.getElementById('avaliacao-nota-wrapper');
+            const selectedOption = selectVendedorId.value;
+            const radioOptions = document.querySelectorAll('[name="avaliacao-nota"]');
+            if (typeof selectedOption !== undefined && selectedOption && selectedOption !== 'none') {
+                avaliacaoNotaWrapper.style.display = 'block';
+                radioOptions.forEach(radioOption => {
+                    radioOption.disabled = false;
+                });
+            } else {
+                avaliacaoNotaWrapper.style.display = 'none';
+                radioOptions.forEach(radioOption => {
+                    radioOption.disabled = true;
+                });
+            }
+            inputVendedorLeadId.value = selectVendedorId.value;
+        });
+    }
+
+    function wtAvaliacoesList() {
+        const options = {
+            valueNames: [
+                { data: ['nota'] }
+            ],
+            page: 10,
+            pagination: [{
+                item: `<li class="page-item"><a class="page page-link"></a></li>`
+            }]
+        };
+
+        var userList = new List('avaliacoes', options);
+
+        const avaliacoesFilterSelect = document.getElementById('filter-avaliacao');
+        if (typeof avaliacoesFilterSelect === undefined || !avaliacoesFilterSelect) {
+            return;
+        }
+
+        avaliacoesFilterSelect.addEventListener('change', e => {
+            const newValue = e.target.value;
+            console.log(newValue);
+            userList.search(newValue);
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -900,6 +979,8 @@
         wt_contact_form();
         wt_dual_range_filter();
         wtChartsInit();
+        wtSelectVendedorCloseAnuncioForm();
+        wtAvaliacoesList();
     }, false);
 
 })();

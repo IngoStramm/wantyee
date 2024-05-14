@@ -25,7 +25,15 @@ $user_type = get_user_meta($user->get('id'), 'wt_user_type', true);
                     <h3><?php echo sprintf(__('Olá, %s!'), $user->display_name); ?></h3>
                     <p><?php _e('Nesta página você pode alterar os seus dados pessoais.', 'wt') ?></p>
 
-                    <p class="mb-5"><?php printf(__('Esta é uma conta de <strong>%s</strong>.', 'wt'), $user_type === 'comprador' ? __('comprador', 'wt') : __('vendedor', 'wt')) ?></p>
+                    <p><?php printf(__('Esta é uma conta de <strong>%s</strong>.', 'wt'), $user_type === 'comprador' ? __('comprador', 'wt') : __('vendedor', 'wt')) ?></p>
+
+                    <p><?php
+                        if ($user_type === 'vendedor') {
+                            printf(__('Clique <a href="%s">aqui</a> para visualizar suas avaliações', 'wt'), wt_get_page_url('perfilvendedor'));
+                        }
+                        ?></p>
+
+                    <div class="clearfix mb-5"></div>
 
                     <?php echo wt_account_nav('account'); ?>
 

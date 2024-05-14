@@ -238,6 +238,22 @@ function wt_register_theme_options_metabox()
     ));
 
     $cmb_options->add_field(array(
+        'name'    => esc_html__('Página do Perfil do Vendedor', 'wt'),
+        'id'      => 'wt_perfil_vendedor_page',
+        'type'    => 'select',
+        'options' => function () {
+            $pages = wt_get_pages();
+            $array = [];
+            $array[''] = __('Selecione uma página', 'wt');
+            foreach ($pages as $id => $title) {
+                $array[$id] = $title;
+            }
+            return $array;
+        },
+        'required'      => true
+    ));
+
+    $cmb_options->add_field(array(
         'name' => esc_html__('Imagem padrão', 'cmb2'),
         'desc' => esc_html__('A imagem padrão será exibido quando o comprador não definir uma imagem para o anúncio.', 'cmb2'),
         'id'   => 'wt_anuncio_default_image',

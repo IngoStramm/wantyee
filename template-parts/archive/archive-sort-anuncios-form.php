@@ -59,6 +59,7 @@ if ($post_type === 'anuncios' && ($prices && count($prices) > 0)) {
         echo wt_dual_range_filter($min, $max);
     }
     ?>
+    <a class="btn btn-secondary" href="<?php echo get_site_url(); ?>"><?php _e('Resetar filtro', ' wt') ?></a>
     <input type="hidden" name="action" value="wt_sort_anuncio_form">
     <?php /* ?><input type="hidden" name="wt_form_sort_anuncio_nonce" value="<?php echo $wt_add_form_sort_anuncio_nonce; ?>"><?php */ ?>
     <button class="btn btn-primary"><?php _e('Filtrar', 'wt'); ?></button>

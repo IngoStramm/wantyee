@@ -73,3 +73,40 @@ function wt_lead_post_type()
         )
     );
 }
+
+add_action('init', 'wt_avaliacao_post_type', 1);
+
+function wt_avaliacao_post_type()
+{
+    $avaliacao = new WT_Post_Type(
+        'Avaliação', // Nome (Singular) do Post Type.
+        'avaliacoes' // Slug do Post Type.;
+    );
+
+    $avaliacao->set_labels(
+        array(
+            'name'               => __('Avaliação', 'wt'),
+            'singular_name'      => __('Avaliação', 'wt'),
+            'menu_name'          => __('Avaliações', 'wt'),
+            'name_admin_bar'     => __('Avaliação', 'wt'),
+            'add_new'            => __('Adicionar avaliação', 'wt'),
+            'add_new_item'       => __('Adicionar Nova avaliação', 'wt'),
+            'new_item'           => __('Nova avaliação', 'wt'),
+            'edit_item'          => __('Editar avaliação', 'wt'),
+            'view_item'          => __('Visualizar avaliação', 'wt'),
+            'all_items'          => __('Todas as avaliações', 'wt'),
+            'search_items'       => __('Pesquisar avaliações', 'wt'),
+            'parent_item_colon'  => __('Avaliação Pai', 'wt'),
+            'not_found'          => __('Nenhuma avaliação encontrada', 'wt'),
+            'not_found_in_trash' => __('Nenhuma avaliação encontrada na lixeira.', 'wt'),
+        )
+    );
+
+    $avaliacao->set_arguments(
+        array(
+            'supports'             => array('title', 'editor'),
+            'menu_icon'         => 'dashicons-star-filled',
+            'show_in_nav_menus' => true
+        )
+    );
+}

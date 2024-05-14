@@ -10,8 +10,8 @@ $account_page_id = wt_get_option('wt_account_page');
 $redirect_to = $account_page_id ? get_page_link($account_page_id) : get_home_url();
 $wt_add_form_new_anuncio_nonce = wp_create_nonce('wt_form_new_anuncio_nonce');
 
-$post_id = isset($_SESSION['wp_anuncio_id']) && $_SESSION['wp_anuncio_id'] ? $_SESSION['wp_anuncio_id'] : null;
-unset($_SESSION['wp_anuncio_id']);
+$post_id = isset($_REQUEST['wt_anuncio_id']) && $_REQUEST['wt_anuncio_id'] ? $_REQUEST['wt_anuncio_id'] : null;
+$post = get_post($post_id);
 $title = $post_id ? get_the_title($post_id) : null;
 $price = $post_id ? get_post_meta($post_id, 'wt_anuncio_preco', true) : null;
 $post_terms = $post_id ? get_the_terms($post_id, 'categoria-de-anuncio') : array();
@@ -32,7 +32,15 @@ if (count($wt_faq) === 0) {
     <div class="row">
         <div class="col">
 
-            <?php if ($user_type === 'comprador') { ?>
+            <?php // Se for editar um anúncio existente e não for o autor dele 
+            ?>
+            <?php // Ou se não for um comprador 
+            ?>
+            <?php if (($post_id && (intval($post->post_author) !== $user_id || get_post_meta($post_id, 'wt_anuncio_status', true) === 'closed')) || ($user_type !== 'comprador')) { ?>
+
+                <?php get_template_part('template-parts/content/content-access-denied'); ?>
+
+            <?php } else { ?>
 
                 <h3><?php echo sprintf(__('Olá, %s!'), $user->display_name); ?></h3>
 
@@ -189,10 +197,6 @@ if (count($wt_faq) === 0) {
                     <input type="hidden" value="<?php echo $post_id; ?>" name="post_id">
                     <input type="hidden" value="<?php echo esc_attr($redirect_to); ?>" name="redirect_to">
                 </form>
-
-            <?php } else { ?>
-
-                <?php get_template_part('template-parts/content/content-access-denied'); ?>
 
             <?php } ?>
         </div>

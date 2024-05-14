@@ -20,7 +20,7 @@ function wt_debug($a)
  */
 function wt_version()
 {
-    $version = '1.0.6';
+    $version = '1.0.9';
     return $version;
 }
 
@@ -190,6 +190,13 @@ function wt_get_page_id($slug)
             }
             break;
 
+        case 'perfilvendedor':
+            $account_following_terms_anuncios_page_id = wt_get_option('wt_perfil_vendedor_page');
+            if ($account_following_terms_anuncios_page_id) {
+                $return_id = $account_following_terms_anuncios_page_id;
+            }
+            break;
+
         default:
             $return_id = get_option('page_for_posts');
             break;
@@ -279,6 +286,13 @@ function wt_get_page_url($slug)
 
         case 'followingtermsanuncios':
             $account_following_terms_anuncios_page_id = wt_get_page_id('followingtermsanuncios');
+            if ($account_following_terms_anuncios_page_id) {
+                $return_url = get_page_link($account_following_terms_anuncios_page_id);
+            }
+            break;
+
+        case 'perfilvendedor':
+            $account_following_terms_anuncios_page_id = wt_get_page_id('perfilvendedor');
             if ($account_following_terms_anuncios_page_id) {
                 $return_url = get_page_link($account_following_terms_anuncios_page_id);
             }

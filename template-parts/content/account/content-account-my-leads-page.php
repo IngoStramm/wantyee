@@ -4,6 +4,8 @@ $user_id = $user->get('id');
 $user_type = get_user_meta($user_id, 'wt_user_type', true);
 $wt_user_following_terms = get_user_meta($user_id, 'wt_user_following_terms', true);
 $account_page_id = wt_get_option('wt_account_page');
+$perfil_vendedor_page_id = wt_get_option('wt_perfil_vendedor_page');
+$perfil_vendedor_page = $perfil_vendedor_page_id ? get_page_link($perfil_vendedor_page_id) : null;
 $redirect_to = $account_page_id ? get_page_link($account_page_id) : get_home_url();
 $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_nonce');
 ?>
@@ -35,6 +37,7 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                             <thead>
                                 <tr>
                                     <th class="sort" data-sort="nome" scope="col"><?php _e('Nome', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
+                                    <th scope="col"><?php _e('Avaliação', 'wt'); ?></th>
                                     <th class="sort" data-sort="email" scope="col"><?php _e('E-mail', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                     <th class="sort" data-sort="titulo" scope="col"><?php _e('Anúncio', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
                                     <th class="sort" data-sort="data" scope="col"><?php _e('Data', 'wt'); ?> <i class="bi bi-arrow-down-up"></i></th>
@@ -52,10 +55,17 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                                 ?>
                                     <tr>
                                         <td class="nome">
-                                            <?php echo $lead_vendedor_data->first_name && $lead_vendedor_data->last_name ?
-                                                $lead_vendedor_data->first_name . ' ' . $lead_vendedor_data->last_name :
-                                                $lead_vendedor_data->display_name ?>
+                                            <?php if ($perfil_vendedor_page) { ?>
+                                                <a href="<?php echo $perfil_vendedor_page; ?>?vendedor_id=<?php echo $lead_vendedor_data->ID; ?>">
+                                                <?php } ?>
+                                                <?php echo $lead_vendedor_data->first_name && $lead_vendedor_data->last_name ?
+                                                    $lead_vendedor_data->first_name . ' ' . $lead_vendedor_data->last_name :
+                                                    $lead_vendedor_data->display_name ?>
+                                                <?php if ($perfil_vendedor_page) { ?>
+                                                </a>
+                                            <?php } ?>
                                         </td>
+                                        <td><?php echo wt_display_vendedor_stars_rating($lead_vendedor_id); ?></td>
                                         <td class="email"><a href="mailto:<?php echo $lead_vendedor_data->user_email; ?>"><?php echo $lead_vendedor_data->user_email; ?></a></td>
                                         <td class="titulo">
                                             <a href="<?php echo get_post_permalink($anuncio_id); ?>">

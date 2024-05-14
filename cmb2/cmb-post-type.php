@@ -77,3 +77,41 @@ function wt_cmb_lead()
         'type'       => 'text_small',
     ));
 }
+
+
+add_action('cmb2_admin_init', 'wt_cmb_avaliacao');
+
+function wt_cmb_avaliacao()
+{
+    $cmb = new_cmb2_box(array(
+        'id'            => 'wt_avaliacao_metabox',
+        'title'         => esc_html__('Opções', 'wt'),
+        'object_types'  => array('avaliacoes'), // Post type
+    ));
+
+    $cmb->add_field(array(
+        'name'       => esc_html__('Nota', 'wt'),
+        'id'         => 'wt_avaliacao_nota',
+        'type'       => 'select',
+        // 'show_option_none' => true,
+        'options'   => array(1, 2, 3, 4, 5)
+    ));
+
+    $cmb->add_field(array(
+        'name'       => esc_html__('ID do anúncio encerrado', 'wt'),
+        'id'         => 'wt_avaliacao_anuncio_id',
+        'type'       => 'text_small',
+    ));
+
+    $cmb->add_field(array(
+        'name'       => esc_html__('ID do lead do anúncio encerrado', 'wt'),
+        'id'         => 'wt_avaliacao_lead_id',
+        'type'       => 'text_small',
+    ));
+
+    $cmb->add_field(array(
+        'name'       => esc_html__('ID do vendedor que gerou o lead do anúncio encerrado', 'wt'),
+        'id'         => 'wt_avaliacao_author_lead_id',
+        'type'       => 'text_small',
+    ));
+}

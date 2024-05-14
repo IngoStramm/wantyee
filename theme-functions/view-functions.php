@@ -65,6 +65,7 @@ function wt_account_nav($slug)
     $page_my_anuncios_id = wt_get_page_id('myanuncios');
     $page_contacted_anuncios_id = wt_get_page_id('contactedanuncios');
     $page_following_terms_anuncios_id = wt_get_page_id('followingtermsanuncios');
+    $page_perfil_vendedor_id = wt_get_page_id('perfilvendedor');
     $curr_account_page_id = wt_get_page_id($slug);
     if ($account_edit_anuncio_page_id || $account_cat_config_anuncio_page_id) {
         get_template_part('template-parts/content/account/content-account-nav', null, array(
