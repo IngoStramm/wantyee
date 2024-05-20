@@ -64,6 +64,12 @@ $avaliacoes = wt_get_vendedor_avaliacoes($vendedor_id);
                                                     $author_data->first_name . ' ' . $author_data->last_name :
                                                     $author_data->display_name ?>
                                             </h5>
+                                            <?php
+                                            $anuncio_id = get_post_meta($avaliacao->ID, 'wt_avaliacao_anuncio_id', true);
+                                            if ($anuncio_id) {
+                                                printf('<div class="avaliacao-anuncio">%s</div>', get_the_title($anuncio_id));
+                                            }
+                                            ?>
                                             <div class="avaliacao-data">
                                                 <?php
                                                 $dateTimeFormat = get_option('date_format');

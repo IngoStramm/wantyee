@@ -23,3 +23,4 @@ require_once(WT_DIR . '/theme-functions/contact-form-functions.php');
 require_once(WT_DIR . '/theme-functions/dual-range-slider.php');
 require_once(WT_DIR . '/theme-functions/relatorio-functions.php');
 require_once(WT_DIR . '/theme-functions/perfil-vendedor-functions.php');
+require_once(WT_DIR . '/theme-functions/rate-vendedor-functions.php');

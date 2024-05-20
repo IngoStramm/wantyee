@@ -92,30 +92,6 @@ function wt_close_anuncio_form_handle()
         exit;
     }
 
-    $vendedor_id = null;
-    if (isset($_POST['vendedor-id']) && $_POST['vendedor-id']) {
-        $vendedor_id = $_POST['vendedor-id'];
-    }
-
-    if ($vendedor_id) {
-        $vendedor_id = $vendedor_id === 'none' ? null : $vendedor_id;
-    }
-
-    $avaliacao_nota = null;
-    if (isset($_POST['avaliacao-nota']) && $_POST['avaliacao-nota']) {
-        $avaliacao_nota = $_POST['avaliacao-nota'];
-    }
-
-    $avaliacao_comentario = null;
-    if (isset($_POST['avaliacao-comentario']) && $_POST['avaliacao-comentario']) {
-        $avaliacao_comentario = $_POST['avaliacao-comentario'];
-    }
-
-    $user_id = null;
-    if (isset($_POST['wt_user_id']) && $_POST['wt_user_id']) {
-        $user_id = $_POST['wt_user_id'];
-    }
-
     // Atualiza o status do anúncio
     // Por segurança, caso o valor do meta field seja um array é melhor apagar tudo
     $status_deleted = delete_post_meta($post_id, 'wt_anuncio_status');
@@ -125,56 +101,6 @@ function wt_close_anuncio_form_handle()
     // wt_debug($status_updated);
 
     // Cria a avaliação se um vendedor tiver sido selecionado
-    if ($vendedor_id) {
-
-        $user_data = get_userdata($user_id);
-        $vendedor_data = get_userdata($vendedor_id);
-
-        $title = sprintf(__('Avaliação criada para o anúncio %s, do comprador %s, para o vendedor %s.'), get_the_title($post_id), $user_data->display_name, $vendedor_data->display_name);
-
-        $args = array(
-            'post_title'                    => $title,
-            'post_status'                   => 'publish',
-            'post_author'                   => $user_id,
-            'post_type'                     => 'avaliacoes',
-        );
-
-        if ($avaliacao_comentario) {
-            $args['post_content'] = $avaliacao_comentario;
-        }
-
-        $meta_input = [];
-        $meta_input['wt_avaliacao_anuncio_id'] = $post_id;
-        $meta_input['wt_avaliacao_author_lead_id'] = $vendedor_id;
-
-        if ($avaliacao_nota) {
-            $meta_input['wt_avaliacao_nota'] = $avaliacao_nota;
-        }
-
-        $wt_avaliacao_lead_id = null;
-        $leads = wt_get_anuncio_leads($post_id);
-        foreach ($leads as $lead) {
-            if ($lead->post_author === $vendedor_id) {
-                $wt_avaliacao_lead_id = $lead->ID;
-                continue;
-            }
-        }
-        
-        if ($wt_avaliacao_lead_id) {
-            $meta_input['wt_avaliacao_lead_id'] = $wt_avaliacao_lead_id;
-        }
-
-        $args['meta_input'] = $meta_input;
-
-        $nova_avaliacao = wp_insert_post($args, true);
-
-        if (is_wp_error($nova_avaliacao)) {
-            $_SESSION['wt_close_anuncio_error_message'] = $nova_avaliacao->get_error_message();
-            wp_safe_redirect($edit_anuncio_page_url . '?wt_anuncio_id=' . $post_id);
-            exit;
-        }
-    }
-
     $_SESSION['wp_anuncio_id'] = $post_id;
     // $_SESSION['wt_close_anuncio_success_message'] = __('Anúncio encerrado com sucesso.', 'wt');
     echo '<h3>' . __('Por favor, aguarde enquanto está sendo redicionando...', 'wt') . '</p>';

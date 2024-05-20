@@ -963,6 +963,36 @@
         });
     }
 
+    function wtRateVendedorModal() {
+        const rateVendedorModal = document.getElementById('rate-vendedor-modal');
+        if(typeof rateVendedorModal === undefined || !rateVendedorModal) {
+            return;
+        }
+        rateVendedorModal.addEventListener('show.bs.modal', event => {
+            // Button that triggered the modal
+            const button = event.relatedTarget;
+            // Extract info from data-bs-* attributes
+            const post_id = button.getAttribute('data-bs-post_id');
+            const vendedor_id = button.getAttribute('data-bs-vendedor_id');
+            const vendedor_nome = button.getAttribute('data-bs-vendedor_nome');
+            const lead_id = button.getAttribute('data-bs-lead_id');
+            console.log('lead_id', lead_id);
+            // If necessary, you could initiate an Ajax request here
+            // and then do the updating in a callback.
+
+            // Update the modal's content.
+            const modalVendedorNomeSpan = rateVendedorModal.querySelector('#vendedor-nome-span');
+            const modalVendedorIdInput = rateVendedorModal.querySelector('#vendedor-id');
+            const modalAnuncioIdInput = rateVendedorModal.querySelector('#anuncio-id');
+            const modalLeadIdInput = rateVendedorModal.querySelector('#lead-id');
+
+            modalVendedorNomeSpan.textContent = vendedor_nome;
+            modalVendedorIdInput.value = vendedor_id;
+            modalAnuncioIdInput.value = post_id;
+            modalLeadIdInput.value = lead_id;
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         wtFormsValidation();
         wtPasswordStrength();
@@ -981,6 +1011,7 @@
         wtChartsInit();
         wtSelectVendedorCloseAnuncioForm();
         wtAvaliacoesList();
+        wtRateVendedorModal();
     }, false);
 
 })();

@@ -12,7 +12,13 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
 
 <div class="container">
     <div class="row">
-        <div class="col">
+
+        <div class="col-md-12">
+            <?php do_action('wt_rate_vendedor_success_message'); ?>
+            <?php do_action('wt_rate_vendedor_error_message'); ?>
+        </div>
+
+        <div class="col-md-12">
 
             <?php if ($user_type === 'comprador') { ?>
 
@@ -65,7 +71,19 @@ $wt_add_form_update_user_nonce = wp_create_nonce('wt_form_following_terms_user_n
                                                 </a>
                                             <?php } ?>
                                         </td>
-                                        <td><?php echo wt_display_vendedor_stars_rating($lead_vendedor_id); ?></td>
+                                        <td>
+                                            <?php
+                                            $nota = wt_get_vendedor_anuncio_rating($lead_vendedor_data->ID, $anuncio_id);
+                                            if (!$nota) {
+                                            ?>
+                                                <a href="#" class="btn btn-warning rate-vendedor" data-bs-toggle="modal" data-bs-target="#rate-vendedor-modal" data-bs-post_id="<?php echo $anuncio_id; ?>" data-bs-vendedor_id="<?php echo $lead_vendedor_data->ID; ?>" data-bs-vendedor_nome="<?php echo $lead_vendedor_data->first_name && $lead_vendedor_data->last_name ? $lead_vendedor_data->first_name . ' ' . $lead_vendedor_data->last_name : $lead_vendedor_data->display_name ?>" data-bs-lead_id="<?php echo $lead_id; ?>">
+                                                    <i class="bi bi-star-half me-1"></i>
+                                                    <?php _e('Avaliar', 'wt'); ?>
+                                                </a>
+                                            <?php } else {
+                                                echo wt_display_static_stars_rating($nota);
+                                            } ?>
+                                        </td>
                                         <td class="email"><a href="mailto:<?php echo $lead_vendedor_data->user_email; ?>"><?php echo $lead_vendedor_data->user_email; ?></a></td>
                                         <td class="titulo">
                                             <a href="<?php echo get_post_permalink($anuncio_id); ?>">

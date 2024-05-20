@@ -21,12 +21,12 @@ function wt_get_vendedor_avaliacoes($vendedor_id)
     return $avaliacoes;
 }
 /**
- * wt_get_vendedor_rating
+ * wt_get_vendedor_total_rating
  *
  * @param  int $vendedor_id
  * @return int
  */
-function wt_get_vendedor_rating($vendedor_id)
+function wt_get_vendedor_total_rating($vendedor_id)
 {
     $avaliacoes = wt_get_vendedor_avaliacoes($vendedor_id);
     $rating = 0;
@@ -54,7 +54,7 @@ function wt_get_avaliacao_rating($avaliacao_id)
  */
 function wt_display_vendedor_stars_rating($vendedor_id)
 {
-    $rating = wt_get_vendedor_rating($vendedor_id);
+    $rating = wt_get_vendedor_total_rating($vendedor_id);
     $output = '';
     if ($rating > 0) {
         $output .= '<div class="stars-rating">';
